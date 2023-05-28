@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: June
+ * @Date: 2023-05-28 14:19:59
+ * @LastEditors: June
+ * @LastEditTime: 2023-05-28 15:49:26
+ */
 module.exports = {
     root: true,
     parser: 'vue-eslint-parser',
@@ -10,7 +18,8 @@ module.exports = {
         'eslint:recommended',
         'plugin:vue/vue3-essential',
         'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended'
+        'plugin:prettier/recommended',
+        './.eslintrc-auto-import.json'
     ],
     overrides: [],
     parserOptions: {
