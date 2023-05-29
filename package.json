@@ -84,6 +84,9 @@
     },
     "dependencies": {
         "@antv/x6": "^2.11.1",
+        "@antv/x6-plugin-dnd": "^2.0.5",
+        "@antv/x6-plugin-history": "^2.2.3",
+        "@antv/x6-vue-shape": "^2.0.11",
         "color-gradient-picker-vue3": "^1.0.0",
         "element-plus": "^2.3.5",
         "lodash-es": "^4.17.21",

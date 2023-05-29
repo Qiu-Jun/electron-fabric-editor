@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-28 17:11:20
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 22:47:23
+ * @LastEditTime: 2023-05-29 10:14:54
 -->
 <template>
     <div class="setting-wrap">
@@ -21,7 +21,7 @@
                 size="small"
                 v-model="gridOps.type"
                 :disabled="!gridOps.visible"
-                @change="onGridType"
+                @change="drawGrids"
             >
                 <el-radio label="dot">点状网格</el-radio>
                 <el-radio label="mesh">网状网格</el-radio>
@@ -46,45 +46,34 @@
                 :max="15"
                 v-model="gridOps.args.thickness"
                 :disabled="!gridOps.visible"
-                @change="onThickNess"
+                @change="drawGrids"
             />
         </div>
 
         <div class="setting-item">
             <span>网格颜色</span>
-            <div>
-                <ColorPicker
-                    :color="color"
-                    :on-change="(color: any) => onChange(color, 'change')"
-                />
-            </div>
+            <el-color-picker v-model="gridOps.args.color" show-alpha @change="drawGrids" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts" name="graphSetting">
-import ColorPicker from 'color-gradient-picker-vue3'
+// import ColorPicker from 'color-gradient-picker-vue3'
 const gridOps = reactive({
     visible: true,
     type: 'mesh',
     args: {
+        color: '#333',
         thickness: 1
     }
 })
 const gridSize = ref(10)
 
 const graph: any = inject('graph')
-const color = ref({
-    red: 255,
-    green: 0,
-    blue: 0,
-    alpha: 1
-})
-const onChange = (color, type) => {
-    console.log(color, type)
-}
+
 // 显示/隐藏网格
 const onGridShow = (val: boolean) => {
+    console.log(graph)
     if (val) {
         graph?.value?.showGrid()
     } else {
@@ -92,25 +81,10 @@ const onGridShow = (val: boolean) => {
     }
 }
 
-// 修改网格类型
-const onGridType = () => {
-    drawGrids()
-}
-
 // 修改网格的大小
 const onGridSize = (val: number) => {
     graph?.value?.setGridSize(val)
 }
-
-// 修改网格线条粗细
-const onThickNess = () => {
-    drawGrids()
-}
-
-onMounted(() => {
-    console.log('2')
-    console.log(graph.value)
-})
 
 interface DrawGridOptions {
     type: string

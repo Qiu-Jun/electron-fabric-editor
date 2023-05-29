@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 21:44:25
+ * @LastEditTime: 2023-05-29 07:45:13
  */
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -74,13 +74,6 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src')
-            }
-        },
-        css: {
-            preprocessorOptions: {
-                scss: {
-                    additionalData: `@import "element-plus/theme-chalk/el-message.css";@import "element-plus/theme-chalk/el-message-box.css";`
-                }
             }
         }
     }

@@ -4,13 +4,18 @@
  * @Author: June
  * @Date: 2023-05-28 15:03:06
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 22:17:53
+ * @LastEditTime: 2023-05-29 11:32:45
 -->
 <template>
     <el-container>
         <el-header height="50px">
             <div class="header-content">
-                <div class="hd-left">June Tool</div>
+                <div class="hd-left">
+                    <div class="title">June Tool</div>
+                    <div class="menu">
+                        <history />
+                    </div>
+                </div>
                 <div class="hd-right">
                     <el-button plain type="primary" v-debounce:300="handleDelete">
                         <svg-icon name="delete" size="24px" color="#409eff" />
@@ -27,7 +32,7 @@
             <section class="left-panel">
                 <nodesCom />
 
-                <lineCom />
+                <lineCom @change="onChangeLineType" />
             </section>
             <div class="mind-content" ref="graph-container" id="graph-container">2</div>
             <section class="right-panel">
@@ -39,27 +44,40 @@
 
 <script setup lang="ts" name="mind">
 import { Graph, Shape } from '@antv/x6'
+import { History } from '@antv/x6-plugin-history'
+import { ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+import graphSetting from './components/graphSetting.vue'
 import nodesCom from './components/nodesCom.vue'
 import lineCom from './components/lineCom.vue'
-import graphSetting from './components/graphSetting.vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import type { Action } from 'element-plus'
+import history from '@/components/history/index.vue'
 
-const graph = ref<Graph | null>(null)
+const graph = ref<any>(null)
+const state = reactive({
+    connectEdgeType: {
+        //连线方式
+        connector: 'normal',
+        router: {
+            name: ''
+        }
+    }
+})
 const initGraph = () => {
     graph.value = new Graph({
         container: document.getElementById('graph-container') || undefined,
+        // 网格
         grid: {
             visible: true,
             size: 10,
             type: 'mesh',
             args: [
                 {
-                    color: '#ccc',
+                    color: '#333',
                     thickness: 1
                 }
             ]
         },
+        // 滚轮控制
         mousewheel: {
             enabled: true,
             zoomAtMousePosition: true,
@@ -85,7 +103,7 @@ const initGraph = () => {
                 return new Shape.Edge({
                     attrs: {
                         line: {
-                            stroke: '#A2B1C3',
+                            stroke: '#333',
                             strokeWidth: 2,
                             targetMarker: {
                                 name: 'block',
@@ -93,6 +111,10 @@ const initGraph = () => {
                                 height: 8
                             }
                         }
+                    },
+                    connector: state.connectEdgeType.connector,
+                    router: {
+                        name: state.connectEdgeType.router.name || ''
                     },
                     zIndex: 0
                 })
@@ -113,6 +135,20 @@ const initGraph = () => {
             }
         }
     })
+    console.log(graph.value)
+    graph.value.use(
+        new History({
+            enabled: true
+        })
+    )
+    graph.value.on('cell:click', ({ cell }: any) => {
+        console.log(cell)
+        // this.type = cell.isNode() ? 'node' : 'edge'
+    })
+    graph.value.on('cell:dblclick', ({ cell, x, y }: { cell: any; x: number; y: number }) => {
+        console.log(cell, x, y)
+        // this.type = cell.isNode() ? 'node' : 'edge'
+    })
 }
 
 const handleDelete = () => {
@@ -120,18 +156,38 @@ const handleDelete = () => {
         showCancelButton: true,
         cancelButtonText: '取消',
         confirmButtonText: '确认',
-        callback: (action: Action) => {
-            ElMessage({
-                type: 'info',
-                message: `action: ${action}`
-            })
+        callback: () => {
+            if (graph) {
+                const cells = graph.value.getCells() || null
+                graph.value.removeCells(cells)
+            }
         }
     })
 }
 
+// 改变线条类型
+const onChangeLineType = (type: string) => {
+    console.log(type)
+    if (type === 'arrow') {
+        state.connectEdgeType = {
+            connector: 'normal',
+            router: { name: '' }
+        }
+    } else if (type === 'smooth') {
+        state.connectEdgeType = {
+            connector: 'smooth',
+            router: { name: '' }
+        }
+    } else {
+        state.connectEdgeType = {
+            connector: 'normal',
+            router: { name: 'manhattan' }
+        }
+    }
+}
+
 onMounted(() => {
     initGraph()
-    console.log(graph.value)
 })
 
 provide('graph', graph)
@@ -162,7 +218,13 @@ provide('graph', graph)
     padding: 0 10px;
     border-bottom: 1px solid #ccc;
     .hd-left {
-        font-weight: bolder;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .title {
+            font-weight: bolder;
+            margin-right: 10px;
+        }
     }
 }
 .left-panel {

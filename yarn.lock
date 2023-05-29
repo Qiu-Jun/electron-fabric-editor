@@ -25,6 +25,23 @@
   resolved "https://registry.npmmirror.com/@antv/x6-geometry/-/x6-geometry-2.0.5.tgz#c158317d74135bedd78c2fdeb76f9c7cfa0ef0aa"
   integrity sha512-MId6riEQkxphBpVeTcL4ZNXL4lScyvDEPLyIafvWMcWNTGK0jgkK7N20XSzqt8ltJb0mGUso5s56mrk8ysHu2A==
 
+"@antv/x6-plugin-dnd@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npmmirror.com/@antv/x6-plugin-dnd/-/x6-plugin-dnd-2.0.5.tgz#48d67eee6ea7cb4817331ea5d0429f2e5b7fe58f"
+  integrity sha512-g8GGJS2XmM8C59juOBiFqaR/f8i8y8tqw9sJNwta7s1Phh3hwDd7o4kk36Kk5eTKkfZfnjEyWHMOqp/h+EDibQ==
+
+"@antv/x6-plugin-history@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.npmmirror.com/@antv/x6-plugin-history/-/x6-plugin-history-2.2.3.tgz#5fd81f85b07f59406731b6853b19129844920c7d"
+  integrity sha512-yiv5e7CQKm1HrJe7je4iWjkzDzU+I0WsyL8En2j0UwXJrUNaKYyv4BkRg2tvyi52hydxidMgi3tNnNQHEZwoMg==
+
+"@antv/x6-vue-shape@^2.0.11":
+  version "2.0.11"
+  resolved "https://registry.npmmirror.com/@antv/x6-vue-shape/-/x6-vue-shape-2.0.11.tgz#55dd79b6e5b351aa47ec20cd354b35a953637bb6"
+  integrity sha512-LYNkvL9AjbeAi6ZzA2/aNRKv0E0+bgR5nMQlcqC+75bYoZtCpd7ZkECcOQhDU4s/DE2+EyyPX8aI1e2pA39Y/A==
+  dependencies:
+    vue-demi latest
+
 "@antv/x6@^2.11.1":
   version "2.11.1"
   resolved "https://registry.npmmirror.com/@antv/x6/-/x6-2.11.1.tgz#d0ae8d9137b52bf1c3724c882c13ed9ac124d6fb"
@@ -5853,6 +5870,11 @@ vue-demi@*:
   version "0.13.11"
   resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.13.11.tgz#7d90369bdae8974d87b1973564ad390182410d99"
   integrity sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==
+
+vue-demi@latest:
+  version "0.14.5"
+  resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.14.5.tgz#676d0463d1a1266d5ab5cba932e043d8f5f2fbd9"
+  integrity sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==
 
 vue-eslint-parser@^9.0.1:
   version "9.1.0"

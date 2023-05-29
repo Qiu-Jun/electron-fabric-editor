@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-28 14:19:59
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 15:49:26
+ * @LastEditTime: 2023-05-29 10:12:34
  */
 module.exports = {
     root: true,
@@ -32,6 +32,7 @@ module.exports = {
     },
     plugins: ['vue', '@typescript-eslint'],
     rules: {
-        'vue/multi-word-component-names': 'off'
+        'vue/multi-word-component-names': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
     }
 }

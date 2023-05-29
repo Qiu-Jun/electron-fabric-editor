@@ -3,17 +3,20 @@
  * @Description:
  * @Date: 2023-03-11 01:02:44
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 21:37:18
+ * @LastEditTime: 2023-05-29 07:50:11
  */
 import { createApp } from 'vue'
 import router from './router/index'
 import store from './store/index'
 import App from './App.vue'
 import directives from './directives/index'
-import './styles/index.scss'
-import 'color-gradient-picker-vue3/dist/style.css'
 import svgIcon from '@/components/svgIcon/index.vue'
 import 'virtual:svg-icons-register'
+
+import './styles/index.scss'
+// import 'color-gradient-picker-vue3/dist/style.css'
+import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/theme-chalk/el-message-box.css'
 
 // 获取所有 SymbolId
 // import ids from 'virtual:svg-icons-names'
