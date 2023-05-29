@@ -1,0 +1,28 @@
+.setting-wrap {
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    .title {
+        font-size: 18px;
+        font-weight: blod;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .setting-item {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        height: 60px;
+        padding: 10px 16px 10px 10px;
+        span {
+            display: inline-block;
+            width: 80px;
+            font-size: 12px;
+            text-align: left;
+            margin-right: 10px;
+        }
+    }
+}
