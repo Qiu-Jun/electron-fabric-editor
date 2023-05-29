@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-29 14:01:59
  * @LastEditors: June
- * @LastEditTime: 2023-05-29 14:13:24
+ * @LastEditTime: 2023-05-30 02:00:32
  */
 'use strict'
 
@@ -76,7 +76,7 @@ module.exports = {
         }
     ],
 
-    scopes: [],
+    scopes: [{ name: 'components' }, { name: 'utils' }, { name: 'styles' }, { name: 'other' }],
 
     allowCustomScopes: true,
     allowBreakingChanges: ['feat', 'fix']
