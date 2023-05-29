@@ -74,7 +74,8 @@
     "lint-staged": {
         "*.{vue,js,ts,tsx,jsx}": [
             "eslint --fix",
-            "prettier --write --ignore-unknown"
+            "prettier --write --ignore-unknown",
+            "git add"
         ]
     },
     "config": {
