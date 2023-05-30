@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:47:21
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 14:29:34
+ * @LastEditTime: 2023-05-30 22:16:26
  */
 import { app, BrowserWindow } from 'electron'
 import initTray from './modules/tray/index'

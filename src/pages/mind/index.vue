@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-28 15:03:06
  * @LastEditors: June
- * @LastEditTime: 2023-05-29 11:32:45
+ * @LastEditTime: 2023-05-30 12:42:47
 -->
 <template>
     <el-container>
@@ -44,13 +44,11 @@
 
 <script setup lang="ts" name="mind">
 import { Graph, Shape } from '@antv/x6'
-import { History } from '@antv/x6-plugin-history'
 import { ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
 import graphSetting from './components/graphSetting.vue'
 import nodesCom from './components/nodesCom.vue'
 import lineCom from './components/lineCom.vue'
-import history from '@/components/history/index.vue'
 
 const graph = ref<any>(null)
 const state = reactive({
@@ -135,12 +133,6 @@ const initGraph = () => {
             }
         }
     })
-    console.log(graph.value)
-    graph.value.use(
-        new History({
-            enabled: true
-        })
-    )
     graph.value.on('cell:click', ({ cell }: any) => {
         console.log(cell)
         // this.type = cell.isNode() ? 'node' : 'edge'

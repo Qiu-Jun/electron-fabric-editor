@@ -4,12 +4,13 @@
  * @Author: June
  * @Date: 2023-05-04 14:26:20
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 13:32:04
+ * @LastEditTime: 2023-05-30 22:10:07
  */
 import { app, BrowserWindow, dialog, shell, MenuItem } from 'electron'
 import path from 'path'
 import { merge } from 'lodash-es'
 import pkg from '../../../package.json'
+import { json } from 'stream/consumers'
 
 interface ICreateWinOps {
     module: string // 窗口模块名称
@@ -79,7 +80,7 @@ class WindowManage {
         }
         const browserOps = merge({}, this.defaultWinOps, options, pos)
         const mainWindow = new BrowserWindow(browserOps)
-
+        mainWindow.webContents.openDevTools()
         mainWindow.on('close', () => {
             this.delWin(mainWindow.id)
         })
@@ -99,20 +100,19 @@ class WindowManage {
                 title: '窗口打开失败',
                 message: `关于${pkg.name}\n当前版本 ${pkg.version}`
             })
-            this.delWin(mainWindow.id)
+            // this.delWin(mainWindow.id)
         })
-
         //开发模式下拼接打开路由
-        if (!app.isPackaged) {
+        if (app.isPackaged) {
+            //打包后读取文件，并使用哈希打开指定路由
+            mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'), {
+                hash: options.hash || '/'
+            })
+        } else {
             const openUrl = options.toUrl
                 ? options.toUrl
                 : `http://127.0.0.1:5173/${options.urlhash ? '#/' + options.urlhash : ''}`
             mainWindow.loadURL(openUrl)
-        } else {
-            //打包后读取文件，并使用哈希打开指定路由
-            mainWindow.loadFile(path.join(__dirname, './dist/index.html'), {
-                hash: options.urlhash || '/'
-            })
         }
         //将窗口信息存储到map
         global.BrowserWindowsMap.set(mainWindow.id, mainWindow)

@@ -1,6 +1,6 @@
 {
     "name": "electron-simple-app",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "electron-simple-app for June",
     "main": "dist-electron/main/index.js",
     "scripts": {
@@ -40,7 +40,7 @@
             ]
         },
         "win": {
-            "icon": "./public/icon.png",
+            "icon": "./public/icon.ico",
             "artifactName": "${productName}_${version}.${ext}",
             "target": [
                 {
@@ -61,7 +61,7 @@
             "installerIcon": "./public/icon.ico",
             "uninstallerIcon": "./public/icon.ico",
             "installerHeaderIcon": "./public/icon.ico",
-            "shortcutName": "App名称"
+            "shortcutName": "简易工具"
         }
     },
     "keywords": [

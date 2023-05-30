@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-06 00:39:19
  * @LastEditors: June
- * @LastEditTime: 2023-05-22 14:28:29
+ * @LastEditTime: 2023-05-30 13:50:31
  */
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
@@ -30,7 +30,7 @@ export default function handleUpdate(win: BrowserWindow) {
         text: string | number
         info?: string
     }) => {
-        win.webContents.send('updatemessage', JSON.stringify({ type, text }))
+        win.webContents.send('updatemessage', { type, text })
     }
     // 下载错误
     autoUpdater.on('error', (err) => {
