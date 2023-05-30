@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-05-28 15:03:06
  * @LastEditors: June
- * @LastEditTime: 2023-05-30 01:48:21
+ * @LastEditTime: 2023-05-30 12:27:42
 -->
 <template>
     <el-container>
@@ -12,9 +12,7 @@
             <div class="header-content">
                 <div class="hd-left">
                     <div class="title">June Tool</div>
-                    <div class="menu">
-                        <history />
-                    </div>
+                    <div class="menu"></div>
                 </div>
                 <div class="hd-right">
                     <el-button plain type="primary" v-debounce:300="handleDelete">
@@ -44,7 +42,6 @@
 
 <script setup lang="ts" name="mind">
 import { Graph, Shape } from '@antv/x6'
-import { History } from '@antv/x6-plugin-history'
 import { ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
 import gridSetting from './components/gridSetting.vue'
@@ -52,7 +49,6 @@ import nodeSetting from './components/nodeSetting.vue'
 import edgeSetting from './components/edgeSetting.vue'
 import nodesCom from './components/nodesCom.vue'
 import lineCom from './components/lineCom.vue'
-import history from '@/components/history/index.vue'
 
 const enum ISelectType {
     Grid = 'grid',
@@ -78,7 +74,9 @@ const state = reactive({
         router: {
             name: ''
         }
-    }
+    },
+    canRedo: false,
+    canUndo: false
 })
 
 const initGraph = () => {
@@ -154,11 +152,6 @@ const initGraph = () => {
             }
         }
     })
-    flowProvide.graph.use(
-        new History({
-            enabled: true
-        })
-    )
     flowProvide.graph.on('blank:click', () => {
         state.selectType = ISelectType.Grid
     })

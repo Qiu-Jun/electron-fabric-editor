@@ -90,15 +90,16 @@
     "dependencies": {
         "@antv/x6": "^2.11.1",
         "@antv/x6-plugin-dnd": "^2.0.5",
-        "@antv/x6-plugin-history": "^2.2.3",
         "@antv/x6-vue-shape": "^2.0.11",
         "color-gradient-picker-vue3": "^1.0.0",
         "commitlint-config-cz": "^0.13.3",
+        "dayjs": "^1.11.7",
         "element-plus": "^2.3.5",
         "lodash-es": "^4.17.21",
         "pinia": "^2.0.33",
         "uuid": "^9.0.0",
         "vue": "^3.2.47",
+        "vue-json-pretty": "^2.2.4",
         "vue-router": "^4.1.6"
     },
     "devDependencies": {
