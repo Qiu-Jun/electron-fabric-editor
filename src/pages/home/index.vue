@@ -4,17 +4,15 @@
  * @Author: June
  * @Date: 2023-03-13 23:43:01
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:43:02
+ * @LastEditTime: 2023-06-25 02:51:42
 -->
 <template>
     <div class="home-page">
         <div class="grid-wrapper">
-            <n-h3>All the tools</n-h3>
+            <h3>{{ $t('title.allTools') }}</h3>
             <el-row :gutter="20">
                 <el-col :span="6" v-for="tool in toolStore.tools" :key="tool.name">
-                    <transition>
-                        <toolCard :tool="tool" />
-                    </transition>
+                    <toolCard :tool="tool" />
                 </el-col>
             </el-row>
         </div>
@@ -48,31 +46,14 @@ import useToolStore from '@/store/modules/tools'
 const toolStore = useToolStore()
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .home-page {
-    padding-top: 50px;
-}
-
-.h3 {
-    margin-bottom: 10px;
-}
-
-::v-deep(.n-grid) {
-    margin-bottom: 30px;
-}
-
-.height-enter-active,
-.height-leave-active {
-    transition: all 0.5s ease-in-out;
-    overflow: hidden;
-    max-height: 500px;
-}
-
-.height-enter-from,
-.height-leave-to {
-    max-height: 42px;
-    overflow: hidden;
-    opacity: 0;
-    margin-bottom: 0;
+    .grid-wrapper {
+        box-sizing: border-box;
+        padding: 20px;
+        h3 {
+            margin-bottom: 10px;
+        }
+    }
 }
 </style>

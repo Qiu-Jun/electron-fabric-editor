@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 21:46:27
+ * @LastEditTime: 2023-06-25 02:34:12
  */
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -24,7 +24,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         vue(),
         vueSetupExtend(),
         AutoImport({
-            imports: ['vue', 'vue-router'],
+            imports: ['vue', 'vue-router', 'vue-i18n'],
             eslintrc: {
                 enabled: true
             },
@@ -75,7 +75,8 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         plugins,
         resolve: {
             alias: {
-                '@': path.resolve(__dirname, 'src')
+                '@': path.resolve(__dirname, 'src'),
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
             }
         }
     }

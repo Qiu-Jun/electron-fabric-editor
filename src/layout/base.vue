@@ -4,12 +4,12 @@
  * @Author: June
  * @Date: 2023-06-24 18:20:34
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 20:38:07
+ * @LastEditTime: 2023-06-25 02:14:07
 -->
 <template>
     <div class="navigation">
-        <el-tooltip class="box-item" effect="dark" content="Home" placement="bottom">
-            <el-button :icon="House" circle></el-button>
+        <el-tooltip class="box-item" effect="dark" :content="$t('tips.home')" placement="bottom">
+            <el-button :icon="House" circle @click="() => $to('/')"></el-button>
         </el-tooltip>
 
         <commandPalette />
@@ -23,6 +23,9 @@
 import { House } from '@element-plus/icons-vue'
 import navBarBtns from './components/navbarBtns.vue'
 import commandPalette from '@/components/commandPalette/index.vue'
+import useNav from '@/hooks/navTo'
+
+const $to = useNav()
 </script>
 
 <style lang="scss" scoped>

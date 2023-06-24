@@ -1,10 +1,3 @@
-/*
- * @Author: June
- * @Description:
- * @Date: 2023-03-11 01:02:44
- * @LastEditors: June
- * @LastEditTime: 2023-06-24 20:12:57
- */
 import { createApp } from 'vue'
 import router from './router/index'
 import store from './store/index'
@@ -22,9 +15,12 @@ import 'element-plus/theme-chalk/el-message-box.css'
 // 获取所有 SymbolId
 // import ids from 'virtual:svg-icons-names'
 
+import i18n from '@/lib/i18n'
+
 function runApp() {
     const app = createApp(App)
     app.use(router)
+    app.use(i18n)
     app.use(store)
     app.component('svg-icon', svgIcon)
     app.use(directives)

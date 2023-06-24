@@ -63,6 +63,7 @@
     "onBeforeRouteUpdate": true,
     "useLink": true,
     "useRoute": true,
-    "useRouter": true
+    "useRouter": true,
+    "useI18n": true
   }
 }

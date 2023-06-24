@@ -4,11 +4,11 @@
  * @Author: June
  * @Date: 2023-06-24 23:24:11
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:58:22
+ * @LastEditTime: 2023-06-25 01:02:39
 -->
 <template>
     <router-link :to="tool.path">
-        <div class="tool-card">
+        <div class="tool-card mb-5">
             <div flex items-center justify-between>
                 <el-icon class="icon" size="40">
                     <component :is="tool.icon" />
@@ -49,14 +49,12 @@ console.log(tool)
 </script>
 
 <style lang="scss" scoped>
-a {
-    text-decoration: none;
-}
-
 .tool-card {
+    box-sizing: border-box;
     transition: border-color ease 0.5s;
-    border-width: 2px !important;
-    color: transparent;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+    padding: 10px;
 
     &:hover {
         border-color: #409eff;

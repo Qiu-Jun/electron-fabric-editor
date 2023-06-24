@@ -4,23 +4,22 @@
  * @Author: June
  * @Date: 2023-06-24 22:30:31
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 22:33:04
+ * @LastEditTime: 2023-06-25 02:31:57
 -->
 <template>
-    <n-tooltip trigger="hover">
-        <template #trigger>
-            <c-button
+    <el-tooltip trigger="hover">
+        <template #content>
+            <el-button
                 variant="text"
                 circle
-                :type="buttonType"
                 :style="{ opacity: isFavorite ? 1 : 0.2 }"
                 @click="toggleFavorite"
             >
                 <el-icon><House /></el-icon>
-            </c-button>
+            </el-button>
         </template>
-        {{ isFavorite ? 'Remove from favorites' : 'Add to favorites' }}
-    </n-tooltip>
+        {{ isFavorite ? $t('favorite.remove') : $t('favorite.add') }}
+    </el-tooltip>
 </template>
 
 <script lang="ts" name="FavoriteButton" setup>

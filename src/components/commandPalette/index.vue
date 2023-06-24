@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-06-24 18:55:54
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 21:51:49
+ * @LastEditTime: 2023-06-25 02:32:37
 -->
 <template>
     <div flex-1 mx-2>
@@ -34,7 +34,7 @@
             v-model="isModalOpen"
             width="50%"
             top="80px"
-            custom-class="dialogHideHeader"
+            class="dialogHideHeader"
             :show-close="false"
             :show-header="false"
             :before-close="handleClose"
