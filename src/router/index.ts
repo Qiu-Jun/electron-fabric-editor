@@ -3,9 +3,17 @@
  * @Description:
  * @Date: 2023-03-11 02:39:47
  * @LastEditors: June
- * @LastEditTime: 2023-05-30 10:41:26
+ * @LastEditTime: 2023-06-24 23:10:07
  */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { tools } from '@/tools'
+
+const toolsRoutes = tools.map(({ path, name, component, ...config }) => ({
+    path,
+    name,
+    component,
+    meta: { isTool: true, name, ...config }
+}))
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -30,7 +38,9 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/update',
         component: () => import('@/pages/update/index.vue')
-    }
+    },
+
+    ...toolsRoutes
 ]
 
 const router = createRouter({

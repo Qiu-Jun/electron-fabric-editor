@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-06-24 19:00:17
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 19:22:24
+ * @LastEditTime: 2023-06-24 23:27:40
  */
 import {
     defineConfig,
@@ -20,7 +20,7 @@ export default defineConfig({
     transformers: [transformerDirectives(), transformerVariantGroup()],
     theme: {
         colors: {
-            primary: '#409ef'
+            primary: '#409eff'
         }
     }
 })
