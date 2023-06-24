@@ -23,7 +23,7 @@
         "src/**/*.d.ts",
         "src/**/*.tsx",
         "src/**/*.vue",
-        "types/*.d.ts",
+        "dts/*.d.ts",
         "./auto-imports.d.ts"
     ],
     "exclude": [
