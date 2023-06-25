@@ -4,16 +4,14 @@
  * @Author: June
  * @Date: 2023-06-24 17:44:29
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 22:49:16
+ * @LastEditTime: 2023-06-26 04:07:43
 -->
 <template>
     <baseLayout>
         <div class="tool-layout">
             <div class="tool-header" v-show="toolTitle">
                 <div flex flex-nowrap items-center justify-between>
-                    <h1>
-                        {{ toolTitle }}
-                    </h1>
+                    <h1>{{ toolTitle ? $t(toolTitle) : '' }}</h1>
 
                     <div>
                         <favoriteButton :tool="{ name: route.meta.name } as Tool" />
@@ -23,7 +21,7 @@
                 <div class="separator" />
 
                 <div class="description">
-                    {{ toolDescription }}
+                    {{ toolDescription ? $t(toolDescription) : '' }}
                 </div>
             </div>
         </div>
@@ -40,7 +38,7 @@ import favoriteButton from '@/components/favoriteBtn/index.vue'
 import type { Tool } from '@/types/tools'
 
 const route = useRoute()
-const toolTitle = computed(() => route.meta.name)
+const toolTitle = computed<string>(() => String(route.meta.name))
 const toolDescription = computed<string>(() => String(route.meta.description))
 </script>
 

@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2023-06-25 02:34:12
+ * @LastEditTime: 2023-06-26 03:22:17
  */
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -17,6 +17,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import Unocss from 'unocss/vite'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     const envData = loadEnv(mode, process.cwd())
@@ -46,7 +47,8 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
             inject: 'body-last', // 插入的位置
             customDomId: '__svg__icons__dom__' // svg的id
         }),
-        Unocss()
+        Unocss(),
+        vueJsx()
     ]
     if (command === 'serve' && mode === 'develectron') {
         plugins.push(

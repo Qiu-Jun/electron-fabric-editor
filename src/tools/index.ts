@@ -4,12 +4,17 @@
  * @Author: June
  * @Date: 2023-06-24 21:08:58
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:00:14
+ * @LastEditTime: 2023-06-26 03:16:25
  */
 import { tool as phoneParserAndFormatter } from './phoneParserAndFormatter'
+import { tool as jsonDiff } from './jsonDiff'
 import type { ToolCategory } from '@/types/tools'
 
 export const toolsByCategory: ToolCategory[] = [
+    {
+        name: 'Json',
+        components: [jsonDiff]
+    },
     {
         name: 'Data',
         components: [phoneParserAndFormatter]

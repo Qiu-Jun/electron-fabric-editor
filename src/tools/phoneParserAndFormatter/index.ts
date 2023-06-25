@@ -4,16 +4,15 @@
  * @Author: June
  * @Date: 2023-06-24 22:55:37
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:08:03
+ * @LastEditTime: 2023-06-26 03:10:13
  */
 import { Iphone } from '@element-plus/icons-vue'
 import { defineTool } from '../tool'
 
 export const tool = defineTool({
-    name: 'Phone parser and formatter',
+    name: 'tools.phoneParse.name',
     path: '/phone-parser-and-formatter',
-    description:
-        'Parse, validate and format phone numbers. Get information about the phone number, like the country code, type, etc.',
+    description: 'tools.phoneParse.desc',
     keywords: [
         'phone',
         'parser',
@@ -29,5 +28,5 @@ export const tool = defineTool({
     ],
     component: () => import('./index.vue'),
     icon: Iphone,
-    createdAt: new Date('2023-05-01')
+    createdAt: new Date('2023-06-25')
 })

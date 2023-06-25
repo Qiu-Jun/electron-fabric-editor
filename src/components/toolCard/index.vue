@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-06-24 23:24:11
  * @LastEditors: June
- * @LastEditTime: 2023-06-25 01:02:39
+ * @LastEditTime: 2023-06-26 01:08:36
 -->
 <template>
     <router-link :to="tool.path">
@@ -29,10 +29,10 @@
                     <favoriteButton :tool="tool" />
                 </div>
             </div>
-            <h3 class="title">{{ tool.name }}</h3>
+            <h3 class="title">{{ $t(tool.name) }}</h3>
 
             <div class="description">
-                {{ tool.description }}
+                {{ $t(tool.description) }}
                 <br />&nbsp;
             </div>
         </div>
