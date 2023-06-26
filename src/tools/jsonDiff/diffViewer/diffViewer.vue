@@ -1,15 +1,15 @@
 <template>
     <div v-if="showResults">
         <el-form flex justify-center>
-            <el-form-item label="Only show differences">
+            <el-form-item :label="$t('tools.jsonDiff.switchLabel')">
                 <el-switch v-model="onlyShowDifferences" />
             </el-form-item>
         </el-form>
 
         <el-card>
-            <el-text v-if="jsonAreTheSame" block text-center italic
-                >The provided JSONs are the same</el-text
-            >
+            <el-text v-if="jsonAreTheSame" block text-center italic>
+                {{ $t('tools.jsonDiff.sameTips') }}
+            </el-text>
             <DiffRootViewer v-else :diff="result" />
         </el-card>
     </div>

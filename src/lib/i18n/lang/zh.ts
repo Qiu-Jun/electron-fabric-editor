@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-06-25 01:37:24
  * @LastEditors: June
- * @LastEditTime: 2023-06-26 03:12:52
+ * @LastEditTime: 2023-06-26 16:38:59
  */
 export default {
     zh: '中文', // 特殊，用于切换
@@ -38,7 +38,14 @@ export default {
         },
         jsonDiff: {
             name: 'JSON对比',
-            desc: '比较两个JSON对象并获得它们之间的差异。'
+            desc: '比较两个JSON对象并获得它们之间的差异。',
+            firstJsonLabel: '第一个JSON',
+            firstPlaceholder: '粘贴你的第一个JSON在这里…',
+            secondJsonLabel: '要比较的JSON',
+            secondPlaceholder: '粘贴你的JSON来比较这里…',
+            sameTips: '所提供的json相同',
+            switchLabel: '只显示差异',
+            jsonValidateErr: '无效的JSON格式'
         }
     },
     regMsg: {

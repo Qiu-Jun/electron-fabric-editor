@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: June
+ * @Date: 2023-06-25 01:37:41
+ * @LastEditors: June
+ * @LastEditTime: 2023-06-26 16:36:04
+ */
 export default {
     en: 'English', // 特殊，用于切换
     tips: {
@@ -30,7 +38,14 @@ export default {
         },
         jsonDiff: {
             name: 'JSON diff',
-            desc: 'Compare two JSON objects and get the differences between them.'
+            desc: 'Compare two JSON objects and get the differences between them.',
+            firstJsonLabel: 'Your first JSON',
+            firstPlaceholder: 'Paste your first JSON here...',
+            secondJsonLabel: 'Your JSON to compare',
+            secondPlaceholder: 'Paste your JSON to compare here...',
+            sameTips: 'The provided JSONs are the same',
+            switchLabel: 'Only show differences',
+            jsonValidateErr: 'Invalid JSON format'
         }
     },
     regMsg: {
