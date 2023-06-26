@@ -1,7 +1,9 @@
 <template>
     <div v-if="showResults">
-        <el-form flex justify-center label="Only show differences" label-placement="left">
-            <el-switch v-model="onlyShowDifferences" />
+        <el-form flex justify-center>
+            <el-form-item label="Only show differences">
+                <el-switch v-model="onlyShowDifferences" />
+            </el-form-item>
         </el-form>
 
         <el-card>
