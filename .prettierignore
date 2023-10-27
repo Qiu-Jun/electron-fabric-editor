@@ -4,3 +4,4 @@ release
 node_modules
 public
 index.html
+*.yaml

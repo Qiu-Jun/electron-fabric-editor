@@ -6,14 +6,14 @@
  * @LastEditTime: 2023-05-28 05:28:13
  */
 interface IElectronAPI {
-    platform: string
-    ipcRenderer: any
+  platform: string
+  ipcRenderer: any
 }
 
 declare global {
-    interface Window {
-        electronAPI: IElectronAPI
-    }
+  interface Window {
+    electronAPI: IElectronAPI
+  }
 }
 
 export { global }

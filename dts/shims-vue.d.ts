@@ -3,11 +3,19 @@
  * @Description:
  * @Date: 2023-01-17 13:07:15
  * @LastEditors: June
- * @LastEditTime: 2023-01-20 11:56:55
+ * @LastEditTime: 2023-10-28 00:05:02
  */
 declare module '*.vue' {
-    import { DefineComponent } from 'vue'
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-    const component: DefineComponent<{}, {}, any>
-    export default component
+  import { ComponentOptions } from 'vue'
+  const componentOptions: ComponentOptions
+  export default componentOptions
+}
+
+export as namespace vfe
+declare module 'vfe' {
+  export as namespace vfe
+  export interface ICanvas extends fabric.Canvas {
+    c: fabric.Canvas
+    editor: Editor
+  }
 }

@@ -64,6 +64,10 @@
     "useLink": true,
     "useRoute": true,
     "useRouter": true,
-    "useI18n": true
+    "useI18n": true,
+    "ExtractDefaultPropTypes": true,
+    "ExtractPropTypes": true,
+    "ExtractPublicPropTypes": true,
+    "WritableComputedRef": true
   }
 }

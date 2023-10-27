@@ -1,30 +1,29 @@
+/*
+ * @Author: June
+ * @Description:
+ * @Date: 2023-10-15 22:09:13
+ * @LastEditors: June
+ * @LastEditTime: 2023-10-28 00:11:35
+ */
 import { createApp } from 'vue'
-import router from './router/index'
-import store from './store/index'
 import App from './App.vue'
-import directives from './directives/index'
-import svgIcon from '@/components/svgIcon/index.vue'
-import 'virtual:svg-icons-register'
+import router, { setupRouter } from './router'
+import ViewUiPlus from 'view-ui-plus'
+import 'view-ui-plus/dist/styles/viewuiplus.css'
+import './styles/index.less'
+import 'virtual:uno.css'
+import VueLazyLoad from 'vue3-lazyload'
+// 自定义字体文件
+import '@/assets/fonts/font.css'
 
-import 'uno.css'
-import './styles/index.scss'
-// import 'color-gradient-picker-vue3/dist/style.css'
-import 'element-plus/theme-chalk/el-message.css'
-import 'element-plus/theme-chalk/el-message-box.css'
+import i18n from './language/index'
 
-// 获取所有 SymbolId
-// import ids from 'virtual:svg-icons-names'
-
-import i18n from '@/lib/i18n'
-
-function runApp() {
+const setupAll = async () => {
     const app = createApp(App)
-    app.use(router)
-    app.use(i18n)
-    app.use(store)
-    app.component('svg-icon', svgIcon)
-    app.use(directives)
+    setupRouter(app)
+    app.use(i18n).use(VueLazyLoad, {}).use(ViewUiPlus)
+    await router.isReady()
     app.mount('#app')
 }
 
-runApp()
+setupAll()

@@ -1,51 +1,22 @@
 /*
  * @Author: June
  * @Description:
- * @Date: 2023-03-11 02:39:47
+ * @Date: 2023-10-15 22:09:13
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:10:07
+ * @LastEditTime: 2023-10-27 23:45:18
  */
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { tools } from '@/tools'
-
-const toolsRoutes = tools.map(({ path, name, component, ...config }) => ({
-    path,
-    name,
-    component,
-    meta: { isTool: true, name, ...config }
-}))
-
-const routes: Array<RouteRecordRaw> = [
-    {
-        path: '/',
-        redirect: '/home'
-    },
-    {
-        path: '/home',
-        name: 'Home',
-        component: () => import('@/pages/home/index.vue')
-    },
-    {
-        path: '/jsonParse',
-        name: 'JsonParse',
-        component: () => import('@/pages/jsonParse/index.vue')
-    },
-    {
-        path: '/flowChart',
-        name: 'FlowChart',
-        component: () => import('@/pages/flowChart/index.vue')
-    },
-    {
-        path: '/update',
-        component: () => import('@/pages/update/index.vue')
-    },
-
-    ...toolsRoutes
-]
+import { createRouter, createWebHashHistory } from 'vue-router'
+import routes from './routes'
+import type { App } from 'vue'
 
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes
+  history: createWebHashHistory(),
+  routes,
+  scrollBehavior() {
+    return { top: 0 }
+  }
 })
+
+export const setupRouter = (app: App<Element>) => app.use(router)
 
 export default router

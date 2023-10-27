@@ -14,56 +14,56 @@ import { appUpdate } from '../../config/constants/winNames'
 const winURL = `http://localhost:5173/#/update`
 let win: BrowserWindow
 const createUpdateWindow = function () {
-    const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
-    win = WindowManage.getInstance().createWin({
-        module: appUpdate,
-        width: 300,
-        height: 360,
-        show: false,
-        frame: false,
-        resizable: false,
-        movable: false,
-        fullscreenable: false,
-        minimizable: false,
-        maximizable: false,
-        transparent: true,
-        alwaysOnTop: true,
-        skipTaskbar: true, // 任务栏中不显示窗口
-        closable: false,
-        hasShadow: false,
-        urlhash: 'update'
-    })
-    return win
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
+  win = WindowManage.getInstance().createWin({
+    module: appUpdate,
+    width: 300,
+    height: 360,
+    show: false,
+    frame: false,
+    resizable: false,
+    movable: false,
+    fullscreenable: false,
+    minimizable: false,
+    maximizable: false,
+    transparent: true,
+    alwaysOnTop: true,
+    skipTaskbar: true, // 任务栏中不显示窗口
+    closable: false,
+    hasShadow: false,
+    urlhash: 'update'
+  })
+  return win
 }
 
 ipcMain.on('updateHide', () => {
-    win?.hide()
+  win?.hide()
 })
 
 ipcMain.on('updateShow', () => {
-    win?.show()
-    win?.focus()
+  win?.show()
+  win?.focus()
 })
 
 ipcMain.handle('updateGetBounds', () => {
-    return win?.getBounds()
+  return win?.getBounds()
 })
 
 ipcMain.handle('updateSetBounds', (event, param) => {
-    const { x, y, width, height } = param
-    return win?.setBounds({
-        x,
-        y,
-        width,
-        height
-    })
+  const { x, y, width, height } = param
+  return win?.setBounds({
+    x,
+    y,
+    width,
+    height
+  })
 })
 
 ipcMain.handle('updateSetSize', (event, param) => {
-    const { width, height } = param
-    win?.setResizable(true)
-    win?.setSize(width, height)
-    win?.setResizable(false)
+  const { width, height } = param
+  win?.setResizable(true)
+  win?.setSize(width, height)
+  win?.setResizable(false)
 })
 
 app.commandLine.appendSwitch('wm-window-animations-disabled')
