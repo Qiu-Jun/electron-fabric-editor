@@ -5,7 +5,7 @@
             <Header v-if="state.show">
                 <!-- logo -->
                 <span class="logo">
-                    <a href="https://github.com/nihaojob/vue-fabric-editor" target="_blank">
+                    <a href="https://github.com/Qiu-Jun/electron-fabric-editor.git" target="_blank">
                         <Icon type="logo-github" :size="30" />
                     </a>
                 </span>
