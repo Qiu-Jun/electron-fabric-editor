@@ -38,7 +38,10 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
+    "@types/fabric": "^5.3.5",
+    "@types/lodash-es": "^4.17.10",
     "@types/node": "^18.15.0",
+    "@types/uuid": "^9.0.6",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "@vitejs/plugin-vue": "^4.0.0",

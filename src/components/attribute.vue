@@ -289,10 +289,11 @@ import axios from 'axios'
 import { getPolygonVertices } from '@/utils/math'
 import InputNumber from '@/components/inputNumber'
 import { Spin } from 'view-ui-plus'
+import { appRepo } from '@/config/constants/app'
 
 const event = inject('event')
 const update = getCurrentInstance()
-const repoSrc = import.meta.env.APP_REPO
+
 const { fabric, mixinState, canvasEditor } = useSelect()
 // 通用元素
 const baseType = [
@@ -429,7 +430,7 @@ const textAlignListSvg = [
 ]
 
 const getFreeFontList = () => {
-  axios.get(`${repoSrc}/font/free-font.json`).then((res) => {
+  axios.get(`${appRepo}/font/free-font.json`).then((res) => {
     fontFamilyList.value = [
       ...fontFamilyList.value,
       ...Object.entries(res.data).map(([, value]) => value)

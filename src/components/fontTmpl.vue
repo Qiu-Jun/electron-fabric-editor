@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2023-04-03 23:01:21
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-16 12:47:18
+ * @LastEditors: June
+ * @LastEditTime: 2023-10-31 11:12:14
  * @Description: 字体文件
 -->
 
@@ -32,35 +32,35 @@ import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 import { Spin } from 'view-ui-plus'
 import { useI18n } from 'vue-i18n'
+import { appRepo } from '@/config/constants/app'
 
-const repoSrc = import.meta.env.APP_REPO
 const { fabric, canvasEditor } = useSelect()
 const { t } = useI18n()
 const list = [
   {
     label: '字体',
-    tempUrl: `${repoSrc}font-tmpl/1.json`,
-    src: `${repoSrc}font-tmpl/1.png`
+    tempUrl: `${appRepo}font-tmpl/1.json`,
+    src: `${appRepo}font-tmpl/1.png`
   },
   {
     label: '字体',
-    tempUrl: `${repoSrc}font-tmpl/2.json`,
-    src: `${repoSrc}font-tmpl/2.png`
+    tempUrl: `${appRepo}font-tmpl/2.json`,
+    src: `${appRepo}font-tmpl/2.png`
   },
   {
     label: '字体',
-    tempUrl: `${repoSrc}font-tmpl/3.json`,
-    src: `${repoSrc}font-tmpl/3.png`
+    tempUrl: `${appRepo}font-tmpl/3.json`,
+    src: `${appRepo}font-tmpl/3.png`
   },
   {
     label: '字体',
-    tempUrl: `${repoSrc}font-tmpl/4.json`,
-    src: `${repoSrc}font-tmpl/4.png`
+    tempUrl: `${appRepo}font-tmpl/4.json`,
+    src: `${appRepo}font-tmpl/4.png`
   },
   {
     label: '字体',
-    tempUrl: `${repoSrc}font-tmpl/5.json`,
-    src: `${repoSrc}font-tmpl/5.png`
+    tempUrl: `${appRepo}font-tmpl/5.json`,
+    src: `${appRepo}font-tmpl/5.png`
   }
 ]
 

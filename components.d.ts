@@ -38,6 +38,7 @@ declare module '@vue/runtime-core' {
     SetSize: typeof import('./src/components/setSize.vue')['default']
     SvgIcon: typeof import('./src/components/svgIcon/index.vue')['default']
     Tools: typeof import('./src/components/tools.vue')['default']
+    WaterMark: typeof import('./src/components/waterMark.vue')['default']
     Zoom: typeof import('./src/components/zoom.vue')['default']
   }
 }

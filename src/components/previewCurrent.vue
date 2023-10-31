@@ -7,9 +7,9 @@
  * @Description: 预览组件
 -->
 <template>
-    <Button type="text" @click="preview">
-        {{ $t('preview') }}
-    </Button>
+  <Button type="text" @click="preview">
+    {{ $t('preview') }}
+  </Button>
 </template>
 
 <script name="PreviewCurrent" lang="ts" setup>
@@ -17,12 +17,12 @@ import { ImagePreview } from 'view-ui-plus'
 
 const canvasEditor = inject('canvasEditor') as any
 const preview = () => {
-    canvasEditor.preview().then((dataUrl: string) => {
-        // const dataUrl = getImgUrl();
-        ImagePreview.show({
-            previewList: [dataUrl]
-        })
+  canvasEditor.preview().then((dataUrl: string) => {
+    // const dataUrl = getImgUrl();
+    ImagePreview.show({
+      previewList: [dataUrl]
     })
+  })
 }
 </script>
 
