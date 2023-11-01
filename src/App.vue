@@ -1,18 +1,18 @@
 <template>
-    <div id="app">
-        <router-view />
-    </div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <style lang="less">
 ul,
 li {
-    list-style: none;
+  list-style: none;
 }
 svg {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 .vue-waterfall-easy-scroll {
-    overflow: inherit !important;
+  overflow: inherit !important;
 }
 </style>

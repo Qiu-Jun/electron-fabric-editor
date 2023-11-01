@@ -87,6 +87,7 @@
     "insert": "insert",
     "insert_picture": "Insert picture",
     "insert_SVG": "Insert SVG",
+    "insert_PSD": "insert PSD",
     "insert_SVGStr": "Insert SVG String",
     "insert_SVGStr_placeholder": "Please enter SVG String",
     "modal_tittle": "Please enter"

@@ -17,12 +17,12 @@
         <Divider type="vertical" />
         <!-- 标尺开关 -->
         <Tooltip :content="$t('grid')">
-          <iSwitch
+          <Switch
             v-model="state.ruler"
             @on-change="rulerSwitch"
             size="small"
             class="switch"
-          ></iSwitch>
+          ></Switch>
         </Tooltip>
         <Divider type="vertical" />
         <history></history>

@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-16 12:51:11
+ * @LastEditors: June
+ * @LastEditTime: 2023-11-01 11:45:20
  * @Description: 插入SVG元素
 -->
 
@@ -21,6 +21,8 @@
           <DropdownItem name="insertSvg">{{ $t('insertFile.insert_SVG') }}</DropdownItem>
           <!-- SVG 字符串 -->
           <DropdownItem name="insertSvgStrModal">{{ $t('insertFile.insert_SVGStr') }}</DropdownItem>
+          <!-- PSD -->
+          <DropdownItem name="insertPSD">{{ $t('insertFile.insert_PSD') }}</DropdownItem>
         </DropdownMenu>
       </template>
     </Dropdown>
@@ -45,6 +47,8 @@
 import { getImgStr, selectFiles } from '@/utils/utils'
 import useSelect from '@/hooks/select'
 import { v4 as uuid } from 'uuid'
+import { parsePSD } from '@/utils/psd'
+import { Message } from 'view-ui-plus'
 
 const { fabric, canvasEditor } = useSelect()
 const state = reactive({
@@ -87,6 +91,16 @@ const HANDLEMAP = {
       })
       canvasEditor.canvas.add(item).centerObject(item).renderAll()
     })
+  },
+  insertPSD: function () {
+    return Message.warning('待开发')
+    // selectFiles({ accept: '.psd', multiple: false }).then((fileList) => {
+    //   Array.from(fileList).forEach(async (item) => {
+    //     const data = await parsePSD(item)
+    //     console.log('data')
+    //     console.log(data)
+    //   })
+    // })
   }
 }
 

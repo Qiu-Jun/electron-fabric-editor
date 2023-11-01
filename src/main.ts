@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-10-15 22:09:13
  * @LastEditors: June
- * @LastEditTime: 2023-10-28 00:11:35
+ * @LastEditTime: 2023-11-01 11:37:12
  */
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -19,11 +19,11 @@ import '@/assets/fonts/font.css'
 import i18n from './language/index'
 
 const setupAll = async () => {
-    const app = createApp(App)
-    setupRouter(app)
-    app.use(i18n).use(VueLazyLoad, {}).use(ViewUiPlus)
-    await router.isReady()
-    app.mount('#app')
+  const app = createApp(App)
+  setupRouter(app)
+  app.use(i18n).use(VueLazyLoad, {}).use(ViewUiPlus)
+  await router.isReady()
+  app.mount('#app')
 }
 
 setupAll()

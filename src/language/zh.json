@@ -92,6 +92,7 @@
     "insert_picture": "插入图片",
     "insert_SVG": "插入SVG元素",
     "insert_SVGStr": "插入SVG字符",
+    "insert_PSD": "插入PSD",
     "insert_SVGStr_placeholder": "请输入SVG字符串",
     "modal_tittle": "请输入"
   },

@@ -4,6 +4,9 @@ dependencies:
   '@vueuse/core':
     specifier: ^10.2.0
     version: registry.npmmirror.com/@vueuse/core@10.2.0(vue@3.2.47)
+  '@webtoon/psd':
+    specifier: ^0.4.0
+    version: registry.npmmirror.com/@webtoon/psd@0.4.0
   axios:
     specifier: ^1.6.0
     version: registry.npmmirror.com/axios@1.6.0
@@ -2537,6 +2540,12 @@ packages:
       '@webassemblyjs/ast': registry.npmmirror.com/@webassemblyjs/ast@1.11.6
       '@xtuc/long': registry.npmmirror.com/@xtuc/long@4.2.2
     dev: true
+
+  registry.npmmirror.com/@webtoon/psd@0.4.0:
+    resolution: {integrity: sha512-ztriE8oFOamRrV9opBURDy+JMiyhur2//vOXsC5CgdnYCB0L1Lnaag4NzP8N+NFCj7uNz9JRYtPmAbQMSDLIsQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@webtoon/psd/-/psd-0.4.0.tgz}
+    name: '@webtoon/psd'
+    version: 0.4.0
+    dev: false
 
   registry.npmmirror.com/@xmldom/xmldom@0.8.10:
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz}
