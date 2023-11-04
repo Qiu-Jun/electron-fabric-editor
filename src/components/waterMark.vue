@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-11-01 11:54:10
  * @LastEditors: June
- * @LastEditTime: 2023-11-04 15:40:37
+ * @LastEditTime: 2023-11-04 15:45:45
 -->
 <template>
   <Button type="text" @click="addWaterMark">
@@ -80,6 +80,7 @@ const onMadalCancel = () => {
   waterMarkState.font = 'serif'
   waterMarkState.color = '#ccc'
   waterMarkState.position = 'lt'
+  waterMarkState.isRotate = 0
 }
 
 const createCanvas = (width: number, height: number) => {
