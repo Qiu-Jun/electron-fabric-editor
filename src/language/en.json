@@ -2,6 +2,7 @@
   "templates": "Templates",
   "elements": "Elements",
   "background": "Background",
+  "placeholder": "Please input",
   "size": "Size",
   "width": "Width",
   "height": "Height",
@@ -32,6 +33,23 @@
   "import_files": "Import files",
   "select_json": "Select JSON",
   "repleaceImg": "repleace Image",
+  "waterMark": {
+    "text": "WaterMark",
+    "modalTitle": "WaterMark Setting",
+    "setting": {
+        "name": "Mark Name",
+        "size": "MarK Size",
+        "angle": "Mark Angle",
+        "position": {
+            "label": "Mark Position",
+            "lt": "Left Top",
+            "rt": "Right Top",
+            "lb": "Left Bottom",
+            "rb": "Right Bottom",
+            "full": "Full"
+        }
+    }
+  },
   "material": {
     "cartoon": "cartoon"
   },

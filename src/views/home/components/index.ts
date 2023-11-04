@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-10-29 13:43:24
  * @LastEditors: June
- * @LastEditTime: 2023-10-31 11:48:44
+ * @LastEditTime: 2023-11-01 12:02:11
  */
 // 导入元素
 import importJSON from '@/components/importJSON.vue'
@@ -52,7 +52,7 @@ export {
   clone,
   zoom,
   dragMode,
-  //   waterMark,
+  waterMark,
   dele,
   lock,
   importTmpl,

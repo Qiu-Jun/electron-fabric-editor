@@ -31,7 +31,7 @@
           <!-- 预览 -->
           <previewCurrent />
           <!-- 添加水印 -->
-          <!-- <waterMark /> -->
+          <waterMark />
           <save></save>
           <lang></lang>
         </div>
@@ -153,7 +153,8 @@ import {
   filters,
   history,
   attribute,
-  layer
+  layer,
+  waterMark
 } from './components'
 // 功能组件
 import { CanvasEventEmitter } from '@/utils/event/notifier'

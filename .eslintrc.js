@@ -1,11 +1,3 @@
-/*
- * @Descripttion:
- * @version:
- * @Author: June
- * @Date: 2023-05-28 14:19:59
- * @LastEditors: June
- * @LastEditTime: 2023-05-29 10:12:34
- */
 module.exports = {
   root: true,
   parser: 'vue-eslint-parser',
@@ -34,6 +26,7 @@ module.exports = {
   rules: {
     'vue/multi-word-component-names': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off'
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off'
   }
 }

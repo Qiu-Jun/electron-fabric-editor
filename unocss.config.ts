@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-06-24 19:00:17
  * @LastEditors: June
- * @LastEditTime: 2023-06-24 23:27:40
+ * @LastEditTime: 2023-11-01 12:33:32
  */
 import {
   defineConfig,
@@ -22,5 +22,6 @@ export default defineConfig({
     colors: {
       primary: '#409eff'
     }
-  }
+  },
+  shortcuts: [{ 'wh-full': 'w-full h-full' }, { 'f-center': 'flex justify-center items-center' }]
 })
