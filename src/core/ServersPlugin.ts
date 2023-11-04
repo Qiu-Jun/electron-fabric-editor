@@ -58,9 +58,7 @@ class ServersPlugin {
   insertSvgFile(jsonFile) {
     // 加载前钩子
     this.editor.hooksEntity.hookImportBefore.callAsync(jsonFile, () => {
-      console.log(jsonFile, '2222')
       this.canvas.loadFromJSON(jsonFile, () => {
-        console.log(jsonFile, '33333')
         this.canvas.renderAll()
         // 加载后钩子
         this.editor.hooksEntity.hookImportAfter.callAsync(jsonFile, () => {
