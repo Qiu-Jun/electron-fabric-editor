@@ -95,7 +95,7 @@
       }
     ],
     "directories": {
-      "output": "release/${version}"
+      "output": "release_${version}"
     },
     "mac": {
       "icon": "./public/icon.png",

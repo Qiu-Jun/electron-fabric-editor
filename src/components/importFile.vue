@@ -2,12 +2,12 @@
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
  * @LastEditors: June
- * @LastEditTime: 2023-11-01 11:45:20
+ * @LastEditTime: 2023-11-05 23:35:13
  * @Description: 插入SVG元素
 -->
 
 <template>
-  <div style="display: inline-block">
+  <div class="inline-block">
     <Dropdown transfer-class-name="fix" @on-click="insertTypeHand">
       <a href="javascript:void(0)">
         {{ $t('insertFile.insert') }}
@@ -31,7 +31,7 @@
       v-model="state.showModal"
       :title="$t('insertFile.modal_tittle')"
       @on-ok="insertTypeHand('insertSvgStr')"
-      @on-cancel="showModal = false"
+      @on-cancel="state.showModal = false"
     >
       <Input
         v-model="state.svgStr"
@@ -43,24 +43,23 @@
   </div>
 </template>
 
-<script name="ImportFile" setup>
+<script name="ImportFile" lang="ts" setup>
 import { getImgStr, selectFiles } from '@/utils/utils'
 import useSelect from '@/hooks/select'
 import { v4 as uuid } from 'uuid'
 import { parsePSD } from '@/utils/psd'
-import { Message } from 'view-ui-plus'
 
-const { fabric, canvasEditor } = useSelect()
+const { fabric, canvasEditor }: any = useSelect()
 const state = reactive({
   showModal: false,
   svgStr: ''
 })
-const HANDLEMAP = {
+const HANDLEMAP: Record<string, any> = {
   // 插入图片
   insertImg: function () {
-    selectFiles({ accept: 'image/*', multiple: true }).then((fileList) => {
-      Array.from(fileList).forEach((item) => {
-        getImgStr(item).then((file) => {
+    selectFiles({ accept: 'image/*', multiple: true }).then((fileList: any) => {
+      Array.from(fileList).forEach((item: any) => {
+        getImgStr(item).then((file: any) => {
           insertImgFile(file)
         })
       })
@@ -68,9 +67,9 @@ const HANDLEMAP = {
   },
   // 插入Svg
   insertSvg: function () {
-    selectFiles({ accept: '.svg', multiple: true }).then((fileList) => {
-      Array.from(fileList).forEach((item) => {
-        getImgStr(item).then((file) => {
+    selectFiles({ accept: '.svg', multiple: true }).then((fileList: any) => {
+      Array.from(fileList).forEach((item: any) => {
+        getImgStr(item).then((file: any) => {
           insertSvgFile(file)
         })
       })
@@ -83,6 +82,7 @@ const HANDLEMAP = {
   },
   // 插入字符串元素
   insertSvgStr: function () {
+    // @ts-ignore
     fabric.loadSVGFromString(state.svgStr, (objects, options) => {
       const item = fabric.util.groupSVGElements(objects, {
         ...options,
@@ -93,26 +93,28 @@ const HANDLEMAP = {
     })
   },
   insertPSD: function () {
-    return Message.warning('待开发')
-    // selectFiles({ accept: '.psd', multiple: false }).then((fileList) => {
-    //   Array.from(fileList).forEach(async (item) => {
-    //     const data = await parsePSD(item)
-    //     console.log('data')
-    //     console.log(data)
-    //   })
-    // })
+    selectFiles({ accept: '.psd', multiple: false }).then((fileList: any) => {
+      Array.from(fileList).forEach(async (item: any) => {
+        const data = await parsePSD(item)
+        console.log('data')
+        console.log(data)
+      })
+    })
   }
 }
 
-const insertTypeHand = (type) => {
+const insertTypeHand = (type: string) => {
   const cb = HANDLEMAP[type]
   cb && typeof cb === 'function' && cb()
 }
 // 插入图片文件
-function insertImgFile(file) {
+function insertImgFile(file: string) {
   if (!file) throw new Error('file is undefined')
+  const workspace = canvasEditor.canvas.getObjects().find((item: any) => item.id === 'workspace')
+  const zoom = workspace.canvas.getZoom()
   const imgEl = document.createElement('img')
   imgEl.src = file
+
   // 插入页面
   document.body.appendChild(imgEl)
   imgEl.onload = () => {
@@ -120,6 +122,8 @@ function insertImgFile(file) {
     const imgInstance = new fabric.Image(imgEl, {
       id: uuid(),
       name: '图片1',
+      scaleX: zoom,
+      scaleY: zoom,
       left: 100,
       top: 100
     })
@@ -133,8 +137,9 @@ function insertImgFile(file) {
 }
 
 // 插入文件元素
-function insertSvgFile(svgFile) {
+function insertSvgFile(svgFile: string) {
   if (!svgFile) throw new Error('file is undefined')
+  //@ts-ignore
   fabric.loadSVGFromURL(svgFile, (objects, options) => {
     const item = fabric.util.groupSVGElements(objects, {
       ...options,

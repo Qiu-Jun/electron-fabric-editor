@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-10-31 11:54:58
  * @LastEditors: June
- * @LastEditTime: 2023-11-01 11:09:25
+ * @LastEditTime: 2023-11-05 22:03:28
  */
 import Psd, { Node } from '@webtoon/psd'
 
@@ -11,14 +11,29 @@ export async function parsePSD(file: File) {
   if (!file) return
   const result = await file.arrayBuffer()
 
-  const psd = await Psd.parse(result)
-  console.log(arrayBufferToBase64Img(psd.icc_profile))
-  traverseNode(psd)
-  // return convertPSD2Sky(psd);
+  const psdFile = await Psd.parse(result)
+  console.log(psdFile)
+  const canvasElement = document.createElement('canvas')
+  const context = canvasElement.getContext('2d')!
+  const compositeBuffer = await psdFile.composite()
+  console.log(compositeBuffer)
+  //   const imageData = new ImageData(compositeBuffer, psdFile.width, psdFile.height)
+
+  //   canvasElement.width = psdFile.width
+  //   canvasElement.height = psdFile.height
+
+  //   context.putImageData(imageData, 0, 0)
+  //   document.body.append(canvasElement)
+  //   console.log(arrayBufferToBase64Img(psd.icc_profile))
+  console.log(psdFile)
+  console.log('end======')
+  transform(psdFile)
+  //   return convertPSD2Sky(psd);
 }
 
-async function traverseNode(node: Node) {
+async function transform(node: Node) {
   if (node.type === 'Layer') {
+    // console.log(await node.composite())
     // Do something with Layer
   } else if (node.type === 'Group') {
     // Do something with Group
@@ -29,7 +44,7 @@ async function traverseNode(node: Node) {
     throw new Error('Invalid node type')
   }
 
-  node.children?.forEach((child) => traverseNode(child))
+  node.children?.forEach((child) => transform(child))
 }
 function Uint8ArrayToString(fileData: any) {
   let dataString = ''

@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-11-01 11:54:10
  * @LastEditors: June
- * @LastEditTime: 2023-11-04 16:11:12
+ * @LastEditTime: 2023-11-05 23:16:59
 -->
 <template>
   <Button type="text" @click="addWaterMark">
@@ -184,7 +184,6 @@ const onModalOk = () => {
   if (!waterMarkState.text) return Message.warning('水印名字不能为空')
   const workspace = canvasEditor.canvas.getObjects().find((item: any) => item.id === 'workspace')
   const { width, height, left, top } = workspace
-  console.log(workspace)
   drawWaterMark[waterMarkState.position](width, height, (imgString: string) => {
     canvasEditor.canvas.overlayImage = null // 清空覆盖层
     canvasEditor.canvas.setOverlayImage(
