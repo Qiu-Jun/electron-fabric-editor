@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
  * @LastEditors: June
- * @LastEditTime: 2023-11-05 23:35:13
+ * @LastEditTime: 2023-11-06 00:58:57
  * @Description: 插入SVG元素
 -->
 
@@ -110,11 +110,8 @@ const insertTypeHand = (type: string) => {
 // 插入图片文件
 function insertImgFile(file: string) {
   if (!file) throw new Error('file is undefined')
-  const workspace = canvasEditor.canvas.getObjects().find((item: any) => item.id === 'workspace')
-  const zoom = workspace.canvas.getZoom()
   const imgEl = document.createElement('img')
   imgEl.src = file
-
   // 插入页面
   document.body.appendChild(imgEl)
   imgEl.onload = () => {
@@ -122,10 +119,10 @@ function insertImgFile(file: string) {
     const imgInstance = new fabric.Image(imgEl, {
       id: uuid(),
       name: '图片1',
-      scaleX: zoom,
-      scaleY: zoom,
-      left: 100,
-      top: 100
+      scaleX: 0.2,
+      scaleY: 0.2,
+      left: 0,
+      top: 0
     })
     // 设置缩放
     canvasEditor.canvas.add(imgInstance)
