@@ -4,13 +4,14 @@
  * @Author: June
  * @Date: 2023-03-13 00:57:21
  * @LastEditors: June
- * @LastEditTime: 2023-10-28 13:46:00
+ * @LastEditTime: 2023-11-06 01:30:14
  */
 import { app, Menu, Tray, nativeImage, dialog, BrowserWindow } from 'electron'
 import path from 'path'
 import pkg from '../../../../package.json'
 import WindowManage from '../../utils/win'
 import { tray2git, appUpdate } from '../../config/constants/winNames'
+import type { MessageBoxOptions } from 'electron'
 
 const initTray = (win: any) => {
   const iconPath = path.join(__dirname, '../..', 'public/icon.png').replace('/\\/g', '\\\\')
@@ -20,7 +21,7 @@ const initTray = (win: any) => {
     {
       label: '关于',
       click: () => {
-        const options = {
+        const options: MessageBoxOptions = {
           type: 'info',
           title: `关于`,
           message: `关于${pkg.name}\n当前版本 ${pkg.version}`,

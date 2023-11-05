@@ -4,7 +4,9 @@
   "keywords": [
     "electron",
     "vite",
-    "vue3"
+    "vue3",
+    "fabricjs",
+    "canvas"
   ],
   "description": "electron-fabric-vue",
   "main": "dist-electron/main/index.js",
@@ -126,7 +128,7 @@
       "installerIcon": "./public/icon.ico",
       "uninstallerIcon": "./public/icon.ico",
       "installerHeaderIcon": "./public/icon.ico",
-      "shortcutName": "简易工具"
+      "shortcutName": "图片编辑器"
     }
   },
   "author": "June",
