@@ -97,7 +97,7 @@
       }
     ],
     "directories": {
-      "output": "release_${version}"
+      "output": "release"
     },
     "mac": {
       "icon": "./public/icon.png",
@@ -107,7 +107,7 @@
       ]
     },
     "win": {
-      "icon": "./public/icon.ico",
+      "icon": "./public/icon.png",
       "artifactName": "${productName}_${version}.${ext}",
       "target": [
         {
