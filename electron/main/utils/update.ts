@@ -4,16 +4,23 @@
  * @Author: June
  * @Date: 2023-05-06 00:39:19
  * @LastEditors: June
- * @LastEditTime: 2023-11-07 16:36:43
+ * @LastEditTime: 2023-11-08 11:38:39
  */
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
+// "publish": [
+//     {
+//       "provider": "generic",
+//       "url": "http://localhost:3000/static/el"
+//     }
+//   ],
 const updateUrl = 'http://localhost:3000/static/el'
+const provider = 'generic'
 const message: Record<string, string> = {
   error: '检查更新出错',
   checking: '正在检查更新…',
-  updateAvailable: '正在更新',
+  updateAvailable: '检查到新版本',
   updateNotAvailable: '已经是最新版本',
   downloadProgress: '正在下载...',
   downloaded: '更新下载完毕，立即更新'
@@ -36,8 +43,11 @@ const sendUpdateMessage = (
 
 export function initUpdate(win: BrowserWindow) {
   autoUpdater.forceDevUpdateConfig = true // 强制使用开发环境进行更新
-  autoUpdater.autoDownload = false // 是否自动下载
-  autoUpdater.setFeedURL(updateUrl)
+  autoUpdater.autoDownload = true // 是否自动下载
+  autoUpdater.setFeedURL({
+    provider,
+    url: updateUrl
+  })
 
   // 下载错误
   autoUpdater.on('error', (err) => {
@@ -48,8 +58,8 @@ export function initUpdate(win: BrowserWindow) {
     sendUpdateMessage(win, { type: 'updateChecking', text: message.checking })
   })
   // 可以更新
-  autoUpdater.on('update-available', () => {
-    sendUpdateMessage(win, { type: 'needUpdate', text: `${message.updateAvailable}` })
+  autoUpdater.on('update-available', (e: any) => {
+    sendUpdateMessage(win, { type: 'needUpdate', text: `${message.updateAvailable}-v${e.version}` })
   })
   // 不需要更新
   autoUpdater.on('update-not-available', () => {
@@ -58,22 +68,19 @@ export function initUpdate(win: BrowserWindow) {
       text: message.updateNotAvailable
     })
   })
-  // 更新下载进度事件
+  // 更新下载进度事件 暂时没有做进度处理
   autoUpdater.on('download-progress', (progress) => {
     sendUpdateMessage(win, {
       type: 'download-progress',
       text: Number(progress.percent)
     })
   })
+
   // 下载更新完后
   autoUpdater.on('update-downloaded', function () {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ipcMain.on('isUpdateNow', (_e, _arg) => {
-      // 开始更新
-      autoUpdater.quitAndInstall()
-      app.quit()
-      // callback()
-    })
+    // 开始更新
+    autoUpdater.quitAndInstall()
+    // app.quit()
     sendUpdateMessage(win, { type: 'download', text: message.downloaded })
   })
 
@@ -83,10 +90,7 @@ export function initUpdate(win: BrowserWindow) {
   //     autoUpdater.checkForUpdates()
   //   })
 
-  //   ipcMain.on('downloadUpdate', () => {
-  //     // 执行下载
-  //     autoUpdater.downloadUpdate()
-  //   })
+  ipcMain.on('doanloadNewVersion', downloadUpdateApp)
 }
 
 export const checkUpdate = () => {
@@ -94,7 +98,12 @@ export const checkUpdate = () => {
   autoUpdater.checkForUpdatesAndNotify() // 检查更新并通知
 }
 
+// 下载
+export const downloadUpdateApp = () => {
+  autoUpdater.downloadUpdate()
+}
 // 安装更新
 export const intsallUpdateApp = () => {
   autoUpdater.quitAndInstall() // 退出并安装更新
+  app.quit()
 }
