@@ -3,16 +3,16 @@
  * @Description:
  * @Date: 2023-03-11 00:44:53
  * @LastEditors: June
- * @LastEditTime: 2023-05-28 05:28:13
+ * @LastEditTime: 2023-11-07 15:51:43
  */
-interface IElectronAPI {
+interface INativeBridge {
   platform: string
   ipcRenderer: any
 }
 
 declare global {
   interface Window {
-    electronAPI: IElectronAPI
+    nativeBridge: IElectronAPI
   }
 }
 

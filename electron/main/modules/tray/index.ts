@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-13 00:57:21
  * @LastEditors: June
- * @LastEditTime: 2023-11-06 01:30:14
+ * @LastEditTime: 2023-11-07 16:40:00
  */
 import { app, Menu, Tray, nativeImage, dialog, BrowserWindow } from 'electron'
 import path from 'path'

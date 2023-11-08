@@ -3,14 +3,13 @@
  * @Description:
  * @Date: 2023-03-11 00:47:21
  * @LastEditors: June
- * @LastEditTime: 2023-10-28 21:26:32
+ * @LastEditTime: 2023-11-07 16:37:06
  */
 import { app, BrowserWindow } from 'electron'
 import initTray from './modules/tray/index'
 import createMenu from './modules/menu/index'
 import WindowManage from './utils/win'
-// import createUpdateWindow from './modules/customWin/update'
-// import handleUpdate from './utils/update'
+import { initUpdate } from './utils/update'
 import { appMain } from './config/constants/winNames'
 type winModule = {
   id: string | number
@@ -49,10 +48,9 @@ app.whenReady().then(() => {
   })
 
   !app.isPackaged && win.webContents.openDevTools()
-  // const updateWin = createUpdateWindow()
   initTray(win)
   createMenu()
-  // handleUpdate(updateWin)
+  initUpdate(win)
 })
 
 // 除了 macOS 外，当所有窗口都被关闭的时候退出程序

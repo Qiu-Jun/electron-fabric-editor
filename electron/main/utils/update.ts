@@ -4,56 +4,63 @@
  * @Author: June
  * @Date: 2023-05-06 00:39:19
  * @LastEditors: June
- * @LastEditTime: 2023-05-30 13:50:31
+ * @LastEditTime: 2023-11-07 16:36:43
  */
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
-const message = {
+const updateUrl = 'http://localhost:3000/static/el'
+const message: Record<string, string> = {
   error: '检查更新出错',
   checking: '正在检查更新…',
-  updateAva: '正在更新',
-  updateNotAva: '已经是最新版本',
+  updateAvailable: '正在更新',
+  updateNotAvailable: '已经是最新版本',
   downloadProgress: '正在下载...',
   downloaded: '更新下载完毕，立即更新'
 }
 
-export default function handleUpdate(win: BrowserWindow) {
-  autoUpdater.autoDownload = false // 是否自动下载
-  autoUpdater.setFeedURL('http://192.168.10.108:9000/')
-  // 通过main进程发送事件给renderer进程，提示更新信息
-  const sendUpdateMessage = ({
+// 通过main进程发送事件给renderer进程，提示更新信息
+const sendUpdateMessage = (
+  win,
+  {
     type,
     text
   }: {
     type: string
     text: string | number
     info?: string
-  }) => {
-    win.webContents.send('updatemessage', { type, text })
   }
+) => {
+  win.webContents.send('updatemessage', { type, text })
+}
+
+export function initUpdate(win: BrowserWindow) {
+  autoUpdater.forceDevUpdateConfig = true // 强制使用开发环境进行更新
+  autoUpdater.autoDownload = false // 是否自动下载
+  autoUpdater.setFeedURL(updateUrl)
+
   // 下载错误
   autoUpdater.on('error', (err) => {
-    sendUpdateMessage({ type: 'updateErr', text: `${message.error}: ${err}` })
+    sendUpdateMessage(win, { type: 'updateErr', text: `${message.error}: ${err}` })
   })
   // 是否需要更新
   autoUpdater.on('checking-for-update', () => {
-    sendUpdateMessage({ type: 'updateChecking', text: message.checking })
+    sendUpdateMessage(win, { type: 'updateChecking', text: message.checking })
   })
   // 可以更新
   autoUpdater.on('update-available', () => {
-    sendUpdateMessage({ type: 'needUpdate', text: `${message.updateAva}` })
+    sendUpdateMessage(win, { type: 'needUpdate', text: `${message.updateAvailable}` })
   })
   // 不需要更新
   autoUpdater.on('update-not-available', () => {
-    sendUpdateMessage({
+    sendUpdateMessage(win, {
       type: 'notNeedUpdate',
-      text: message.updateNotAva
+      text: message.updateNotAvailable
     })
   })
   // 更新下载进度事件
   autoUpdater.on('download-progress', (progress) => {
-    sendUpdateMessage({
+    sendUpdateMessage(win, {
       type: 'download-progress',
       text: Number(progress.percent)
     })
@@ -67,17 +74,27 @@ export default function handleUpdate(win: BrowserWindow) {
       app.quit()
       // callback()
     })
-    sendUpdateMessage({ type: 'download', text: message.downloaded })
+    sendUpdateMessage(win, { type: 'download', text: message.downloaded })
   })
 
-  // 手动触发更新
-  ipcMain.on('checkForUpdate', () => {
-    // 执行自动更新检查
-    autoUpdater.checkForUpdates()
-  })
+  //   // 手动触发更新
+  //   ipcMain.on('checkForUpdate', () => {
+  //     // 执行自动更新检查
+  //     autoUpdater.checkForUpdates()
+  //   })
 
-  ipcMain.on('downloadUpdate', () => {
-    // 执行下载
-    autoUpdater.downloadUpdate()
-  })
+  //   ipcMain.on('downloadUpdate', () => {
+  //     // 执行下载
+  //     autoUpdater.downloadUpdate()
+  //   })
+}
+
+export const checkUpdate = () => {
+  autoUpdater.checkForUpdates() // 检查更新
+  autoUpdater.checkForUpdatesAndNotify() // 检查更新并通知
+}
+
+// 安装更新
+export const intsallUpdateApp = () => {
+  autoUpdater.quitAndInstall() // 退出并安装更新
 }

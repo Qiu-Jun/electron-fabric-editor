@@ -93,7 +93,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": ""
+        "url": "http://localhost:3000/static/el"
       }
     ],
     "directories": {
@@ -101,10 +101,7 @@
     },
     "mac": {
       "icon": "./public/icon.png",
-      "artifactName": "${productName}_${version}.${ext}",
-      "target": [
-        "dmg"
-      ]
+      "artifactName": "${productName}_${version}.${ext}"
     },
     "win": {
       "icon": "./public/icon.png",

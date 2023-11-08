@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
  * @LastEditors: June
- * @LastEditTime: 2023-11-06 00:58:57
+ * @LastEditTime: 2023-11-07 21:29:40
  * @Description: 插入SVG元素
 -->
 
@@ -48,6 +48,8 @@ import { getImgStr, selectFiles } from '@/utils/utils'
 import useSelect from '@/hooks/select'
 import { v4 as uuid } from 'uuid'
 import { parsePSD } from '@/utils/psd'
+import { fabric as IFabric } from 'fabric'
+import { cloneDeep } from 'lodash-es'
 
 const { fabric, canvasEditor }: any = useSelect()
 const state = reactive({
@@ -138,6 +140,10 @@ function insertSvgFile(svgFile: string) {
   if (!svgFile) throw new Error('file is undefined')
   //@ts-ignore
   fabric.loadSVGFromURL(svgFile, (objects, options) => {
+    console.log(objects)
+    objects.pop()
+    objects.pop()
+    console.log(objects)
     const item = fabric.util.groupSVGElements(objects, {
       ...options,
       name: 'defaultSVG',

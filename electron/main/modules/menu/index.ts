@@ -4,10 +4,10 @@
  * @Author: June
  * @Date: 2023-03-13 01:02:42
  * @LastEditors: June
- * @LastEditTime: 2023-10-27 21:50:43
+ * @LastEditTime: 2023-11-07 16:41:00
  */
 import { app, Menu } from 'electron'
-import handleUpdate from './module/update'
+import { checkUpdate } from '../../utils/update'
 
 const template: any = [
   {
@@ -30,7 +30,7 @@ const template: any = [
   },
   {
     label: '帮助',
-    submenu: [{ label: '检查更新', click: handleUpdate }]
+    submenu: [{ label: '检查更新', click: checkUpdate }]
   }
 ]
 
