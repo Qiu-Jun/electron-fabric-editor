@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-13 00:57:21
  * @LastEditors: June
- * @LastEditTime: 2023-11-08 10:41:38
+ * @LastEditTime: 2023-11-08 12:32:20
  */
 import { app, Menu, Tray, nativeImage, dialog, BrowserWindow } from 'electron'
 import path from 'path'
@@ -76,7 +76,7 @@ const initTray = (win: any) => {
             const winid = global.winModulesMap.get(appUpdate)?.id || 0
             const win = winMange.getWin(winid)
             win?.show()
-            checkUpdate()
+            // checkUpdate()
           }
         }
       ]

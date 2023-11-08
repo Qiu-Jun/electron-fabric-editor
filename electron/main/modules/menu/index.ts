@@ -4,10 +4,9 @@
  * @Author: June
  * @Date: 2023-03-13 01:02:42
  * @LastEditors: June
- * @LastEditTime: 2023-11-07 16:41:00
+ * @LastEditTime: 2023-11-08 12:32:08
  */
 import { app, Menu } from 'electron'
-import { checkUpdate } from '../../utils/update'
 
 const template: any = [
   {
@@ -27,10 +26,6 @@ const template: any = [
       { label: '重做', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
       { label: '全选', accelerator: 'CmdOrCtrl+A', role: 'selectAll' }
     ]
-  },
-  {
-    label: '帮助',
-    submenu: [{ label: '检查更新', click: checkUpdate }]
   }
 ]
 
