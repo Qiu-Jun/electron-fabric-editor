@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-13 00:57:21
  * @LastEditors: June
- * @LastEditTime: 2023-11-08 12:39:21
+ * @LastEditTime: 2023-11-10 21:17:24
  */
 import { app, Menu, Tray, nativeImage, dialog, BrowserWindow } from 'electron'
 import path from 'path'
@@ -12,9 +12,9 @@ import pkg from '../../../../package.json'
 import WindowManage from '../../utils/win'
 import { tray2git, appUpdate } from '../../config/constants/winNames'
 import { checkUpdate } from '../../utils/update'
-import type { MessageBoxOptions } from 'electron'
+import type { MessageBoxOptions, BrowserWindow as IBrowserWindow } from 'electron'
 
-const initTray = (win: any) => {
+const initTray = (win: IBrowserWindow) => {
   const iconPath = path.join(__dirname, '../..', 'public/tray.png').replace('/\\/g', '\\\\')
   const tray = new Tray(nativeImage.createFromPath(iconPath))
   tray.setToolTip('Mall-Cook') // 鼠标指针在托盘图标上悬停时显示的文本
