@@ -9,20 +9,22 @@
 
 ## Electron-Fabric-Editor
 
-[vue-fabric-editor的Electron版本](https://github.com/nihaojob/vue-fabric-editor)
+[vue-fabric-editor 的 Electron 版本](https://github.com/nihaojob/vue-fabric-editor)
 
 ## 技术栈
-+ Electron
-+ Vue3
-+ Typescript
-+ Pinia
-+ Vite
-+ Unocss
+
+- Electron
+- Vue3
+- Typescript
+- Pinia
+- Vite
+- Unocss
 
 ## 启动
+
 ```bash
 # 启动electron
-pnpm dev 
+pnpm dev
 
 # 启动web
 pnpm devweb

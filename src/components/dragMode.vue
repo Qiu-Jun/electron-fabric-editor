@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <div class="box">
+  <div class="absolute box">
     <Switch size="large" v-model="status" @on-change="switchMode">
       <template #open>
         <span>Drag</span>
@@ -54,7 +54,6 @@ onBeforeUnmount(() => {
 </script>
 <style scoped lang="less">
 .box {
-  position: absolute;
   right: 193px;
   bottom: 14px;
 }

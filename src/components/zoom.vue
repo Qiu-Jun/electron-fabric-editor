@@ -6,7 +6,7 @@
  * @Description: 缩放元素
 -->
 <template>
-  <div class="box">
+  <div class="absolute right-10px bottom-10px">
     <ButtonGroup>
       <Button @click="big">
         <svg
@@ -78,10 +78,3 @@ const setViewport = () => {
   canvasEditor.auto()
 }
 </script>
-<style scoped lang="less">
-.box {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-</style>
