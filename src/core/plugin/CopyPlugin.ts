@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:38:37
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-06-20 13:34:21
+ * @LastEditors: June
+ * @LastEditTime: 2024-01-31 13:00:01
  * @Description: 复制插件
  */
 
@@ -77,7 +77,7 @@ class CopyPlugin {
   }
 
   // 复制元素
-  clone(paramsActiveObeject: fabric.ActiveSelection | fabric.Object) {
+  clone(paramsActiveObeject?: fabric.ActiveSelection | fabric.Object) {
     const activeObject = paramsActiveObeject || this.canvas.getActiveObject()
     if (!activeObject) return
     if (activeObject?.type === 'activeSelection') {

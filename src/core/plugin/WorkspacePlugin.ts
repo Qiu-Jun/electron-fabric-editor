@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-27 12:26:41
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-05 00:34:38
+ * @LastEditors: June
+ * @LastEditTime: 2024-01-31 13:05:36
  * @Description: 画布区域插件
  */
 
@@ -43,12 +43,6 @@ class WorkspacePlugin {
     this._bindWheel()
   }
 
-  // hookImportBefore() {
-  //   return new Promise((resolve, reject) => {
-  //     resolve();
-  //   });
-  // }
-
   hookImportAfter() {
     return new Promise((resolve) => {
       const workspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
@@ -83,7 +77,8 @@ class WorkspacePlugin {
       fill: 'rgba(255,255,255,1)',
       width,
       height,
-      id: 'workspace'
+      id: 'workspace',
+      strokeWidth: 0
     })
     workspace.set('selectable', false)
     workspace.set('hasControls', false)

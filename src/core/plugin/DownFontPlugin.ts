@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-27 22:58:57
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-16 13:51:48
+ * @LastEditors: June
+ * @LastEditTime: 2024-01-31 13:02:41
  * @Description: 下载字体插件
  */
 
@@ -20,7 +20,7 @@ class DownFontPlugin {
     this.editor = editor
   }
 
-  hookImportBefore(json) {
+  hookImportBefore(json: string) {
     // console.log(downFontByJSON(json).then, 111);
     return downFontByJSON(json)
   }

@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2023-02-16 22:52:00
  * @LastEditors: June
- * @LastEditTime: 2023-11-01 11:29:14
+ * @LastEditTime: 2024-01-31 13:08:39
  * @Description: 颜色选择器
 -->
 <template>
@@ -184,6 +184,7 @@ const fabricGradientToBar = (val) => {
 // Fabric渐变转css
 const fabricGradientToCss = (val, activeObject) => {
   // 渐变类型
+  if (!val) return
   currentGradient.type = val.type
   currentGradient.degree = activeObject.get(props.angleKey, val.degree)
   currentGradient.points = val.colorStops.map((item) => {

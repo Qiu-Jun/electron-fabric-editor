@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-20 13:21:10
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-06-20 13:42:32
+ * @LastEditors: June
+ * @LastEditTime: 2024-01-31 13:03:58
  * @Description: 组合拆分组合插件
  */
 
@@ -52,7 +52,6 @@ class GroupPlugin {
 
   contextMenu() {
     const activeObject = this.canvas.getActiveObject()
-    console.log(activeObject, '111')
     if (activeObject && activeObject.type === 'group') {
       return [
         { text: '拆分组合', hotkey: 'Ctrl+V', disabled: false, onclick: () => this.unGroup() }
