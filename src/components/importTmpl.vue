@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-08-11 10:12:00
+ * @LastEditors: June
+ * @LastEditTime: 2024-02-25 22:52:11
  * @Description: 导入模板
 -->
 
@@ -52,7 +52,7 @@ import { useI18n } from 'vue-i18n'
 import { cloneDeep } from 'lodash-es'
 
 const { t } = useI18n()
-const { canvasEditor } = useSelect()
+const { canvasEditor }: { canvasEditor: any } = useSelect()
 
 interface materialTypeI {
   value: string
@@ -72,13 +72,20 @@ const allType: materialTypeI = {
   label: '全部'
 }
 
-const state = reactive({
+const state = reactive<{
+  search: string
+  placeholder: string | undefined
+  jsonFile: any
+  materialType: string[]
+  materialTypelist: materialTypeI[]
+  materialist: materialTypeI[]
+}>({
   search: '',
-  placeholder: <undefined | string>'',
-  jsonFile: <any>null,
+  placeholder: '',
+  jsonFile: null,
   materialType: [''], // 选中分类
-  materialTypelist: <materialTypeI[]>[], // 分类列表
-  materialist: <materialTypeI[]>[] // 列表内容
+  materialTypelist: [], // 分类列表
+  materialist: [] // 列表内容
 })
 
 // 获取素材分类
@@ -106,7 +113,7 @@ const beforeClearTip = (tmplUrl: string) => {
 // 获取模板数据
 const getTempData = (tmplUrl: string) => {
   Spin.show({
-    render: (h) => h('div', t('alert.loading_data'))
+    render: (h: any) => h('div', t('alert.loading_data'))
   })
   const getTemp = axios.get(tmplUrl)
   getTemp.then((res) => {
@@ -116,7 +123,7 @@ const getTempData = (tmplUrl: string) => {
   })
 }
 // 切换素材类型
-const handleChange = (e, item) => {
+const handleChange = (e: Event, item: [materialItemI]) => {
   // 搜索框文字设置
   const { label, value } = item[0]
   state.placeholder = label

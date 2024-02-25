@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:52:09
  * @LastEditors: June
- * @LastEditTime: 2023-11-07 21:49:59
+ * @LastEditTime: 2024-02-25 22:54:06
  * @Description: 内部插件
  */
 import { v4 as uuid } from 'uuid'
@@ -57,7 +57,7 @@ class ServersPlugin {
 
   insert() {
     selectFiles({ accept: '.json' }).then((files) => {
-      const [file] = files
+      const [file]: any = files
       const reader = new FileReader()
       reader.readAsText(file, 'UTF-8')
       reader.onload = () => {
@@ -66,7 +66,7 @@ class ServersPlugin {
     })
   }
 
-  insertSvgFile(jsonFile) {
+  insertSvgFile(jsonFile: string) {
     // 加载前钩子
     this.editor.hooksEntity.hookImportBefore.callAsync(jsonFile, () => {
       this.canvas.loadFromJSON(jsonFile, () => {
@@ -74,6 +74,7 @@ class ServersPlugin {
         // 加载后钩子
         this.editor.hooksEntity.hookImportAfter.callAsync(jsonFile, () => {
           this.canvas.renderAll()
+          // this.editor.getPlugin('HistoryPlugin').history.clear();
         })
       })
     })
@@ -108,10 +109,10 @@ class ServersPlugin {
     clipboardText(JSON.stringify(jsonStr, null, '\t'))
   }
 
-  saveJson() {
+  async saveJson() {
     const dataUrl = this.getJson()
     // 把文本text转为textgroup，让导入可以编辑
-    transformText(dataUrl.objects)
+    await transformText(dataUrl.objects)
     const fileStr = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(dataUrl, null, '\t')
     )}`
@@ -156,7 +157,7 @@ class ServersPlugin {
 
   _getSaveSvgOption() {
     const workspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
-    const { left, top, width, height } = workspace
+    const { left, top, width, height } = workspace as fabric.Object
     return {
       width,
       height,

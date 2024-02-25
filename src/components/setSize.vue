@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
  * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-24 23:13:24
+ * @LastEditTime: 2024-02-20 13:11:30
  * @Description: 尺寸设置
 -->
 
@@ -40,10 +40,10 @@
 
       <Form :label-width="40" class="form-wrap" style="justify-content: flex-start">
         <FormItem :label="$t('width')" prop="name" style="margin-right: 10px">
-          <InputNumber :min="1" :max="2000" v-model="modalData.width"></InputNumber>
+          <InputNumber :min="1" :max="5000" v-model="modalData.width"></InputNumber>
         </FormItem>
         <FormItem :label="$t('height')" prop="name">
-          <InputNumber :min="1" :max="2000" v-model="modalData.height"></InputNumber>
+          <InputNumber :min="1" :max="5000" v-model="modalData.height"></InputNumber>
         </FormItem>
       </Form>
     </Modal>
@@ -85,14 +85,24 @@ let presetSize = reactive([
     label: t('phone_wallpaper'),
     width: 1080,
     height: 1920
+  },
+  {
+    label: 'kindle',
+    width: 1200,
+    height: 860
+  },
+  {
+    label: 'kindle-resize',
+    width: 860,
+    height: 1200
   }
 ])
 
 onMounted(() => {
   canvasEditor.setSize(width.value, height.value)
-  canvasEditor.on('sizeChange', (width, height) => {
-    width.value = width
-    height.value = height
+  canvasEditor.on('sizeChange', (w, h) => {
+    width.value = w
+    height.value = h
   })
 
   // canvas.editor.editorWorkspace.setSize(width.value, height.value);

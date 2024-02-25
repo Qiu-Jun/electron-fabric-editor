@@ -2,20 +2,20 @@
  * @Author: 秦少卫
  * @Date: 2023-02-16 22:52:00
  * @LastEditors: June
- * @LastEditTime: 2024-01-31 13:08:39
+ * @LastEditTime: 2024-01-31 12:46:50
  * @Description: 颜色选择器
 -->
 <template>
   <div class="box">
     <!-- 颜色开关 -->
-    <Switch v-model="isGradient" size="large" class="switch">
+    <iSwitch v-model="isGradient" size="large" class="switch">
       <template #open>
         <span>渐变</span>
       </template>
       <template #close>
         <span>纯色</span>
       </template>
-    </Switch>
+    </iSwitch>
     <!-- 渐变 -->
     <div v-if="isGradient">
       <div class="gradient-bar" :style="bgStr"></div>

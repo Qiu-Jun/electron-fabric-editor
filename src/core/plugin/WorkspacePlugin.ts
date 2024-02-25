@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2023-06-27 12:26:41
  * @LastEditors: June
- * @LastEditTime: 2024-01-31 13:05:36
+ * @LastEditTime: 2024-02-25 22:40:04
  * @Description: 画布区域插件
  */
 
@@ -17,19 +17,20 @@ class WorkspacePlugin {
   static pluginName = 'WorkspacePlugin'
   static events = ['sizeChange']
   static apis = ['big', 'small', 'auto', 'one', 'setSize']
-  workspaceEl: HTMLElement
+  workspaceEl!: HTMLElement
   workspace: null | fabric.Rect
   option: any
   constructor(canvas: fabric.Canvas, editor: IEditor) {
     this.canvas = canvas
     this.editor = editor
+    this.workspace = null
     this.init({
       width: 900,
       height: 2000
     })
   }
 
-  init(option) {
+  init(option: { width: number; height: number }) {
     const workspaceEl = document.querySelector('#workspace') as HTMLElement
     if (!workspaceEl) {
       throw new Error('element #workspace is missing, plz check!')
@@ -52,7 +53,7 @@ class WorkspacePlugin {
         this.setSize(workspace.width, workspace.height)
         this.editor.emit('sizeChange', workspace.width, workspace.height)
       }
-      resolve()
+      resolve('')
     })
   }
 
@@ -115,7 +116,7 @@ class WorkspacePlugin {
     resizeObserver.observe(this.workspaceEl)
   }
 
-  setSize(width: number, height: number) {
+  setSize(width: number | undefined, height: number | undefined) {
     this._initBackground()
     this.option.width = width
     this.option.height = height
@@ -123,6 +124,7 @@ class WorkspacePlugin {
     this.workspace = this.canvas.getObjects().find((item) => item.id === 'workspace') as fabric.Rect
     this.workspace.set('width', width)
     this.workspace.set('height', height)
+    this.editor.emit('sizeChange', this.workspace.width, this.workspace.height)
     this.auto()
   }
 
