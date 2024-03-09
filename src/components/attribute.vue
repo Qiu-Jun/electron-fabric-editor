@@ -276,6 +276,29 @@
           </div>
         </div>
       </div>
+      <!-- 关联数据 -->
+      <div class="flex-view">
+        <div class="flex-item">
+          <span class="label">{{ $t('attributes.linkData') }}</span>
+          <div class="content slider-box">
+            <!-- <Input v-model="baseAttr.linkData" @on-change="changeCommon('id', baseAttr.id)"></Input> -->
+            <Select
+              v-model="baseAttr.linkData"
+              filterable
+              multiple
+              allow-create
+              @on-change="changeCommon('linkData', baseAttr.linkData)"
+            >
+              <Option value="src"></Option>
+              <Option value="text"></Option>
+              <Option value="名称"></Option>
+              <Option value="照片"></Option>
+              <Option value="日期"></Option>
+              <Option value="描述"></Option>
+            </Select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -289,11 +312,10 @@ import axios from 'axios'
 import { getPolygonVertices } from '@/utils/math'
 import InputNumber from '@/components/inputNumber'
 import { Spin } from 'view-ui-plus'
-import { appRepo } from '@/config/constants/app'
 
 const event = inject('event')
 const update = getCurrentInstance()
-
+const repoSrc = import.meta.env.APP_REPO
 const { fabric, mixinState, canvasEditor } = useSelect()
 // 通用元素
 const baseType = [
@@ -328,7 +350,8 @@ const baseAttr = reactive({
     offsetX: 0,
     offsetY: 0
   },
-  points: {}
+  points: {},
+  linkData: null
 })
 // 字体属性
 const fontAttr = reactive({
@@ -430,7 +453,7 @@ const textAlignListSvg = [
 ]
 
 const getFreeFontList = () => {
-  axios.get(`${appRepo}/font/free-font.json`).then((res) => {
+  axios.get(`${repoSrc}/font/free-font.json`).then((res) => {
     fontFamilyList.value = [
       ...fontFamilyList.value,
       ...Object.entries(res.data).map(([, value]) => value)
@@ -454,6 +477,7 @@ const getObjectAttr = (e) => {
     baseAttr.shadow = activeObject.get('shadow') || {}
     baseAttr.angle = activeObject.get('angle') || 0
     baseAttr.points = activeObject.get('points') || {}
+    baseAttr.linkData = activeObject.get('linkData') || null
 
     const textTypes = ['i-text', 'text', 'textbox']
     if (textTypes.includes(activeObject.type)) {
@@ -508,7 +532,7 @@ const changeFontFamily = (fontName) => {
       canvasEditor.canvas.renderAll()
       Spin.hide()
     })
-    .catch((err) => {
+    .catch(() => {
       Spin.hide()
     })
 }

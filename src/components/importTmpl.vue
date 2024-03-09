@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
- * @LastEditors: June
- * @LastEditTime: 2024-02-25 22:52:11
+ * @LastEditors: June 1601745371@qq.com
+ * @LastEditTime: 2024-03-09 10:41:45
  * @Description: 导入模板
 -->
 
@@ -69,7 +69,7 @@ interface materialItemI {
 
 const allType: materialTypeI = {
   value: '',
-  label: '全部'
+  label: t('all')
 }
 
 const state = reactive<{

@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:52:09
- * @LastEditors: June
- * @LastEditTime: 2024-02-25 22:54:06
+ * @LastEditors: June 1601745371@qq.com
+ * @LastEditTime: 2024-03-09 10:33:39
  * @Description: 内部插件
  */
 import { v4 as uuid } from 'uuid'
@@ -35,7 +35,7 @@ function transformText(objects: any) {
 
 class ServersPlugin {
   public canvas: fabric.Canvas
-  public editor: IEditor
+  public editor: IEditor | any
   static pluginName = 'ServersPlugin'
   static apis = [
     'insert',
@@ -61,6 +61,7 @@ class ServersPlugin {
       const reader = new FileReader()
       reader.readAsText(file, 'UTF-8')
       reader.onload = () => {
+        // @ts-ignore
         this.insertSvgFile(reader.result)
       }
     })
@@ -81,7 +82,7 @@ class ServersPlugin {
   }
 
   getJson() {
-    return this.canvas.toJSON(['id', 'gradientAngle', 'selectable', 'hasControls'])
+    return this.canvas.toJSON(['id', 'gradientAngle', 'selectable', 'hasControls', 'linkData'])
   }
 
   /**
@@ -122,6 +123,7 @@ class ServersPlugin {
   saveSvg() {
     this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
       const option = this._getSaveSvgOption()
+      // @ts-ignore
       const dataUrl = this.canvas.toSVG(option)
       const fileStr = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(dataUrl)}`
       this.editor.hooksEntity.hookSaveAfter.callAsync(fileStr, () => {
@@ -156,7 +158,7 @@ class ServersPlugin {
   }
 
   _getSaveSvgOption() {
-    const workspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
+    const workspace = this.canvas.getObjects().find((item: any) => item.id === 'workspace')
     const { left, top, width, height } = workspace as fabric.Object
     return {
       width,
@@ -171,9 +173,7 @@ class ServersPlugin {
   }
 
   _getSaveOption() {
-    const workspace = this.canvas
-      .getObjects()
-      .find((item: fabric.Object) => item.id === 'workspace')
+    const workspace = this.canvas.getObjects().find((item: any) => item.id === 'workspace')
     const { left, top, width, height } = workspace as fabric.Object
     const option = {
       name: 'New Image',
@@ -188,7 +188,7 @@ class ServersPlugin {
   }
 
   clear() {
-    this.canvas.getObjects().forEach((obj) => {
+    this.canvas.getObjects().forEach((obj: any) => {
       if (obj.id !== 'workspace') {
         this.canvas.remove(obj)
       }

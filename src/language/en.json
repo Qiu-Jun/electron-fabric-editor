@@ -1,4 +1,5 @@
 {
+  "all": "All",
   "templates": "Templates",
   "elements": "Elements",
   "background": "Background",
@@ -158,6 +159,7 @@
   "phone_wallpaper": "Phone Wallpaper",
   "attributes": {
     "id": "ID",
+    "linkData": "linkData",
     "font": "Font",
     "align": "Align",
     "bold": "Bold:",
