@@ -3,8 +3,8 @@
  * @version:
  * @Author: June
  * @Date: 2023-04-23 21:10:05
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-05 00:47:52
+ * @LastEditors: June 1601745371@qq.com
+ * @LastEditTime: 2024-03-09 13:35:58
  */
 import { inject, onBeforeMount, onMounted, reactive } from 'vue'
 import { SelectEvent, SelectMode, SelectOneType } from '@/utils/event/types'
@@ -28,20 +28,20 @@ export default function useSelect() {
 
   const fabric = inject('fabric')
   // const canvas = inject('canvas');
-  const canvasEditor = inject('canvasEditor')
-  const event = inject('event')
+  const canvasEditor: any = inject('canvasEditor')
+  const event: any = inject('event')
 
-  const selectOne = (e) => {
+  const selectOne = (e: any) => {
     state.mSelectMode = SelectMode.ONE
     state.mSelectId = e[0].id
     state.mSelectOneType = e[0].type
-    state.mSelectIds = e.map((item) => item.id)
+    state.mSelectIds = e.map((item: any) => item.id)
   }
 
-  const selectMulti = (e) => {
+  const selectMulti = (e: any) => {
     state.mSelectMode = SelectMode.MULTI
     state.mSelectId = ''
-    state.mSelectIds = e.map((item) => item.id)
+    state.mSelectIds = e.map((item: any) => item.id)
   }
 
   const selectCancel = () => {
