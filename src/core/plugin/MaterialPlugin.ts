@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-08-04 21:13:16
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-08-07 23:04:58
+ * @LastEditors: June
+ * @LastEditTime: 2024-03-21 14:11:14
  * @Description: 素材插件
  */
 
@@ -17,13 +17,13 @@ class MaterialPlugin {
   static pluginName = 'MaterialPlugin'
   static apis = ['getMaterialType', 'getMaterialList']
   apiMapUrl: { [propName: string]: string }
-  constructor(canvas: fabric.Canvas, editor: IEditor) {
+  constructor(canvas: fabric.Canvas, editor: IEditor, config: { repoSrc: string }) {
     this.canvas = canvas
     this.editor = editor
 
     this.apiMapUrl = {
-      template: 'https://nihaojob.github.io/vue-fabric-editor-static/template/type.json',
-      svg: 'https://nihaojob.github.io/vue-fabric-editor-static/svg/type.json'
+      template: config.repoSrc + '/template/type.json',
+      svg: config.repoSrc + '/svg/type.json'
     }
   }
 

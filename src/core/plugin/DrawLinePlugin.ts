@@ -1,14 +1,14 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-21 22:09:36
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-06-22 16:07:52
+ * @LastEditors: June
+ * @LastEditTime: 2024-03-21 14:37:05
  * @Description: file content
  */
 
 import { v4 as uuid } from 'uuid'
 import { fabric } from 'fabric'
-import Arrow from '@/core/objects/Arrow'
+import Arrow from '../objects/Arrow'
 import Editor from '../core'
 type IEditor = Editor
 
@@ -78,6 +78,7 @@ class DrawLinePlugin {
         const y2 = this.pointer.y - startY
         const r = Math.sqrt(x2 * x2 + y2 * y2)
         let angle = (Math.atan2(y2, x2) / Math.PI) * 180
+        // @ts-ignore
         angle = parseInt(((angle + 7.5) % 360) / 15) * 15
 
         const cosx = r * Math.cos((angle * Math.PI) / 180)
@@ -117,7 +118,7 @@ class DrawLinePlugin {
   }
 
   endRest() {
-    this.canvas.getObjects().forEach((obj) => {
+    this.canvas.getObjects().forEach((obj: any) => {
       if (obj.id !== 'workspace') {
         obj.selectable = true
         obj.hasControls = true

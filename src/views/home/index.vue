@@ -5,13 +5,13 @@
       <Header v-if="state.show">
         <!-- logo -->
         <span class="logo">
-          <a href="https://github.com/Qiu-Jun/electron-fabric-editor" target="_blank">
+          <a href="https://github.com/nihaojob/vue-fabric-editor" target="_blank">
             <Icon type="logo-github" :size="30" />
           </a>
         </span>
 
         <!-- 导入 -->
-        <importJson></importJson>
+        <import-Json></import-Json>
         <Divider type="vertical" />
         <import-file></import-file>
         <Divider type="vertical" />
@@ -167,6 +167,13 @@ import attribute from '@/components/attribute.vue'
 import { CanvasEventEmitter } from '@/utils/event/notifier'
 // import { downFile } from '@/utils/utils';
 import { fabric } from 'fabric'
+
+// import test from '@kuaitu/core';
+
+// console.log(test(), '1111');
+
+const repoSrc = import.meta.env.VITE_APP_REPO
+
 import Editor, {
   DringPlugin,
   AlignGuidLinePlugin,
@@ -232,7 +239,9 @@ onMounted(() => {
   canvasEditor.use(HistoryPlugin)
   canvasEditor.use(FlipPlugin)
   canvasEditor.use(RulerPlugin)
-  canvasEditor.use(MaterialPlugin)
+  canvasEditor.use(MaterialPlugin, {
+    repoSrc
+  })
 
   event.init(canvas)
   state.show = true
