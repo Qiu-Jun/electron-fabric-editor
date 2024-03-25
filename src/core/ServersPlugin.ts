@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:52:09
- * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-03-09 10:33:39
+ * @LastEditors: June
+ * @LastEditTime: 2024-03-25 11:13:38
  * @Description: 内部插件
  */
 import { v4 as uuid } from 'uuid'
@@ -57,17 +57,16 @@ class ServersPlugin {
 
   insert() {
     selectFiles({ accept: '.json' }).then((files) => {
-      const [file]: any = files
+      const [file] = files as any
       const reader = new FileReader()
       reader.readAsText(file, 'UTF-8')
       reader.onload = () => {
-        // @ts-ignore
-        this.insertSvgFile(reader.result)
+        reader.result && this.insertSvgFile(reader.result as string)
       }
     })
   }
 
-  insertSvgFile(jsonFile: string) {
+  insertSvgFile(jsonFile: string, callback?: () => void) {
     // 加载前钩子
     this.editor.hooksEntity.hookImportBefore.callAsync(jsonFile, () => {
       this.canvas.loadFromJSON(jsonFile, () => {
@@ -76,6 +75,7 @@ class ServersPlugin {
         this.editor.hooksEntity.hookImportAfter.callAsync(jsonFile, () => {
           this.canvas.renderAll()
           // this.editor.getPlugin('HistoryPlugin').history.clear();
+          callback && typeof callback === 'function' && callback()
         })
       })
     })
@@ -123,7 +123,6 @@ class ServersPlugin {
   saveSvg() {
     this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
       const option = this._getSaveSvgOption()
-      // @ts-ignore
       const dataUrl = this.canvas.toSVG(option)
       const fileStr = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(dataUrl)}`
       this.editor.hooksEntity.hookSaveAfter.callAsync(fileStr, () => {
@@ -144,7 +143,7 @@ class ServersPlugin {
   }
 
   preview() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
         const option = this._getSaveOption()
         this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0])

@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-05-21 08:55:25
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-06-09 13:17:27
+ * @LastEditors: June
+ * @LastEditTime: 2024-03-25 11:16:22
  * @Description: 辅助线功能
  */
 
@@ -46,6 +46,7 @@ class AlignGuidLinePlugin {
     const ctx = canvas.getSelectionContext()
     const aligningLineOffset = 5
     const aligningLineMargin = 4
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const This = this
     let viewportTransform: number[] | undefined
     let zoom = 1
@@ -284,7 +285,7 @@ class AlignGuidLinePlugin {
     canvas.on('before:render', () => {
       // fix 保存图片时报错
       try {
-        canvas.clearContext(canvas.contextTop)
+        canvas.contextTop && canvas.clearContext(canvas.contextTop)
       } catch (error) {
         console.log(error)
       }
