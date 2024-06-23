@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config'
 
-// _configEnv
+// _configEnvgit
 export default defineConfig(() =>
   defineConfig({
     esbuild: { target: 'es2022' },
