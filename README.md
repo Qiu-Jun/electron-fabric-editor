@@ -41,3 +41,6 @@ pnpm build:win
 # 打包mac
 pnpm build:mac
 ```
+
+## 更新
+  - 时间：2024-06-23   commit: bdc88923cc7c9f1ea967e3a7fda49c18e8009ee8   fix(plugin): resize插件增加最小尺寸判断
