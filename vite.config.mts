@@ -5,24 +5,25 @@
  * @LastEditors: June
  * @LastEditTime: 2024-04-04 11:40:02
  */
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import * as path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import electron from 'vite-plugin-electron'
 import AutoImport from 'unplugin-auto-import/vite'
-import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import Unocss from 'unocss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import dotenv from "dotenv"
+import fs from 'node:fs'
 
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   const envData = loadEnv(mode, process.cwd())
+  dotenv.config(envData)
   const envPrefix = 'APP_'
   const plugins = [
     vue(),
-    vueSetupExtend(),
     AutoImport({
       // 处理eslint 配置打开运行一次，生产后关闭
       eslintrc: {
@@ -108,3 +109,25 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     }
   }
 })
+
+
+function loadEnv(mode: string, envDir: string) {
+  const envPath = `${envDir}/.env`;
+  const localEnvPath = `${envDir}/.env.${mode}`;
+ 
+  const _loadEnv = envPath => {
+    const env = dotenv.config({ path: envPath });
+    if (env.error) {
+      throw new Error(`Failed to load env from ${envPath}: ${env.error}`);
+    }
+    return env.parsed;
+  };
+ 
+  const env = [localEnvPath, envPath]
+    .filter(path => fs.existsSync(path))
+    .map(path => _loadEnv(path));
+ 
+  // 将加载的环境变量合并，并添加到Vite配置中
+  return env.reduce((acc, envs) => ({ ...acc, ...envs }), {});
+}
+ 

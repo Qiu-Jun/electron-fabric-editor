@@ -6,7 +6,7 @@
  * @LastEditors: June
  * @LastEditTime: 2023-11-07 16:45:13
  */
-import { ipcRenderer, contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import os from 'os'
 
 const listeners = {}

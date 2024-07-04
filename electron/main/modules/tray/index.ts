@@ -6,18 +6,16 @@
  * @LastEditors: June
  * @LastEditTime: 2023-11-10 21:17:24
  */
-import { app, Menu, Tray, nativeImage, dialog, BrowserWindow } from 'electron'
+import { app, Menu, Tray, nativeImage, dialog } from 'electron'
 import path from 'path'
 import pkg from '../../../../package.json'
-import WindowManage from '../../utils/win'
-import { tray2git, appUpdate } from '../../config/constants/winNames'
-import { checkUpdate } from '../../utils/update'
+import { appName } from '../../config'
+
 import type { MessageBoxOptions, BrowserWindow as IBrowserWindow } from 'electron'
 
 const initTray = (win: IBrowserWindow) => {
   const iconPath = path.join(__dirname, '../..', 'public/tray.png').replace('/\\/g', '\\\\')
   const tray = new Tray(nativeImage.createFromPath(iconPath))
-  tray.setToolTip('Mall-Cook') // 鼠标指针在托盘图标上悬停时显示的文本
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '关于',
@@ -29,15 +27,6 @@ const initTray = (win: IBrowserWindow) => {
           buttons: []
         }
         dialog.showMessageBox(options)
-      }
-    },
-    {
-      label: '仓库地址',
-      click: () => {
-        WindowManage.getInstance().createWin({
-          module: tray2git,
-          toUrl: 'https://github.com/Qiu-Jun/electron-fabric-editor.git'
-        })
       }
     },
     {
@@ -88,35 +77,13 @@ const initTray = (win: IBrowserWindow) => {
       }
     }
   ])
-
+  appName && tray.setToolTip(appName) // 鼠标指针在托盘图标上悬停时显示的文本
   // Call this again for Linux because we modified the context menu
   tray.setContextMenu(contextMenu)
 
-  //   win &&
-  //     tray.on('click', () => {
-  //       if (!BrowserWindow.getAllWindows().length) return
-  //       const winIsVisible: boolean = win.isVisible()
-  //       // 窗口是否隐藏
-  //       if (!winIsVisible) {
-  //         win.show()
-  //         // 展示加载动画
-  //         win.webContents.send('show')
-  //       } else {
-  //         const s = 0.3
-  //         // 展示退出动画
-  //         win.webContents.send('hide', s)
-
-  //         // 退出动画加载完之后再隐藏程序
-  //         let timer: NodeJS.Timeout | null = null
-  //         timer = setTimeout(() => {
-  //           win.hide()
-  //           if (timer) {
-  //             clearTimeout(timer)
-  //             timer = null
-  //           }
-  //         }, s * 1000)
-  //       }
-  //     })
+  tray.on('double-click', () => {
+    win?.show()
+  })
 }
 
 export default initTray
