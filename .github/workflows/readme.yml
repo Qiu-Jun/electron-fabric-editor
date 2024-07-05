@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-
+name: Contributes
 jobs:
   contrib-readme-job:
     runs-on: ubuntu-latest
@@ -14,4 +14,4 @@ jobs:
           image_size: 80
           use_username: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
