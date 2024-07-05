@@ -14,7 +14,7 @@ import { WinManage } from './utils/winManage'
 import { is, appMain } from './constants'
 import { appLoadUrl } from './config'
 
-// import { initUpdate } from './utils/update'
+import { initUpdate } from './utils/update'
 
 let win: any = null
 
@@ -29,7 +29,7 @@ function createWindow(): void {
       frame: true,
       autoHideMenuBar: true,
       resizable: true,
-      icon: path.join(__dirname, '../..', 'public/icon.png'),
+      icon: path.join(__dirname, '../..', 'resources/icon.png'),
       webPreferences: {
         webSecurity: false, // 同源策略
         contextIsolation: true, // 开启上下文隔离
@@ -64,7 +64,7 @@ app.whenReady().then(() => {
 
   initTray(win.getWin(appMain))
   createMenu()
-  //   initUpdate(win)
+  initUpdate(win)
 })
 
 // 除了 macOS 外，当所有窗口都被关闭的时候退出程序

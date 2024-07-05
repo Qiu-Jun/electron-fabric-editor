@@ -75,6 +75,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   }
   return {
     base: './',
+    publicDir: 'resources',
     plugins,
     server: {
       port: 3000,

@@ -14,7 +14,7 @@ import { appName } from '../../config'
 import type { MessageBoxOptions, BrowserWindow as IBrowserWindow } from 'electron'
 
 const initTray = (win: IBrowserWindow) => {
-  const iconPath = path.join(__dirname, '../..', 'public/tray.png').replace('/\\/g', '\\\\')
+  const iconPath = path.join(__dirname, '../..', 'resources/tray.png').replace('/\\/g', '\\\\')
   const tray = new Tray(nativeImage.createFromPath(iconPath))
   const contextMenu = Menu.buildFromTemplate([
     {

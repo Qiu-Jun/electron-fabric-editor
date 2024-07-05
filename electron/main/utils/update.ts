@@ -9,13 +9,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
-// "publish": [
-//     {
-//       "provider": "generic",
-//       "url": "http://localhost:3000/static/el"
-//     }
-//   ],
-const updateUrl = 'http://localhost:3000/static/el'
+const updateUrl = 'https://3k2j857423.goho.co/static/el'
 const provider = 'generic'
 const message: Record<string, string> = {
   error: '检查更新出错',
@@ -51,18 +45,22 @@ export function initUpdate(win: BrowserWindow) {
 
   // 下载错误
   autoUpdater.on('error', (err) => {
+    console.log(err, '------')
     sendUpdateMessage(win, { type: 'updateErr', text: `${message.error}: ${err}` })
   })
   // 是否需要更新
   autoUpdater.on('checking-for-update', () => {
+    console.log('检查是否需要更新')
     sendUpdateMessage(win, { type: 'updateChecking', text: message.checking })
   })
   // 可以更新
   autoUpdater.on('update-available', (e: any) => {
+    console.log('可以更新')
     sendUpdateMessage(win, { type: 'needUpdate', text: `${message.updateAvailable}-v${e.version}` })
   })
   // 不需要更新
   autoUpdater.on('update-not-available', () => {
+    console.log('不需要更新')
     sendUpdateMessage(win, {
       type: 'notNeedUpdate',
       text: message.updateNotAvailable
