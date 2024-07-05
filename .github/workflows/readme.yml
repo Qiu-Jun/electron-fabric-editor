@@ -14,4 +14,4 @@ jobs:
           image_size: 80
           use_username: true
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CONTRIBUTORS_TOKEN  }}
