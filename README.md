@@ -48,7 +48,7 @@ pnpm build:mac
 
 ## 管理员
 <!-- readme: collaborators -start -->
-<!-- readme: collaborators -start -->
+<!-- readme: collaborators -end -->
 
 ## 贡献者
 <!-- readme: collaborators,contributors -start -->
