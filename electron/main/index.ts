@@ -79,4 +79,4 @@ app.on('window-all-closed', () => {
 // // 客户端失去焦点
 // app.on('browser-window-blur', () => { })
 
-app.on('activate', () => win.show())
+app.on('activate', () => win?.show())

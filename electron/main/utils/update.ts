@@ -6,7 +6,7 @@
  * @LastEditors: June
  * @LastEditTime: 2023-11-08 11:38:39
  */
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 const updateUrl = 'https://3k2j857423.goho.co/static/el'
@@ -42,53 +42,42 @@ export function initUpdate(win: BrowserWindow) {
     provider,
     url: updateUrl
   })
-
+  checkUpdate()
   // 下载错误
   autoUpdater.on('error', (err) => {
     console.log(err, '------')
-    sendUpdateMessage(win, { type: 'updateErr', text: `${message.error}: ${err}` })
   })
   // 是否需要更新
   autoUpdater.on('checking-for-update', () => {
-    console.log('检查是否需要更新')
-    sendUpdateMessage(win, { type: 'updateChecking', text: message.checking })
+    console.log('checking-for-update')
   })
   // 可以更新
   autoUpdater.on('update-available', (e: any) => {
-    console.log('可以更新')
-    sendUpdateMessage(win, { type: 'needUpdate', text: `${message.updateAvailable}-v${e.version}` })
+    console.log('update-available')
+    autoUpdater.downloadUpdate()
   })
   // 不需要更新
   autoUpdater.on('update-not-available', () => {
-    console.log('不需要更新')
-    sendUpdateMessage(win, {
-      type: 'notNeedUpdate',
-      text: message.updateNotAvailable
-    })
+    console.log('update-not-available')
   })
   // 更新下载进度事件 暂时没有做进度处理
   autoUpdater.on('download-progress', (progress) => {
-    sendUpdateMessage(win, {
-      type: 'download-progress',
-      text: Number(progress.percent)
-    })
+    console.log(progress)
   })
 
   // 下载更新完后
   autoUpdater.on('update-downloaded', function () {
     // 开始更新
-    autoUpdater.quitAndInstall()
-    // app.quit()
-    sendUpdateMessage(win, { type: 'download', text: message.downloaded })
+    dialog
+      .showMessageBox({
+        title: '升级提示！',
+        message: '已为您下载最新应用，点击确定马上替换为最新版本！'
+      })
+      .then(() => {
+        //重启应用并在下载后安装更新。 它只应在发出 update-downloaded 后方可被调用。
+        autoUpdater.quitAndInstall()
+      })
   })
-
-  //   // 手动触发更新
-  //   ipcMain.on('checkForUpdate', () => {
-  //     // 执行自动更新检查
-  //     autoUpdater.checkForUpdates()
-  //   })
-
-  ipcMain.on('doanloadNewVersion', downloadUpdateApp)
 }
 
 export const checkUpdate = () => {
