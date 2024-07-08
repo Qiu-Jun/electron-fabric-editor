@@ -160,7 +160,7 @@
               <attributeId></attributeId>
 
               <!-- 新增字体样式使用 -->
-              <Button @click="canvasEditor.getFontJson()" size="small">获取元素数据</Button>
+              <Button @click="canvasEditor.getFontJson()" size="small">获取元素信息</Button>
             </div>
           </div>
           <!-- <attribute v-if="state.show"></attribute> -->
