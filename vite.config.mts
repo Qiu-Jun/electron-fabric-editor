@@ -20,6 +20,7 @@ import fs from 'node:fs'
 
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   const envData = loadEnv(mode, process.cwd())
+  console.log(envData)
   dotenv.config(envData)
   const envPrefix = 'APP_'
   const plugins = [
@@ -38,7 +39,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     createHtmlPlugin({
       inject: {
         data: {
-          title: envData.VITE_APP_TITLE
+          title: envData.APP_TITLE
         }
       }
     }),

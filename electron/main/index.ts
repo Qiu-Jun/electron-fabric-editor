@@ -21,12 +21,15 @@ let win: any = null
 
 function startApp() {
   // 返回false 说明已有应用了
-  if (!getLock) {
-    win?.isMinimized() && win?.restore()
-    win?.focus()
-    return
-  } else {
-    app.quit()
+
+  if (!is.dev) {
+    if (!getLock) {
+      win?.isMinimized() && win?.restore()
+      win?.focus()
+      return
+    } else {
+      app.quit()
+    }
   }
 
   app.whenReady().then(() => {

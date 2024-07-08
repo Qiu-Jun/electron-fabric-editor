@@ -43,7 +43,7 @@ pnpm build:mac
 ```
 
 ## 更新
-  - 时间：2024-07-08   commit: 96cad2435dd2a0b4640378b8d9f80e1e54af0822   build(docker): 增加nginx版本号
+  - 时间：2024-07-08   commit: 08e7e76c101ce67f77714fd7d143f7cca77f0238   fix(plugin): 移除多余代码
 
 
 ## 管理员

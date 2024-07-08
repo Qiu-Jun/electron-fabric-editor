@@ -97,9 +97,9 @@ class ServersPlugin {
   // 设置path属性
   renderITextPath(textPaths: Record<'id' | 'path', any>[]) {
     textPaths.forEach((item) => {
-      const object = this.canvas.getObjects().find((o) => o.id === item.id)
+      const object: any = this.canvas.getObjects().find((o) => o.id === item.id)
       if (object) {
-        fabric.Path.fromObject(item.path, (e) => {
+        fabric.Path.fromObject(item.path, (e: string) => {
           object.set('path', e)
         })
       }
@@ -227,8 +227,12 @@ class ServersPlugin {
 
   saveSvg() {
     this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
-      const option = this._getSaveSvgOption()
-      const dataUrl = this.canvas.toSVG(option)
+      const { fontOption, svgOption }: any = this._getSaveSvgOption()
+      //@ts-ignore
+      fabric.fontPaths = {
+        ...fontOption
+      }
+      const dataUrl = this.canvas.toSVG(svgOption)
       const fileStr = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(dataUrl)}`
       this.editor.hooksEntity.hookSaveAfter.callAsync(fileStr, () => {
         downFile(fileStr, 'svg')
@@ -263,15 +267,35 @@ class ServersPlugin {
 
   _getSaveSvgOption() {
     const workspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
+    let fontFamilyArry = this.canvas
+      .getObjects()
+      .filter((item) => item.type == 'textbox')
+      .map((item: any) => item.fontFamily)
+    fontFamilyArry = Array.from(new Set(fontFamilyArry))
+
+    // @ts-ignore
+    const fontList = this.editor.getPlugin('FontPlugin').cacheList
+
+    const fontEntry = {}
+    for (const font of fontFamilyArry) {
+      const item = fontList.find((item: any) => item.name === font)
+      // @ts-ignore
+      fontEntry[font] = item.file
+    }
+
+    console.log('_getSaveSvgOption', fontEntry)
     const { left, top, width, height } = workspace as fabric.Object
     return {
-      width,
-      height,
-      viewBox: {
-        x: left,
-        y: top,
+      fontOption: fontEntry,
+      svgOption: {
         width,
-        height
+        height,
+        viewBox: {
+          x: left,
+          y: top,
+          width,
+          height
+        }
       }
     }
   }
@@ -280,6 +304,7 @@ class ServersPlugin {
     const workspace = this.canvas
       .getObjects()
       .find((item: fabric.Object) => item.id === 'workspace')
+    console.log('getObjects', this.canvas.getObjects())
     const { left, top, width, height } = workspace as fabric.Object
     const option = {
       name: 'New Image',
