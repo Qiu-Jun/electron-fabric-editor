@@ -43,7 +43,7 @@ pnpm build:mac
 ```
 
 ## 更新
-  - 时间：2024-06-23   commit: bdc88923cc7c9f1ea967e3a7fda49c18e8009ee8   fix(plugin): resize插件增加最小尺寸判断
+  - 时间：2024-07-08   commit: 96cad2435dd2a0b4640378b8d9f80e1e54af0822   build(docker): 增加nginx版本号
 
 
 ## 管理员
