@@ -70,6 +70,13 @@ pnpm build:mac
             <br />
             <sub><b>Qiu-Jun</b></sub>
         </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/zjc2233">
+            <img src="https://avatars.githubusercontent.com/u/43945226?v=4" width="80;" alt="zjc2233"/>
+            <br />
+            <sub><b>zjc2233</b></sub>
+        </a>
     </td></tr>
 </table>
 <!-- readme: collaborators,contributors -end -->
