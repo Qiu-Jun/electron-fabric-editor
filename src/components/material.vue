@@ -49,7 +49,7 @@ import { getMaterialInfoUrl, getMaterialPreviewUrl } from '@/hooks/usePageList'
 import { getMaterialTypes, getMaterialsByType, getMaterials } from '@/api/material'
 import useCalculate from '@/hooks/useCalculate'
 import { useRoute } from 'vue-router'
-import { Utils } from '@kuaitu/core'
+import { Utils } from '@/lib/core'
 
 const { canvasEditor } = useSelect()
 

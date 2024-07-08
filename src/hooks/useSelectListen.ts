@@ -6,7 +6,7 @@
  * @LastEditors: 秦少卫
  * @LastEditTime: 2024-07-06 12:15:19
  */
-import Editor, { EventType } from '@kuaitu/core'
+import Editor, { EventType } from '@/lib/core'
 import { get } from 'lodash-es'
 
 const { SelectEvent, SelectMode } = EventType

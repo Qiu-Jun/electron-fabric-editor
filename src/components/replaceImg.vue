@@ -17,7 +17,7 @@
 <script setup name="ReplaceImg">
 import useSelect from '@/hooks/select'
 
-import { Utils } from '@kuaitu/core'
+import { Utils } from '@/lib/core'
 const { getImgStr, selectFiles, insertImgFile } = Utils
 
 const update = getCurrentInstance()

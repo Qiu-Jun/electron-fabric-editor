@@ -274,7 +274,7 @@ import Editor, {
   ResizePlugin,
   LockPlugin,
   AddBaseTypePlugin
-} from '@kuaitu/core'
+} from '@/lib/core'
 import Edit from '@/components/edit.vue'
 import ClipImage from '@/components/clipImage.vue'
 import AttributeTextContent from '@/components/attributeTextContent.vue'

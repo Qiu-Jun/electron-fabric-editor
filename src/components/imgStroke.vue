@@ -63,7 +63,7 @@
 import useSelect from '@/hooks/select'
 import { Slider } from 'view-ui-plus'
 import { fabric } from 'fabric'
-import { Utils } from '@kuaitu/core'
+import { Utils } from '@/lib/core'
 import { values } from 'lodash-es'
 
 interface IExtendImage {

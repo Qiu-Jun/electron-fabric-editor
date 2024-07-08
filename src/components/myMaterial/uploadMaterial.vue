@@ -43,7 +43,7 @@
 <script setup name="ImportTmpl">
 const APP_APIHOST = import.meta.env.APP_APIHOST
 import { getFileList, uploadImg, createdMaterial, removeMaterial } from '@/api/user'
-import { Utils } from '@kuaitu/core'
+import { Utils } from '@/lib/core'
 const { selectFiles } = Utils
 const canvasEditor = inject('canvasEditor')
 
