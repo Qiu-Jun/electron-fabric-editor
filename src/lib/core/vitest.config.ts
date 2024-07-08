@@ -1,7 +1,6 @@
 import { defineConfig } from 'vitest/config'
 
-// _configEnvgit
-export default defineConfig(() =>
+export default defineConfig((_configEnv) =>
   defineConfig({
     esbuild: { target: 'es2022' },
     optimizeDeps: {

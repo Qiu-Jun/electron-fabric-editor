@@ -7,7 +7,7 @@ import './styles/index.less'
 import VueLazyLoad from 'vue3-lazyload'
 // 自定义字体文件
 import '@/assets/fonts/font.css'
-import 'virtual:uno.css'
+
 import { VueMasonryPlugin } from 'vue-masonry'
 
 import i18n from './language/index'

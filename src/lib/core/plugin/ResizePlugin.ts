@@ -1,8 +1,8 @@
 /*
  * @Author: wuchenguang1998
  * @Date: 2024-06-17 21:00:00
- * @LastEditors: wuchenguang1998
- * @LastEditTime: 2024-06-19 19:00:00
+ * @LastEditors: 秦少卫
+ * @LastEditTime: 2024-06-30 20:01:36
  * @Description: 画布resize拖拽插件
  */
 
@@ -22,6 +22,12 @@ class ResizePlugin implements IPluginTempl {
   workspaceEl!: HTMLElement
   // 最小画布尺寸
   minSize = { width: 1, height: 1 }
+  // 控制条
+  barOpts = {
+    bWidth: 30, // 宽
+    bHeight: 6, // 高
+    bPadding: 10 // 离画布边缘的距离
+  }
   hasCreatedBar = false
   isDragging = false
   dragEl: HTMLElement | null = null
@@ -66,27 +72,24 @@ class ResizePlugin implements IPluginTempl {
     const wsHeight = workspace.height * scaleY
     const wsLeft = workspace.left * scaleX
     const wsTop = workspace.top * scaleY
+    const { bWidth, bHeight, bPadding } = this.barOpts
     if (!viewportTransform) return
     // 左控制条
     const leftBar = this._getBarFromType('left')
-    leftBar.style.left = `${offsetX + wsLeft - 8}px`
-    leftBar.style.top = `${offsetY + wsTop}px`
-    leftBar.style.height = `${wsHeight}px`
+    leftBar.style.left = `${offsetX + wsLeft - bHeight - bPadding}px`
+    leftBar.style.top = `${offsetY + wsTop + wsHeight / 2 - bWidth / 2}px`
     // 右控制条
     const rightBar = this._getBarFromType('right')
-    rightBar.style.left = `${offsetX + wsLeft + wsWidth}px`
-    rightBar.style.top = `${offsetY + wsTop}px`
-    rightBar.style.height = `${wsHeight}px`
+    rightBar.style.left = `${offsetX + wsLeft + wsWidth + bPadding}px`
+    rightBar.style.top = `${offsetY + wsTop + wsHeight / 2 - bWidth / 2}px`
     // 上控制条
     const topBar = this._getBarFromType('top')
-    topBar.style.left = `${offsetX + wsLeft}px`
-    topBar.style.top = `${offsetY + wsTop - 8}px`
-    topBar.style.width = `${wsWidth}px`
+    topBar.style.left = `${offsetX + wsLeft + wsWidth / 2 - bWidth / 2}px`
+    topBar.style.top = `${offsetY + wsTop - bHeight - bPadding}px`
     // 下控制条
     const bottomBar = this._getBarFromType('bottom')
-    bottomBar.style.left = `${offsetX + wsLeft}px`
-    bottomBar.style.top = `${offsetY + wsTop + wsHeight}px`
-    bottomBar.style.width = `${wsWidth}px`
+    bottomBar.style.left = `${offsetX + wsLeft + wsWidth / 2 - bWidth / 2}px`
+    bottomBar.style.top = `${offsetY + wsTop + wsHeight + bPadding}px`
     // 监听
     if (!this.hasCreatedBar) {
       this.hasCreatedBar = true
@@ -137,6 +140,7 @@ class ResizePlugin implements IPluginTempl {
         this.isDragging = false
         this.dragEl.classList.remove('active')
         this.dragEl = null
+        this.canvas.defaultCursor = 'default'
       }
     })
   }
@@ -149,16 +153,16 @@ class ResizePlugin implements IPluginTempl {
       const [scaleX, , , scaleY] = viewportTransform || []
       const deltaX = e.clientX - this.startPoints.x
       const deltaY = e.clientY - this.startPoints.y
-      const deltaViewX = (e.clientX - this.startPoints.x) / scaleX
-      const deltaViewY = (e.clientY - this.startPoints.y) / scaleY
+      const deltaViewX = deltaX / scaleX
+      const deltaViewY = deltaY / scaleY
       const type = this.dragEl.id.split('-')[1]
       let tempLength = 0
       switch (type) {
         case 'left':
-          tempLength = Math.round(this.wsOffset.width - deltaViewX)
+          tempLength = Math.round(this.wsOffset.width - deltaViewX * 2)
           if (tempLength >= this.minSize.width) {
             this.dragEl.style.left = `${this.barOffset.x + deltaX}px`
-            workspace.set('left', this.wsOffset.left + deltaViewX)
+            workspace.set('left', this.wsOffset.left + deltaViewX * 2)
             workspace.set('width', tempLength)
           } else {
             workspace.set('left', this.wsOffset.left + this.wsOffset.width - this.minSize.width)
@@ -166,7 +170,7 @@ class ResizePlugin implements IPluginTempl {
           }
           break
         case 'right':
-          tempLength = Math.round(this.wsOffset.width + deltaViewX)
+          tempLength = Math.round(this.wsOffset.width + deltaViewX * 2)
           if (tempLength >= this.minSize.width) {
             this.dragEl.style.left = `${this.barOffset.x + deltaX}px`
             workspace.set('width', tempLength)
@@ -175,10 +179,10 @@ class ResizePlugin implements IPluginTempl {
           }
           break
         case 'top':
-          tempLength = Math.round(this.wsOffset.height - deltaViewY)
+          tempLength = Math.round(this.wsOffset.height - deltaViewY * 2)
           if (tempLength >= this.minSize.height) {
             this.dragEl.style.top = `${this.barOffset.y + deltaY}px`
-            workspace.set('top', this.wsOffset.top + deltaViewY)
+            workspace.set('top', this.wsOffset.top + deltaViewY * 2)
             workspace.set('height', tempLength)
           } else {
             workspace.set('top', this.wsOffset.top + this.wsOffset.height - this.minSize.height)
@@ -186,7 +190,7 @@ class ResizePlugin implements IPluginTempl {
           }
           break
         case 'bottom':
-          tempLength = Math.round(this.wsOffset.height + deltaViewY)
+          tempLength = Math.round(this.wsOffset.height + deltaViewY * 2)
           if (tempLength >= this.minSize.height) {
             this.dragEl.style.top = `${this.barOffset.y + deltaY}px`
             workspace.set('height', tempLength)
@@ -197,10 +201,17 @@ class ResizePlugin implements IPluginTempl {
         default:
           break
       }
+
+      this.editor.setCenterFromObject(workspace)
       workspace.clone((cloned: fabric.Rect) => {
         this.canvas.clipPath = cloned
         this.canvas.requestRenderAll()
       })
+      if (['left', 'right'].includes(type)) {
+        this.canvas.defaultCursor = 'ew-resize'
+      } else {
+        this.canvas.defaultCursor = 'ns-resize'
+      }
       this.editor.emit('sizeChange', workspace.width, workspace.height)
     }
   }

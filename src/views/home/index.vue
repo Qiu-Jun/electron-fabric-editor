@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2024-05-17 15:30:21
- * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-06-19 11:05:24
+ * @LastEditors: 秦少卫
+ * @LastEditTime: 2024-07-06 12:36:48
  * @Description: file content
 -->
 <template>
@@ -271,8 +271,10 @@ import Editor, {
   BarCodePlugin,
   QrCodePlugin,
   ImageStroke,
-  ResizePlugin
-} from '@/lib/core'
+  ResizePlugin,
+  LockPlugin,
+  AddBaseTypePlugin
+} from '@kuaitu/core'
 import Edit from '@/components/edit.vue'
 import ClipImage from '@/components/clipImage.vue'
 import AttributeTextContent from '@/components/attributeTextContent.vue'
@@ -387,6 +389,8 @@ onMounted(() => {
   canvasEditor.use(PsdPlugin)
   canvasEditor.use(ImageStroke)
   canvasEditor.use(ResizePlugin)
+  canvasEditor.use(LockPlugin)
+  canvasEditor.use(AddBaseTypePlugin)
 
   state.show = true
   // 默认打开标尺

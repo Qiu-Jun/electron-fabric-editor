@@ -6,7 +6,7 @@
  * @LastEditors: 秦少卫
  * @LastEditTime: 2024-06-10 20:11:48
  */
-import Editor, { EventType } from '@/lib/core'
+import Editor, { EventType } from '@kuaitu/core'
 import { useI18n } from 'vue-i18n'
 
 const { SelectMode } = EventType
