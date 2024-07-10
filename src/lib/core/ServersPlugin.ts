@@ -97,9 +97,9 @@ class ServersPlugin {
   // 设置path属性
   renderITextPath(textPaths: Record<'id' | 'path', any>[]) {
     textPaths.forEach((item) => {
-      const object: any = this.canvas.getObjects().find((o) => o.id === item.id)
+      const object = this.canvas.getObjects().find((o) => o.id === item.id)
       if (object) {
-        fabric.Path.fromObject(item.path, (e: string) => {
+        fabric.Path.fromObject(item.path, (e) => {
           object.set('path', e)
         })
       }
@@ -227,8 +227,7 @@ class ServersPlugin {
 
   saveSvg() {
     this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
-      const { fontOption, svgOption }: any = this._getSaveSvgOption()
-      //@ts-ignore
+      const { fontOption, svgOption } = this._getSaveSvgOption()
       fabric.fontPaths = {
         ...fontOption
       }
@@ -270,16 +269,14 @@ class ServersPlugin {
     let fontFamilyArry = this.canvas
       .getObjects()
       .filter((item) => item.type == 'textbox')
-      .map((item: any) => item.fontFamily)
+      .map((item) => item.fontFamily)
     fontFamilyArry = Array.from(new Set(fontFamilyArry))
 
-    // @ts-ignore
     const fontList = this.editor.getPlugin('FontPlugin').cacheList
 
     const fontEntry = {}
     for (const font of fontFamilyArry) {
-      const item = fontList.find((item: any) => item.name === font)
-      // @ts-ignore
+      const item = fontList.find((item) => item.name === font)
       fontEntry[font] = item.file
     }
 
