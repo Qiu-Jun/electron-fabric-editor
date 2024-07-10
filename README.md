@@ -42,8 +42,8 @@ pnpm build:win
 pnpm build:mac
 ```
 
-## 更新
-  - 时间：2024-07-08   commit: 08e7e76c101ce67f77714fd7d143f7cca77f0238   fix(plugin): 移除多余代码
+## 最后同步更新
+  - 时间：2024-07-10   commit: 64e3fb689640e30d40fb15cf9a1a8eef7e3a7c90   fix(历史记录): 适配回退为空
 
 
 ## 管理员
