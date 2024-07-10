@@ -12,8 +12,7 @@ import { electronApp, optimizer } from '@electron-toolkit/utils'
 import path from 'path'
 import { WinManage } from './utils/winManage'
 import { is, appMain } from './constants'
-import { appLoadUrl } from './config'
-
+import { appLoadUrl, appUpdateUrl } from './config'
 import { initUpdate } from './utils/update'
 
 const getLock = app.requestSingleInstanceLock()
@@ -51,7 +50,7 @@ function startApp() {
 
     initTray(win.getWin(appMain))
     createMenu()
-    initUpdate(win)
+    // initUpdate()
   })
 
   // 除了 macOS 外，当所有窗口都被关闭的时候退出程序

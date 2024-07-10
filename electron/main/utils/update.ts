@@ -6,10 +6,12 @@
  * @LastEditors: June
  * @LastEditTime: 2023-11-08 11:38:39
  */
-import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, nativeImage } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { appUpdateUrl } from '../config'
+import path from 'node:path'
 
-const updateUrl = 'https://3k2j857423.goho.co/static/el'
+const iconFile = path.join(__dirname, '../../..', '')
 const provider = 'generic'
 const message: Record<string, string> = {
   error: '检查更新出错',
@@ -35,62 +37,67 @@ const sendUpdateMessage = (
   win.webContents.send('updatemessage', { type, text })
 }
 
-export function initUpdate(win: BrowserWindow) {
+export function initUpdate() {
+  if (!appUpdateUrl) return
   autoUpdater.forceDevUpdateConfig = true // 强制使用开发环境进行更新
-  autoUpdater.autoDownload = true // 是否自动下载
+  autoUpdater.autoDownload = false // 是否自动下载
   autoUpdater.setFeedURL({
     provider,
-    url: updateUrl
+    url: appUpdateUrl
   })
   checkUpdate()
-  // 下载错误
+  // 监听升级失败事件
   autoUpdater.on('error', (err) => {
-    console.log(err, '------')
-  })
-  // 是否需要更新
-  autoUpdater.on('checking-for-update', () => {
-    console.log('checking-for-update')
-  })
-  // 可以更新
-  autoUpdater.on('update-available', (e: any) => {
-    console.log('update-available')
-    autoUpdater.downloadUpdate()
-  })
-  // 不需要更新
-  autoUpdater.on('update-not-available', () => {
-    console.log('update-not-available')
-  })
-  // 更新下载进度事件 暂时没有做进度处理
-  autoUpdater.on('download-progress', (progress) => {
-    console.log(progress)
+    dialog.showMessageBox({
+      title: '提示',
+      message: `下载错误`,
+      icon: iconFile
+    })
   })
 
-  // 下载更新完后
-  autoUpdater.on('update-downloaded', function () {
-    // 开始更新
+  //监听发现可用更新事件
+  autoUpdater.on('update-available', (e: any) => {
     dialog
       .showMessageBox({
-        title: '升级提示！',
-        message: '已为您下载最新应用，点击确定马上替换为最新版本！'
+        title: '更新提示',
+        message: `您有新版本v${e.version}可更新，是否更新?`,
+        icon: nativeImage.createFromPath(iconFile)
       })
-      .then(() => {
-        //重启应用并在下载后安装更新。 它只应在发出 update-downloaded 后方可被调用。
-        autoUpdater.quitAndInstall()
+      .then(downloadUpdateApp)
+  })
+
+  //监听没有可用更新事件
+  // autoUpdater.on('update-not-available', () => {
+  //   console.log('update-not-available')
+  // })
+
+  // 更新下载进度事件
+  // autoUpdater.on('download-progress', (progress) => {
+  //   console.log(progress)
+  // })
+
+  //监听下载完成事件
+  autoUpdater.on('update-downloaded', () => {
+    dialog
+      .showMessageBox({
+        title: '更新提示',
+        message: '已为您下载最新应用，是否更新最新版本？'
       })
+      .then(intsallUpdateApp)
   })
 }
 
 export const checkUpdate = () => {
   autoUpdater.checkForUpdates() // 检查更新
-  autoUpdater.checkForUpdatesAndNotify() // 检查更新并通知
+  // autoUpdater.checkForUpdatesAndNotify() // 检查是否有可用的更新，如果有，用户会收到一个通知
 }
 
 // 下载
-export const downloadUpdateApp = () => {
+export function downloadUpdateApp() {
   autoUpdater.downloadUpdate()
 }
+
 // 安装更新
-export const intsallUpdateApp = () => {
+export function intsallUpdateApp() {
   autoUpdater.quitAndInstall() // 退出并安装更新
-  app.quit()
 }
