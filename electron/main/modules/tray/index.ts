@@ -29,46 +29,44 @@ const initTray = (win: IBrowserWindow) => {
         dialog.showMessageBox(options)
       }
     },
+    // {
+    //   label: '开机自启',
+    //   type: 'checkbox',
+    //   checked: app.getLoginItemSettings().openAtLogin,
+    //   click: function () {
+    //     const curStatus = app.getLoginItemSettings().openAtLogin
+    //     if (process.platform === 'darwin') {
+    //       app.setLoginItemSettings({
+    //         openAtLogin: !curStatus,
+    //         path: process.execPath,
+    //         openAsHidden: true //  用户可以从系统首选项中编辑此设置, 以便在打开应用程序时检查
+    //       })
+    //     } else if (process.platform === 'win32') {
+    //       app.setLoginItemSettings({
+    //         openAtLogin: !curStatus,
+    //         path: process.execPath,
+    //         args: ['--openAsHidden']
+    //       })
+    //     } else {
+    //       app.setLoginItemSettings({
+    //         openAtLogin: !curStatus,
+    //         path: process.execPath
+    //       })
+    //     }
+    //   }
+
+    // },
     {
-      label: '设置',
-      submenu: [
-        {
-          label: '开机自启',
-          type: 'checkbox',
-          checked: app.getLoginItemSettings().openAtLogin,
-          click: function () {
-            const curStatus = app.getLoginItemSettings().openAtLogin
-            if (process.platform === 'darwin') {
-              app.setLoginItemSettings({
-                openAtLogin: !curStatus,
-                path: process.execPath,
-                openAsHidden: true //  用户可以从系统首选项中编辑此设置, 以便在打开应用程序时检查
-              })
-            } else if (process.platform === 'win32') {
-              app.setLoginItemSettings({
-                openAtLogin: !curStatus,
-                path: process.execPath,
-                args: ['--openAsHidden']
-              })
-            } else {
-              app.setLoginItemSettings({
-                openAtLogin: !curStatus,
-                path: process.execPath
-              })
-            }
-          }
+      label: '检查更新',
+      click: () => {
+        const options: MessageBoxOptions = {
+          type: 'info',
+          title: `提示`,
+          message: `因为服务器问题暂时拦截不做检查`,
+          buttons: []
         }
-        // {
-        //   label: '检查更新',
-        //   click: () => {
-        //     const winMange = WindowManage.getInstance()
-        //     const winid = global.winModulesMap.get(appUpdate)?.id || 0
-        //     const win = winMange.getWin(winid)
-        //     win?.show()
-        //     checkUpdate()
-        //   }
-        // }
-      ]
+        dialog.showMessageBox(options)
+      }
     },
     {
       label: '退出',

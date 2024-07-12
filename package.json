@@ -67,7 +67,7 @@
     "commitlint-config-cz": "^0.13.3",
     "cz-customizable": "^7.0.0",
     "dotenv": "^16.4.5",
-    "electron": "^27.0.2",
+    "electron": "^31.2.0",
     "electron-builder": "^24.6.4",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
