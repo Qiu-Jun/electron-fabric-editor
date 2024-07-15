@@ -26,7 +26,6 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   const plugins = [
     vue(),
     AutoImport({
-      // 处理eslint 配置打开运行一次，生产后关闭
       eslintrc: {
         enabled: true, // Default `false`
         filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
@@ -56,16 +55,26 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     plugins.push(
       electron([
         {
-          entry: 'electron/main/index.ts',
+          entry: path.resolve(__dirname, 'src/main/index.ts'),
           vite: {
+            resolve: {
+               alias: {
+                '~': path.resolve(__dirname, 'src/main')
+              },
+            },
             build: {
               outDir: 'dist-electron/main'
             }
           }
         },
         {
-          entry: 'electron/preload/index.ts',
+          entry: path.resolve(__dirname, 'src/preload/index.ts'),
           vite: {
+             resolve: {
+               alias: {
+                '~': path.resolve(__dirname, 'src/main')
+              },
+            },
             build: {
               outDir: 'dist-electron/preload'
             }
@@ -75,6 +84,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     )
   }
   return {
+    root: path.resolve(__dirname, 'src/render'),
     base: './',
     publicDir: 'resources',
     plugins,
@@ -96,18 +106,17 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         less: {
           javascriptEnabled: true,
-          additionalData: `@import "${path.resolve(__dirname, 'src/styles/variable.less')}";`
+          additionalData: `@import "${path.resolve(__dirname, 'src/render/styles/variable.less')}";`
         }
       }
     },
     envPrefix,
     resolve: {
-      alias: [
-        { find: /^@\//, replacement: path.resolve(__dirname, 'src') + '/' },
-        { find: /^~/, replacement: '' },
-        { find: /^vue-i18n/, replacement: 'vue-i18n/dist/vue-i18n.cjs.js' }
-      ],
-      extensions: ['.ts', '.tsx', '.js', '.mjs', '.vue', '.json', '.less', '.css']
+      alias: {
+        '@': path.resolve(__dirname, 'src/render'),
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
+      },
+      extensions: ['.ts', '.tsx', '.js', '.mjs', '.vue', '.json', '.less', '.css', '.scss']
     }
   }
 })
