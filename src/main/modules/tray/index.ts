@@ -9,7 +9,7 @@
 import { app, Menu, Tray, nativeImage, dialog } from 'electron'
 import path from 'path'
 import pkg from '../../../../package.json'
-import { appName } from '~/config'
+import { appName } from '../../config'
 
 import type { MessageBoxOptions, BrowserWindow as IBrowserWindow } from 'electron'
 
