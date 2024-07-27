@@ -21,7 +21,7 @@
   },
   "exclude": ["node_modules"],
   "include": [
-    "typings/**/*.d.ts",
+    "typings/*.d.ts",
     "src/render/**/*.ts",
     "src/render/types/*.ts",
     "src/render/**/*.tsx",
