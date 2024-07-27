@@ -15,13 +15,12 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import Unocss from 'unocss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import dotenv from "dotenv"
-import fs from 'node:fs'
+import { wrapperEnv, loadEnv } from './build/getEnv'
 
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
-  const envData = loadEnv(mode, process.cwd())
-  console.log(envData)
-  dotenv.config(envData)
+  const root = process.cwd()
+  const env = loadEnv(mode, `${root}/env`)!
+  const viteEnv = wrapperEnv(env)
   const envPrefix = 'APP_'
   const plugins = [
     vue(),
@@ -32,13 +31,13 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
       },
 
-      dts: './dts/auto-imports.d.ts',
+      dts: './typings/auto-imports.d.ts',
       imports: ['vue', 'vue-router', 'vue-i18n']
     }),
     createHtmlPlugin({
       inject: {
         data: {
-          title: envData.APP_TITLE
+          title: viteEnv.APP_TITLE
         }
       }
     }),
@@ -120,25 +119,3 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     }
   }
 })
-
-
-function loadEnv(mode: string, envDir: string) {
-  const envPath = `${envDir}/.env`;
-  const localEnvPath = `${envDir}/.env.${mode}`;
- 
-  const _loadEnv = envPath => {
-    const env = dotenv.config({ path: envPath });
-    if (env.error) {
-      throw new Error(`Failed to load env from ${envPath}: ${env.error}`);
-    }
-    return env.parsed;
-  };
- 
-  const env = [localEnvPath, envPath]
-    .filter(path => fs.existsSync(path))
-    .map(path => _loadEnv(path));
- 
-  // 将加载的环境变量合并，并添加到Vite配置中
-  return env.reduce((acc, envs) => ({ ...acc, ...envs }), {});
-}
- 
