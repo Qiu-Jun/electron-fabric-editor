@@ -21,14 +21,9 @@ let win: any = null
 function startApp() {
   // 返回false 说明已有应用了
 
-  if (!is.dev) {
-    if (!getLock) {
-      win?.isMinimized() && win?.restore()
-      win?.focus()
-      return
-    } else {
-      app.quit()
-    }
+  if (!getLock) {
+    win?.isMinimized() && win?.restore()
+    win?.focus()
   }
 
   app.whenReady().then(() => {
@@ -73,7 +68,7 @@ startApp()
 function createWindow(): void {
   win = WinManage.initialize({
     loadURL: is.dev ? appLoadUrl : '',
-    loadFile: is.dev ? '' : path.join(__dirname, '../../dist/index.html'),
+    loadFile: is.dev ? '' : path.join(__dirname, '..', '/dist/index.html'),
     baseOptions: {
       width: 1600,
       height: 960,

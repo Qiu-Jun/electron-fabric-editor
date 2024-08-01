@@ -57,25 +57,25 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           entry: path.resolve(__dirname, 'src/main/index.ts'),
           vite: {
             resolve: {
-               alias: {
+              alias: {
                 '~': path.resolve(__dirname, 'src/main')
-              },
+              }
             },
             build: {
-              outDir: 'dist-electron/main'
+              outDir: path.resolve(__dirname, 'dist-electron/main')
             }
           }
         },
         {
           entry: path.resolve(__dirname, 'src/preload/index.ts'),
           vite: {
-             resolve: {
-               alias: {
+            resolve: {
+              alias: {
                 '~': path.resolve(__dirname, 'src/main')
-              },
+              }
             },
             build: {
-              outDir: 'dist-electron/preload'
+              outDir: path.resolve(__dirname, 'dist-electron/preload')
             }
           }
         }
@@ -116,6 +116,9 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
       },
       extensions: ['.ts', '.tsx', '.js', '.mjs', '.vue', '.json', '.less', '.css', '.scss']
+    },
+    build: {
+      outDir: path.resolve(__dirname, 'dist-electron/dist')
     }
   }
 })
