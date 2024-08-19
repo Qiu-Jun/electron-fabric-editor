@@ -3,11 +3,11 @@
  * @Description:
  * @Date: 2023-10-29 12:18:14
  * @LastEditors: June
- * @LastEditTime: 2023-11-01 12:01:24
+ * @LastEditTime: 2024-08-19 14:52:13
  */
 import { createI18n } from 'vue-i18n'
-import zh from 'view-ui-plus/dist/locale/zh-CN'
-import en from 'view-ui-plus/dist/locale/en-US' //新版本把'iview'改成'view-design'
+import zh from 'element-plus/es/locale/lang/zh-cn'
+import en from 'element-plus/es/locale/lang/en'
 import US from './en.json'
 import CN from './zh.json'
 import { getLocal, setLocal } from '@/utils/local'
