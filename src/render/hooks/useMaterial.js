@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2024-05-11 11:51:59
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-05-30 15:09:18
+ * @LastEditors: June
+ * @LastEditTime: 2024-08-19 14:49:03
  * @Description: 素材相关
  */
 
@@ -78,11 +78,11 @@ export default function useMaterial() {
   // 画布转图片
   const uploadFileToInfo = async () => {
     const dataURLtoFile = (dataurl, filename) => {
-      var arr = dataurl.split(','),
+      const arr = dataurl.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
-        n = bstr.length,
         u8arr = new Uint8Array(n)
+      let n = bstr.length
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
