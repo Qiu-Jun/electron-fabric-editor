@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2024-04-04 11:40:02
+ * @LastEditTime: 2024-08-21 01:25:49
  */
 import { defineConfig } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -12,6 +12,8 @@ import * as path from 'path'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import electron from 'vite-plugin-electron'
 import AutoImport from 'unplugin-auto-import/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import Unocss from 'unocss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -25,14 +27,20 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   const plugins = [
     vue(),
     AutoImport({
+      resolvers: [ElementPlusResolver()],
       eslintrc: {
         enabled: true, // Default `false`
         filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
         globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
       },
 
-      dts: './typings/auto-imports.d.ts',
+      dts: path.join(root, './typings/auto-imports.d.ts'),
       imports: ['vue', 'vue-router', 'vue-i18n']
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+      dirs: ['src/components'],
+      dts: './typings/components.d.ts'
     }),
     createHtmlPlugin({
       inject: {
