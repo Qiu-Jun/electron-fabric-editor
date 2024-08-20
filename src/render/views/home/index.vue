@@ -26,11 +26,11 @@
         <div class="flex items-center">
           <a
             class="mr-10px"
-            href="https://github.com/ikuaitu/element-fabric-editor"
+            href="https://github.com/ikuaitu/electron-fabric-editor"
             target="_blank"
           >
             <img
-              src="https://img.shields.io/badge/GitHub-ElementFbricEditor-blue"
+              src="https://img.shields.io/badge/GitHub-ElectronFbricEditor-blue"
               alt="element-fbric-editor"
             />
           </a>
