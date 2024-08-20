@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:47:21
  * @LastEditors: June
- * @LastEditTime: 2023-11-08 11:38:58
+ * @LastEditTime: 2024-08-20 15:05:09
  */
 import { app, BrowserWindow } from 'electron'
 import initTray from './modules/tray/index'
@@ -21,7 +21,7 @@ let win: any = null
 function startApp() {
   // 返回false 说明已有应用了
 
-  if (!getLock) {
+  if (!getLock && process.platform === 'win32') {
     win?.isMinimized() && win?.restore()
     win?.focus()
   }
@@ -59,8 +59,6 @@ function startApp() {
 
   // // 客户端失去焦点
   // app.on('browser-window-blur', () => { })
-
-  app.on('activate', () => win?.show())
 }
 
 startApp()
