@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2024-08-21 01:33:46
+ * @LastEditTime: 2024-08-21 01:56:00
  */
 import { defineConfig } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -40,7 +40,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     Components({
       resolvers: [ElementPlusResolver()],
       dirs: [path.join(root, 'src/render/components')],
-      dts: './typings/components.d.ts'
+      dts: path.join(root, './typings/components.d.ts')
     }),
     createHtmlPlugin({
       inject: {
