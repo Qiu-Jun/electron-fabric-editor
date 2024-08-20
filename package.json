@@ -139,7 +139,8 @@
   "license": "MIT",
   "lint-staged": {
     "*.{vue,js,ts,tsx,jsx}": [
-      "eslint --fix"
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "husky": {

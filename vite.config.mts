@@ -3,7 +3,7 @@
  * @Description:
  * @Date: 2023-03-11 00:41:24
  * @LastEditors: June
- * @LastEditTime: 2024-08-21 01:25:49
+ * @LastEditTime: 2024-08-21 01:33:46
  */
 import { defineConfig } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
@@ -39,7 +39,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     }),
     Components({
       resolvers: [ElementPlusResolver()],
-      dirs: ['src/components'],
+      dirs: [path.join(root, 'src/render/components')],
       dts: './typings/components.d.ts'
     }),
     createHtmlPlugin({
@@ -50,7 +50,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       }
     }),
     createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')], // icon存放的目录
+      iconDirs: [path.resolve(root, 'src/render/assets/svgs')], // icon存放的目录
       symbolId: 'icon-[name]', // symbol的id
       inject: 'body-last', // 插入的位置
       customDomId: '__svg__icons__dom__' // svg的id
