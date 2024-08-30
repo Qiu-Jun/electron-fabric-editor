@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-12 22:16:24
  * @LastEditors: June
- * @LastEditTime: 2023-11-10 21:22:37
+ * @LastEditTime: 2024-08-30 10:02:23
 -->
 
 ## Electron-Fabric-Editor
@@ -41,10 +41,6 @@ pnpm build:win
 # 打包mac
 pnpm build:mac
 ```
-
-## 最后同步更新
-  - 时间：2024-07-10   commit: 4b90a174653790013352e6be883e8150de311b4b   图片尺寸在画布自动缩放功能 (#467)
-
 
 ## 管理员
 <!-- readme: collaborators -start -->

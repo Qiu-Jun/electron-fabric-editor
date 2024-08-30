@@ -1,12 +1,13 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-05-19 08:31:34
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-04-10 17:33:11
+ * @LastEditors: June
+ * @LastEditTime: 2024-08-30 10:03:24
  * @Description: 拖拽插件
  */
 
 import Editor from '../Editor'
+type IPlugin = Pick<DringPlugin, 'startDring' | 'endDring'>
 type IEditor = Editor
 
 export class DringPlugin implements IPluginTempl {
@@ -26,13 +27,13 @@ export class DringPlugin implements IPluginTempl {
 
   startDring() {
     this.dragMode = true
-    this.canvas.defaultCursor = 'grab'
+    this.canvas.setCursor('grab')
     this.editor.emit('startDring')
     this.canvas.renderAll()
   }
   endDring() {
     this.dragMode = false
-    this.canvas.defaultCursor = 'default'
+    this.canvas.setCursor('default')
     this.canvas.isDragging = false
     this.editor.emit('endDring')
     this.canvas.renderAll()
@@ -44,7 +45,7 @@ export class DringPlugin implements IPluginTempl {
     this.canvas.on('mouse:down', function (this: ExtCanvas, opt) {
       const evt = opt.e
       if (evt.altKey || This.dragMode) {
-        This.canvas.defaultCursor = 'grabbing'
+        This.canvas.setCursor('grabbing')
         This.canvas.discardActiveObject()
         This._setDring()
         this.selection = false
@@ -56,9 +57,10 @@ export class DringPlugin implements IPluginTempl {
     })
 
     this.canvas.on('mouse:move', function (this: ExtCanvas, opt) {
+      This.dragMode && This.canvas.setCursor('grab')
       if (this.isDragging) {
         This.canvas.discardActiveObject()
-        This.canvas.defaultCursor = 'grabbing'
+        This.canvas.setCursor('grabbing')
         const { e } = opt
         if (!this.viewportTransform) return
         const vpt = this.viewportTransform
@@ -80,14 +82,13 @@ export class DringPlugin implements IPluginTempl {
           obj.selectable = true
         }
       })
-      This.canvas.defaultCursor = 'default'
+      This.dragMode && This.canvas.setCursor('grab')
       this.requestRenderAll()
     })
   }
 
   _setDring() {
     this.canvas.selection = false
-    this.canvas.defaultCursor = 'grab'
     this.canvas.getObjects().forEach((obj) => {
       obj.selectable = false
     })
