@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-12 22:16:24
  * @LastEditors: June
- * @LastEditTime: 2024-08-30 10:02:23
+ * @LastEditTime: 2024-08-30 10:19:50
 -->
 
 ## Electron-Fabric-Editor
@@ -41,38 +41,3 @@ pnpm build:win
 # 打包mac
 pnpm build:mac
 ```
-
-## 管理员
-<!-- readme: collaborators -start -->
-<table>
-<tr>
-    <td align="center">
-        <a href="https://github.com/Qiu-Jun">
-            <img src="https://avatars.githubusercontent.com/u/24954362?v=4" width="80;" alt="Qiu-Jun"/>
-            <br />
-            <sub><b>Qiu-Jun</b></sub>
-        </a>
-    </td></tr>
-</table>
-<!-- readme: collaborators -end -->
-
-## 贡献者
-<!-- readme: collaborators,contributors -start -->
-<table>
-<tr>
-    <td align="center">
-        <a href="https://github.com/Qiu-Jun">
-            <img src="https://avatars.githubusercontent.com/u/24954362?v=4" width="80;" alt="Qiu-Jun"/>
-            <br />
-            <sub><b>Qiu-Jun</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/zjc2233">
-            <img src="https://avatars.githubusercontent.com/u/43945226?v=4" width="80;" alt="zjc2233"/>
-            <br />
-            <sub><b>zjc2233</b></sub>
-        </a>
-    </td></tr>
-</table>
-<!-- readme: collaborators,contributors -end -->
