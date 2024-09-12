@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-12 22:16:24
  * @LastEditors: June
- * @LastEditTime: 2024-09-12 17:13:18
+ * @LastEditTime: 2024-09-12 17:15:10
 -->
 
 ## Electron-Fabric-Editor
@@ -13,7 +13,7 @@
 
 ## 关于分支
 + main分支基于vite-electron 手写
-+ electron egg分支基于electron egg脚手架
++ electron egg分支基于[electron egg](https://github.com/dromara/electron-egg)脚手架
 
 ## 技术栈
 
