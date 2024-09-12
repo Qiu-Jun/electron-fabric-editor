@@ -4,12 +4,16 @@
  * @Author: June
  * @Date: 2023-03-12 22:16:24
  * @LastEditors: June
- * @LastEditTime: 2024-08-30 10:19:50
+ * @LastEditTime: 2024-09-12 17:13:18
 -->
 
 ## Electron-Fabric-Editor
 
 [vue-fabric-editor 的 Electron 版本](https://github.com/nihaojob/vue-fabric-editor)
+
+## 关于分支
++ main分支基于vite-electron 手写
++ electron egg分支基于electron egg脚手架
 
 ## 技术栈
 
