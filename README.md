@@ -4,7 +4,7 @@
  * @Author: June
  * @Date: 2023-03-12 22:16:24
  * @LastEditors: June
- * @LastEditTime: 2024-09-12 17:15:10
+ * @LastEditTime: 2024-09-26 09:37:48
 -->
 
 ## Electron-Fabric-Editor
@@ -45,3 +45,12 @@ pnpm build:win
 # 打包mac
 pnpm build:mac
 ```
+
+
+## 管理员
+<!-- readme: collaborators -start -->
+<!-- readme: collaborators -end -->
+
+## 贡献者
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->
