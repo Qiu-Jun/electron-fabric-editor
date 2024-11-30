@@ -1,0 +1,293 @@
+{
+  "tab": {
+    "add": "添加",
+    "template": "模板",
+    "element": "元素",
+    "text": "文字",
+    "material": "素材",
+    "ai": "AI",
+    "mine": "我的"
+  },
+  "text": {
+    "title": "文本",
+    "headline": "标题",
+    "subHeadline": "副标题",
+    "text": "正文"
+  },
+  "shape": {
+    "title": "形状",
+    "rect": "矩形",
+    "triangle": "三角形",
+    "around": "圆形",
+    "polygon": "多边形",
+    "line": "直线"
+  },
+  "codes": {
+    "title": "图片码",
+    "qrCode": "二维码",
+    "barCode": "条形码"
+  },
+  "insert": {
+    "title": "插入",
+    "template": "新建设计",
+    "image": "插入图片",
+    "svg": "插入SVG",
+    "psd": "插入PSD",
+    "json": "插入JSON",
+    "folder": "新建文件夹"
+  },
+  "draw": {
+    "title": "绘制元素"
+  },
+  "header": {
+    "allTemplate": "全部模板",
+    "preview": "预览",
+    "clear": "清空",
+    "save": {
+      "download": "下载",
+      "save_my_spase": "保存到我的空间",
+      "save_as_picture": "PNG图片",
+      "save_as_svg": "SVG图片",
+      "copy_to_clipboard": "复制到剪切板",
+      "copy_to_clipboardstr": "复制字符串剪切板",
+      "save_as_json": "保存为JSON"
+    },
+    "ruler": "标尺",
+    "history": {
+      "undo": "撤销",
+      "redo": "重做"
+    }
+  },
+  "basics": "基础",
+  "recommend": "推荐",
+  "background": "背景",
+  "container": "容器",
+  "element": "元素",
+  "tempalte": "模板",
+  "image": "图片",
+  "panel": {
+    "title": "面板"
+  },
+  "layer": {
+    "title": "图层"
+  },
+  "drag": "拖曳",
+  "bgSetting": {
+    "size": "尺寸",
+    "color": "颜色",
+    "colorMacthing": "配色",
+    "width": "宽度",
+    "height": "高度",
+    "bgImage": "背景图",
+    "addBgImage": "设置背景图",
+    "removeBgImage": "移除背景图"
+  },
+  "attrSetting": {
+    "color": "颜色",
+    "centerAlign": {
+      "name": "居中",
+      "centerX": "水平居中",
+      "center": "水平垂直居中",
+      "centerY": "垂直居中"
+    },
+    "font": {
+      "title": "字体属性",
+      "fontSize": "字号",
+      "lineHeight": "行高",
+      "space": "间距",
+      "background": "背景",
+      "decimals": "小数",
+      "decimalsOptions": {
+        "none": "无",
+        "bottom": "下标",
+        "top": "上标"
+      }
+    },
+    "position": {
+      "title": "位置信息",
+      "x": "X轴",
+      "y": "Y轴",
+      "rotate": "旋转",
+      "opacity": "透明"
+    },
+    "shadow": {
+      "title": "阴影",
+      "x": "X轴",
+      "y": "Y轴",
+      "blur": "模糊"
+    },
+    "border": {
+      "title": "边框",
+      "width": "宽度",
+      "stroke": "边框"
+    },
+    "data": {
+      "title": "数据",
+      "id": "ID",
+      "getFontStyle": "获取字体样式"
+    },
+    "group": {
+      "group": "成组",
+      "unGroup": "拆分组",
+      "align": {
+        "name": "对齐",
+        "left": "左对齐",
+        "centerX": "水平居中对齐",
+        "right": "右对齐",
+        "top": "上对齐",
+        "bottom": "下对齐",
+        "centerY": "垂直居中对齐",
+        "averageX": "水平分布",
+        "averageY": "垂直分布"
+      },
+      "centerAlign": {
+        "name": "居中",
+        "centerX": "水平居中",
+        "center": "水平垂直居中",
+        "centerY": "垂直居中"
+      }
+    },
+    "radius": {
+      "name": "圆角",
+      "radius": "半径"
+    },
+    "text": {
+      "content": "文本内容",
+      "path": "文本路径"
+    }
+  },
+  "quickOperation": {
+    "title": "快捷操作",
+    "lock": "锁定",
+    "delete": "删除",
+    "copy": "复制",
+    "editPoly": "编辑多边形",
+    "hidden": "隐藏"
+  },
+  "imageSetting": {
+    "repleaceImg": "替换图片",
+    "crop": {
+      "title": "裁剪图片",
+      "create": "添加裁切",
+      "remove": "移除裁切"
+    },
+    "filters": {
+      "title": "图片滤镜",
+      "simple": "简单滤镜",
+      "complex": "复杂滤镜",
+      "Invert": "反向",
+      "Sepia": "乌黑",
+      "BlackWhite": "黑白",
+      "Brownie": "巧克力",
+      "Vintage": "复古",
+      "Kodachrome": "胶片",
+      "technicolor": "鲜艳",
+      "Polaroid": "高光",
+      "Grayscale": "灰度",
+      "GrayscaleList": {
+        "average": "一般",
+        "lightness": "中度",
+        "luminosity": "明亮"
+      },
+      "RemoveColor": "去除颜色",
+      "Brightness": "亮度",
+      "Contrast": "对比度",
+      "Saturation": "饱和度",
+      "Vibrance": "振动",
+      "HueRotation": "色调",
+      "Noise": "噪音",
+      "Pixelate": "像素化",
+      "Blur": "模糊",
+      "Gamma": "调整"
+    },
+    "stroke": {
+      "title": "图像描边",
+      "enable": "启动",
+      "show": "显示描边",
+      "size": "描边大小",
+      "color": "描边颜色"
+    }
+  },
+  "flip": {
+    "title": "翻转",
+    "x": "水平翻转",
+    "y": "垂直翻转"
+  },
+  "grid": "网格",
+  "waterMark": {
+    "name": "水印",
+    "modalTitle": "配置水印",
+    "setting": {
+      "name": "水印名称",
+      "size": "水印大小",
+      "color": "水印颜色",
+      "angle": "水印角度",
+      "position": {
+        "label": "水印位置",
+        "lt": "左上角",
+        "rt": "右上角",
+        "lb": "左下角",
+        "rb": "右下角",
+        "full": "平铺"
+      }
+    }
+  },
+  "importFiles": {
+    "file": "文件",
+    "createDesign": {
+      "title": "创建设计",
+      "customSize": "自定义尺寸",
+      "systemSize": "系统推荐尺寸"
+    }
+  },
+  "width": "宽度",
+  "height": "高度",
+  "type": "类型",
+  "qrCode": {
+    "name": "二维码属性",
+    "content": "内容",
+    "space": "边距",
+    "splashes": "散点",
+    "outAngle": "外角",
+    "inAngle": "内角",
+    "fault": "容错"
+  },
+  "barCode": {
+    "name": "条形码属性",
+    "text": "文本",
+    "content": "内容",
+    "show": "显示",
+    "color": "颜色",
+    "position": "位置",
+    "size": "字号",
+    "background": "背景"
+  },
+  "mouseMenu": {
+    "layer": "图层管理",
+    "copy": "复制",
+    "delete": "删除",
+    "group": "组合",
+    "unGroup": "取消组合",
+    "up": "上移一层",
+    "down": "下移一层",
+    "upTop": "移到顶部",
+    "downTop": "移到底部",
+    "center": "水平垂直居中"
+  },
+  "polygonClip": "多边形",
+  "rectClip": "矩形",
+  "circleClip": "圆",
+  "triangleClip": "三角形",
+  "polygonClipInverted": "多边形【反】",
+  "rectClipInverted": "矩形【反】",
+  "circleClipInverted": "圆【反】",
+  "triangleClipInverted": "三角形【反】",
+  "color": "颜色",
+  "common_elements": "基础要素",
+  "draw_elements": "绘制元素",
+  "code_img": "条码图片",
+  "setSizeTip": "调整画布尺寸",
+  "tip": {
+    "replaceTip": "确定要添加到画布中吗？"
+  }
+}

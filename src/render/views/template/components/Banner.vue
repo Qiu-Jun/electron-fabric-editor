@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2024-06-12 16:48:10
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-06-12 21:51:40
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-22 08:01:28
  * @Description: 幻灯片
 -->
 <template>
@@ -59,19 +59,12 @@ getBannerList(
 </script>
 <style lang="scss" scoped>
 .banner {
-  width: 1200px;
-  margin: 0 auto;
-  margin-top: 20px;
-  border-radius: 10px;
-  overflow: hidden;
+  @apply w-1200px mx-auto mt-20px rounded-10px overflow-hidden;
 }
 .img-box {
-  overflow: hidden;
-  height: 100%;
+  @apply overflow-hidden h-full;
   img {
-    height: 100%;
-    margin: 0 auto;
-    display: block;
+    @apply h-full mx-auto block;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2024-06-11 16:04:59
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-06-12 16:37:40
+ * @LastEditors: June
+ * @LastEditTime: 2024-09-20 10:44:04
  * @Description: 搜索组件
 -->
 
@@ -16,7 +16,13 @@
       :icon="ArrowLeftBold"
     ></el-button>
 
-    <el-select class="select" v-model="typeValue" :disabled="loading" @change="change">
+    <el-select
+      class="select"
+      v-model="typeValue"
+      :disabled="loading"
+      placeholder="请选择"
+      @change="change"
+    >
       <el-option
         v-for="item in typeList"
         :value="item.value"
@@ -85,7 +91,10 @@ onMounted(async () => {
 })
 
 const change = () => {
-  emit('change', { searchKeyWord: searchKeyWord.value, typeValue: typeValue.value })
+  emit('change', {
+    searchKeyWord: searchKeyWord.value,
+    typeValue: typeValue.value
+  })
 }
 
 // const getValue = () => {

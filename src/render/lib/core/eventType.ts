@@ -9,14 +9,14 @@
 export enum SelectMode {
   EMPTY = '',
   ONE = 'one',
-  MULTI = 'multiple'
+  MULTI = 'multiple',
 }
 
 // 选择事件（用于广播）
 export enum SelectEvent {
   ONE = 'selectOne',
   MULTI = 'selectMultiple',
-  CANCEL = 'selectCancel'
+  CANCEL = 'selectCancel',
 }
 
-export default { SelectMode, SelectEvent }
+export default { SelectMode, SelectEvent };

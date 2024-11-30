@@ -2,19 +2,19 @@ import dayjs from 'dayjs'
 import { useRouter, useRoute } from 'vue-router'
 import { uploadImg, createdTempl, getTmplInfo, updataTempl, removeTempl } from '@/api/user'
 import { ElMessageBox } from 'element-plus'
-
+import { useEditorStoreWithOut } from '@/store/modules/editor'
 import { useI18n } from 'vue-i18n'
 
+const editorStore = useEditorStoreWithOut()
 export default function useMaterial() {
   const { t } = useI18n()
   const router = useRouter()
   const route = useRoute()
-  const canvasEditor = inject('canvasEditor')
 
   // 创建模板
   const createTmpl = async (width: number, height: number, parentId = '') => {
-    canvasEditor.clear()
-    canvasEditor.setSize(width, height)
+    editorStore.editor.clear()
+    editorStore.editor.setSize(width, height)
     const name = dayjs().format('YYYY[年]MM[月]DD[日]HH[小时]mm[分钟]ss[秒]') + '创建的作品'
     const data = await getCanvasCommonData()
     // 上传图片
@@ -30,7 +30,7 @@ export default function useMaterial() {
     return templInfo
   }
 
-  const createdFileType = async (name: string, parentId = '') => {
+  const createdFileType = async (name, parentId = '') => {
     await createdTempl({
       data: {
         name,
@@ -58,7 +58,7 @@ export default function useMaterial() {
 
   // 获取画布数据
   const getCanvasCommonData = async () => {
-    const json = canvasEditor.getJson()
+    const json = editorStore.editor.getJson()
     const fileInfo = await uploadFileToInfo()
     return {
       json,
@@ -69,21 +69,19 @@ export default function useMaterial() {
 
   // 画布转图片
   const uploadFileToInfo = async () => {
-    const dataURLtoFile = (dataurl: string, filename: string) => {
-      const arr = dataurl.split(','),
-        // @ts-ignore
+    const dataURLtoFile = (dataurl, filename) => {
+      let arr = dataurl.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
-        // @ts-ignore
+        n = bstr.length,
         u8arr = new Uint8Array(n)
-      let n = bstr.length
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
       return new File([u8arr], filename, { type: mime })
     }
 
-    const upload = (base64: string) => {
+    const upload = (base64) => {
       const file = dataURLtoFile(base64, '123.png')
       const formData = new FormData()
       const time = new Date()
@@ -104,26 +102,26 @@ export default function useMaterial() {
   }
 
   // 更新路由
-  const routerToId = (id: string) => {
+  const routerToId = (id) => {
     router.replace('/?id=' + id)
   }
 
   // 获取详情
-  const getTemplInfo = async (id: string) => {
+  const getTemplInfo = async (id) => {
     const res = await getTmplInfo(id)
     return res.data
   }
 
   // 更新详情
-  const updataTemplInfo = async (id: string, name: string) => {
-    const data: any = await getCanvasCommonData()
+  const updataTemplInfo = async (id, name) => {
+    const data = await getCanvasCommonData()
     name && (data.name = name)
     await updataTempl(id, {
       data
     })
   }
 
-  const removeTemplInfo = (id: string) => {
+  const removeTemplInfo = (id) => {
     return new Promise((resolve, reject) => {
       ElMessageBox.confirm(`${t('my_spase.remove_templTip')}`, 'Warning', {
         title: t('my_spase.remove_templ')
@@ -133,7 +131,7 @@ export default function useMaterial() {
     })
   }
 
-  const removeFileType = (id: string) => {
+  const removeFileType = (id) => {
     return new Promise((resolve, reject) => {
       ElMessageBox.confirm(`${t('my_spase.remove_file_type_Tip')}`, 'Warning', {
         title: t('my_spase.remove_file_type')
@@ -143,7 +141,7 @@ export default function useMaterial() {
     })
   }
 
-  const reNameFileType = async (name: string, id: string) => {
+  const reNameFileType = async (name, id) => {
     await updataTempl(id, {
       data: {
         name

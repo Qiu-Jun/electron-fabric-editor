@@ -2,7 +2,7 @@
  * @Description:
  * @Author: June
  * @Date: 2024-08-21 13:03:57
- * @LastEditTime: 2024-08-21 13:24:52
+ * @LastEditTime: 2024-11-30 17:39:19
  * @LastEditors: June
  */
 /*
@@ -37,7 +37,11 @@ export const createVitePlugins = (
   const _isProd = isProd(mode)
   const { APP_TITLE } = viteEnv
   const plugins: PluginOption | PluginOption[] = [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: { isCustomElement: (tag) => tag.startsWith('wc-') }
+      }
+    }),
     AutoImport({
       resolvers: [ElementPlusResolver()],
       eslintrc: {

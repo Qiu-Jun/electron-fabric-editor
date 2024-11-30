@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2024-06-06 19:58:26
  * @LastEditors: June
- * @LastEditTime: 2024-07-26 09:00:53
+ * @LastEditTime: 2024-09-06 12:16:37
  * @Description: 二维码生成工具
  */
 
@@ -45,7 +45,10 @@ enum errorCorrectionLevelType {
 class QrCodePlugin implements IPluginTempl {
   static pluginName = 'QrCodePlugin'
   static apis = ['addQrCode', 'setQrCode', 'getQrCodeTypes']
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {}
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {}
 
   async hookTransform(object: any) {
     if (object.extensionType === 'qrcode') {
@@ -69,11 +72,11 @@ class QrCodePlugin implements IPluginTempl {
       width: 300,
       margin: 10,
       errorCorrectionLevel: 'M',
-      dotsColor: 'black',
+      dotsColor: '#000000',
       dotsType: 'rounded',
-      cornersSquareColor: 'black',
+      cornersSquareColor: '#000000',
       cornersSquareType: 'square',
-      cornersDotColor: 'black',
+      cornersDotColor: '#000000',
       cornersDotType: 'square',
       background: '#ffffff'
     }

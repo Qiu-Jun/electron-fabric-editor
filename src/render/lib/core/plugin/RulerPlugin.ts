@@ -6,59 +6,59 @@
  * @Description: 标尺插件
  */
 
-import { fabric } from 'fabric'
-import Editor from '../Editor'
+import { fabric } from 'fabric';
+import Editor from '../Editor';
 // import { throttle } from 'lodash-es';
-type IEditor = Editor
+type IEditor = Editor;
 
-import initRuler from '../ruler'
+import initRuler from '../ruler';
 
 class RulerPlugin implements IPluginTempl {
-  static pluginName = 'RulerPlugin'
+  static pluginName = 'RulerPlugin';
   //  static events = ['sizeChange'];
-  static apis = ['hideGuideline', 'showGuideline', 'rulerEnable', 'rulerDisable']
-  ruler: any
+  static apis = ['hideGuideline', 'showGuideline', 'rulerEnable', 'rulerDisable'];
+  ruler: any;
   constructor(public canvas: fabric.Canvas, public editor: IEditor) {
-    this.init()
+    this.init();
   }
 
   hookSaveBefore() {
     return new Promise((resolve) => {
-      this.hideGuideline()
-      resolve(true)
-    })
+      this.hideGuideline();
+      resolve(true);
+    });
   }
 
   hookSaveAfter() {
     return new Promise((resolve) => {
-      this.showGuideline()
-      resolve(true)
-    })
+      this.showGuideline();
+      resolve(true);
+    });
   }
 
   init() {
-    this.ruler = initRuler(this.canvas)
+    this.ruler = initRuler(this.canvas);
   }
 
   hideGuideline() {
-    this.ruler.hideGuideline()
+    this.ruler.hideGuideline();
   }
 
   showGuideline() {
-    this.ruler.showGuideline()
+    this.ruler.showGuideline();
   }
 
   rulerEnable() {
-    this.ruler.enable()
+    this.ruler.enable();
   }
 
   rulerDisable() {
-    this.ruler.disable()
+    this.ruler.disable();
   }
 
   destroy() {
-    console.log('pluginDestroy')
+    console.log('pluginDestroy');
   }
 }
 
-export default RulerPlugin
+export default RulerPlugin;

@@ -3,8 +3,8 @@
  * @version:
  * @Author: June
  * @Date: 2023-05-20 09:18:28
- * @LastEditors: 秦少卫
- * @LastEditTime: 2023-07-29 22:24:03
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-30 17:37:22
 -->
 <template>
   <el-dropdown placement="bottom-end" @click="setLang">

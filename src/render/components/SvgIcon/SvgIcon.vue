@@ -1,35 +1,62 @@
+<!--
+ * @Author: June
+ * @Description: Description
+ * @Date: 2024-08-19 12:53:30
+ * @LastEditTime: 2024-10-03 11:59:20
+ * @LastEditors: June
+-->
 <template>
-  <svg class="svg-icon" :style="iconStyle" aria-hidden="true">
-    <use :xlink:href="symbolId" :fill="color" />
+  <div
+    v-if="isExternalChar"
+    :style="styleExternalIcon"
+    class="svg-external-icon svg-icon"
+  />
+  <svg v-else class="svg-icon" :class="props.extClass" aria-hidden="true">
+    <use :xlink:href="iconName" />
   </svg>
 </template>
 
-<script setup lang="ts" name="SvgIcon">
-import { computed, CSSProperties } from 'vue'
+<script lang="ts" setup>
+import { isExternal } from '@/utils/common'
 
-interface SvgProps {
-  name: string // 图标的名称 ==> 必传
-  prefix?: string // 图标的前缀 ==> 非必传（默认为"icon"）
-  iconStyle?: CSSProperties // 图标的样式 ==> 非必传
-  color?: string // 填充颜色
-}
-
-const props = withDefaults(defineProps<SvgProps>(), {
-  prefix: 'icon',
-  color: ''
+const props = defineProps({
+  icon: {
+    type: String,
+    required: true
+  },
+  extClass: {
+    type: String,
+    default: ''
+  },
+  color: {
+    type: String,
+    default: ''
+  }
 })
 
-const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+const isExternalChar = computed(() => isExternal(props.icon))
+const iconName = computed(() => `#icon-${props.icon}`)
+const styleExternalIcon = computed(() => {
+  return {
+    mask: `url(${props.icon}) no-repeat 50% 50%`,
+    '-webkit-mask': `url(${props.icon}) no-repeat 50% 50%`,
+    color: props.color ? props.color : ''
+  }
+})
 </script>
 
 <style scoped>
 .svg-icon {
-  display: inline-block;
   width: 1em;
   height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
   overflow: hidden;
-  vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
-  outline: none;
-  fill: currentcolor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
+}
+
+.svg-external-icon {
+  background-color: currentColor;
+  mask-size: cover !important;
+  display: inline-block;
 }
 </style>

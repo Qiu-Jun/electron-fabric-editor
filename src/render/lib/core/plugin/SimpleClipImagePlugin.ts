@@ -18,7 +18,11 @@ const bindInfo = (shell: fabric.Object, activeObject: fabric.Object) => {
   bindFlagToObject(shell, 'targetId', get(activeObject, 'id'))
   bindFlagToObject(shell, 'targetType', get(activeObject, 'type'))
 }
-const bindFlagToObject = (activeObject: fabric.Object, key = 'clip', value: any = true) => {
+const bindFlagToObject = (
+  activeObject: fabric.Object,
+  key = 'clip',
+  value: any = true
+) => {
   set(activeObject, key, value)
 }
 const createRectClip = (activeObject: fabric.Object, inverted: boolean) => {
@@ -124,7 +128,10 @@ export default class SimpleClipImagePlugin implements IPluginTempl {
   static pluginName = 'SimpleClipImagePlugin'
   //  static events = ['sizeChange'];
   static apis = ['addClipPathToImage', 'removeClip']
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {}
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {}
   addClipPathToImage(value: string) {
     const activeObject = this.canvas.getActiveObjects()[0]
     if (activeObject && activeObject.type === 'image') {
@@ -161,7 +168,10 @@ export default class SimpleClipImagePlugin implements IPluginTempl {
         activeObject.set('dirty', true)
       })
       shell.on('deselected', () => {
-        if (clipPath instanceof fabric.Ellipse && shell instanceof fabric.Ellipse) {
+        if (
+          clipPath instanceof fabric.Ellipse &&
+          shell instanceof fabric.Ellipse
+        ) {
           clipPath.set({ rx: shell.getRx(), ry: shell.getRy() })
           this.correctPosition(activeObject, shell, clipPath)
         } else if (shell instanceof fabric.Polygon) {
@@ -184,8 +194,16 @@ export default class SimpleClipImagePlugin implements IPluginTempl {
       this.canvas.setActiveObject(shell)
     }
   }
-  correctPosition(activeObject: fabric.Object, shell: fabric.Object, clipPath: fabric.Object) {
-    const position = activeObject.toLocalPoint(shell.getCenterPoint(), 'center', 'center')
+  correctPosition(
+    activeObject: fabric.Object,
+    shell: fabric.Object,
+    clipPath: fabric.Object
+  ) {
+    const position = activeObject.toLocalPoint(
+      shell.getCenterPoint(),
+      'center',
+      'center'
+    )
     const { scaleX = 1, scaleY = 1 } = activeObject
     clipPath.set({
       absolutePositioned: false,

@@ -11,10 +11,12 @@ import axios from 'axios'
 import qs from 'qs'
 const repoSrc = apiHost
 // 分类API
-const typeApi = (url) => axios.get(`${repoSrc}/api/${url}?pagination[pageSize]=200`)
+const typeApi = (url) =>
+  axios.get(`${repoSrc}/api/${url}?pagination[pageSize]=200`)
 
 // 分页API
-const pageApi = (url, queryParams) => axios.get(`${repoSrc}/api/${url}?${queryParams}`)
+const pageApi = (url, queryParams) =>
+  axios.get(`${repoSrc}/api/${url}?${queryParams}`)
 
 const getInfo = (id) => axios.get(`${repoSrc}/api/templs/${id}`)
 
@@ -70,7 +72,10 @@ function getMaterialInfoUrl(info) {
 }
 
 function getMaterialPreviewUrl(info) {
-  const imgUrl = info?.data?.attributes?.formats?.small?.url || info?.data?.attributes?.url || ''
+  const imgUrl =
+    info?.data?.attributes?.formats?.small?.url ||
+    info?.data?.attributes?.url ||
+    ''
   return repoSrc + imgUrl
 }
 
@@ -107,7 +112,9 @@ export default function usePageList({
 
   // 是否到达底部
   const isDownBottm = computed(() => {
-    return pagination.page === page.value && pagination.page >= pagination.pageCount
+    return (
+      pagination.page === page.value && pagination.page >= pagination.pageCount
+    )
   })
   // 获取分类列表
   const getTypeList = async () => {

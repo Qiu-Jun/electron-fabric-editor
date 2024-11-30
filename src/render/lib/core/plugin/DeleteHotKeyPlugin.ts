@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:57:35
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-04-10 17:33:02
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-10 10:58:46
  * @Description: 删除快捷键
  */
 
@@ -15,7 +15,10 @@ class DeleteHotKeyPlugin implements IPluginTempl {
   static pluginName = 'DeleteHotKeyPlugin'
   static apis = ['del']
   hotkeys: string[] = ['backspace']
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {}
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {}
 
   // 快捷键扩展回调
   hotkeyEvent(eventName: string, e: KeyboardEvent) {
@@ -37,7 +40,15 @@ class DeleteHotKeyPlugin implements IPluginTempl {
   contextMenu() {
     const activeObject = this.canvas.getActiveObject()
     if (activeObject) {
-      return [null, { text: '删除', hotkey: 'Ctrl+V', disabled: false, onclick: () => this.del() }]
+      return [
+        null,
+        {
+          text: '删除',
+          hotkey: 'Backspace',
+          disabled: false,
+          onclick: () => this.del()
+        }
+      ]
     }
   }
 

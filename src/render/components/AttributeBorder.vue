@@ -1,24 +1,21 @@
-<!--
- * @Author: 秦少卫
- * @Date: 2024-05-21 10:18:57
- * @LastEditors: June
- * @LastEditTime: 2024-07-26 21:12:56
- * @Description: 边框
--->
 <template>
-  <div class="attr-item-box" v-if="mixinState.mSelectMode === 'one' && !isGroup">
+  <div class="attr-item-box" v-if="isOne && !isGroup">
     <!-- <h3>边框</h3> -->
-    <el-divider content-position="left"><h4>边框</h4></el-divider>
+    <el-divider content-position="left">
+      <h4>{{ $t('editor.attrSetting.border.title') }}</h4>
+    </el-divider>
     <!-- 通用属性 -->
     <div>
       <el-row :gutter="12" style="margin-right: 10px">
         <el-col :span="12">
-          <div class="asa-number-warp">
-            <span class="label" style="margin-right: 10px">{{ $t('color') }}</span>
+          <div class="number-warp">
+            <span class="label" style="margin-right: 10px">{{
+              $t('editor.attrSetting.color')
+            }}</span>
             <div style="flex: 1">
               <el-color-picker
                 v-model="baseAttr.stroke"
-                @change="(value) => changeCommon('stroke', value)"
+                @change="(value: any) => changeCommon('stroke', value)"
                 show-alpha
               />
             </div>
@@ -28,20 +25,20 @@
           <InputNumber
             v-model="baseAttr.strokeWidth"
             @on-change="(value) => changeCommon('strokeWidth', value)"
-            :append="$t('width')"
+            :append="$t('editor.attrSetting.border.width')"
             :min="0"
           ></InputNumber>
         </el-col>
       </el-row>
 
-      <div class="asa-number-warp">
+      <div class="number-warp">
         <span
           style="
             flex: 0 0 48px;
             font-size: var(--el-form-label-font-size);
             color: var(--el-text-color-regular);
           "
-          >{{ $t('attributes.stroke') }}</span
+          >{{ $t('editor.attrSetting.border.stroke') }}</span
         >
         <div class="content">
           <el-select v-model="baseAttr.strokeDashArray" @change="borderSet">
@@ -60,16 +57,18 @@
   </div>
 </template>
 
-<script setup name="AttrBute">
-import useSelect from '@/hooks/select'
+<script lang="ts" setup>
 import InputNumber from './InputNumber'
+import { useEditorStore } from '@/store/modules/editor'
+import useSelect from '@/hooks/select'
 
+const { isOne, isGroup } = useSelect()
+const editorStore = useEditorStore()
 const update = getCurrentInstance()
-const { mixinState, canvasEditor } = useSelect()
 
 const groupType = ['group']
 // 属性值
-const baseAttr = reactive({
+const baseAttr: any = reactive({
   stroke: '#fff',
   strokeWidth: 0,
   strokeDashArray: []
@@ -150,10 +149,9 @@ const strokeDashList = [
   }
 ]
 
-const isGroup = computed(() => groupType.includes(mixinState.mSelectOneType))
 // 属性获取
-const getObjectAttr = (e) => {
-  const activeObject = canvasEditor.canvas.getActiveObject()
+const getObjectAttr = (e?: any) => {
+  const activeObject = editorStore.canvas?.getActiveObject()
 
   // 不是当前obj，跳过
   if (e && e.target && e.target !== activeObject) return
@@ -174,22 +172,24 @@ const getObjectAttr = (e) => {
 }
 
 // 通用属性改变
-const changeCommon = (key, value) => {
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+const changeCommon = (key: string, value: any) => {
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
+    // @ts-ignore
     activeObject.set(key, value)
     activeObject.set('strokeUniform', true)
-    canvasEditor.canvas.renderAll()
+    editorStore.canvas?.renderAll()
   }
 }
 
 // 边框设置
-const borderSet = (key) => {
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+const borderSet = (key: string) => {
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
     const stroke = strokeDashList.find((item) => item.label === key)
+    // @ts-ignore
     activeObject.set(stroke.value)
-    canvasEditor.canvas.renderAll()
+    editorStore.canvas?.renderAll()
   }
 }
 
@@ -198,17 +198,19 @@ const selectCancel = () => {
 }
 
 onMounted(() => {
-  // 获取字体数据
-  getObjectAttr()
-  canvasEditor.on('selectCancel', selectCancel)
-  canvasEditor.on('selectOne', getObjectAttr)
-  canvasEditor.canvas.on('object:modified', getObjectAttr)
+  nextTick(() => {
+    // 获取字体数据
+    getObjectAttr()
+    editorStore.editor?.on('selectCancel', selectCancel)
+    editorStore.editor?.on('selectOne', getObjectAttr)
+    editorStore.canvas?.on('object:modified', getObjectAttr)
+  })
 })
 
 onBeforeUnmount(() => {
-  canvasEditor.off('selectCancel', selectCancel)
-  canvasEditor.off('selectOne', getObjectAttr)
-  canvasEditor.canvas.off('object:modified', getObjectAttr)
+  editorStore.editor?.off('selectCancel', selectCancel)
+  editorStore.editor?.off('selectOne', getObjectAttr)
+  editorStore.canvas?.off('object:modified', getObjectAttr)
 })
 </script>
 
@@ -220,25 +222,17 @@ onBeforeUnmount(() => {
   background: #f8f8f9;
   box-shadow: none;
 }
-.asa-number-warp {
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+.number-warp {
   background: #f6f7f9;
-  border-radius: 5px;
   padding: 0 15px 0 10px;
-  margin-bottom: 10px;
-  position: relative;
-  z-index: 1;
+  @apply box-border w-full flex justify-start items-center rounded-5px mb-10px relative z-1;
   .label {
     flex: 0 0 32px;
     font-size: var(--el-form-label-font-size);
     color: var(--el-text-color-regular);
   }
   .content {
-    width: 100%;
+    @apply w-full;
   }
 }
 </style>

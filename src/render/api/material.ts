@@ -21,7 +21,8 @@ export const getWebInfo = () => instance.get('/api/web-site?populate=*')
 export const getMaterialTypes = () => instance.get('/api/material-types')
 
 // 获取素材列表
-export const getMaterials = (data: any) => instance.get('/api/materials?' + data)
+export const getMaterials = (data: any) =>
+  instance.get('/api/materials?' + data)
 
 // 获取根据分类获取素材
 export const getMaterialsByType = (data: any) =>
@@ -31,7 +32,8 @@ export const getMaterialsByType = (data: any) =>
 export const getFontStyleTypes = () => instance.get('/api/font-style-types')
 
 // 获取字体素材离别奥列表
-export const getFontStyles = (data: any) => instance.get('/api/font-styles?' + data)
+export const getFontStyles = (data: any) =>
+  instance.get('/api/font-styles?' + data)
 
 // 获取根据分类获取字体样式列表
 export const getFontStyleListByType = (data: any) =>

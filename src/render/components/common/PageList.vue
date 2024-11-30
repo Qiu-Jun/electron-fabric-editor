@@ -1,8 +1,8 @@
 <!--
  * @Author: 秦少卫
  * @Date: 2024-06-11 16:34:23
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-06-12 15:41:52
+ * @LastEditors: June
+ * @LastEditTime: 2024-10-09 21:22:56
  * @Description: 分页组件
 -->
 
@@ -40,7 +40,9 @@
           </el-tooltip>
         </div>
       </div>
-      <el-divider v-if="isDownBottom">{{ pageData.length ? '已经到底了' : '暂无内容' }}</el-divider>
+      <el-divider v-if="isDownBottom">{{
+        pageData.length ? '已经到底了' : '暂无内容'
+      }}</el-divider>
     </el-scrollbar>
   </div>
 </template>

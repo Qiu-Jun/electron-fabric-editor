@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2023-06-20 12:52:09
  * @LastEditors: June
- * @LastEditTime: 2024-07-26 09:29:00
+ * @LastEditTime: 2024-10-13 00:07:44
  * @Description: 内部插件
  */
 import { fabric } from 'fabric'
@@ -10,7 +10,11 @@ import { v4 as uuid } from 'uuid'
 import Editor from './Editor'
 import { SelectEvent, SelectMode } from './eventType'
 import { clipboardText, downFile, selectFiles } from './utils/utils'
+import { useTemplateStoreWithOut } from '@/store/modules/template'
+import { blob } from 'stream/consumers'
 type IEditor = Editor
+
+const templateStore = useTemplateStoreWithOut()
 
 function transformText(objects: any) {
   if (!objects) return
@@ -128,7 +132,6 @@ class ServersPlugin {
       this.canvas.loadFromJSON(jsonFile, () => {
         // 把i-text对应的path加上
         this.renderITextPath(textPaths)
-        this.canvas.renderAll()
         // 加载后钩子
         this.editor.hooksEntity.hookImportAfter.callAsync(jsonFile, () => {
           // 修复导入带水印的json无法清除问题 #359
@@ -137,6 +140,14 @@ class ServersPlugin {
             this.editor.updateDrawStatus(!!temp['overlayImage'])
           this.canvas.renderAll()
           callback && callback()
+          this.canvas.renderAll()
+          const tempObj = JSON.parse(jsonFile)
+          this.canvas.toCanvasElement(1).toBlob((blob) => {
+            if (blob) {
+              tempObj.image = URL.createObjectURL(blob)
+            }
+            templateStore.addTemplate(tempObj)
+          })
           this.editor.emit('loadJson')
         })
       })
@@ -188,7 +199,9 @@ class ServersPlugin {
    */
   dragAddItem(item: fabric.Object, event?: DragEvent) {
     if (event) {
-      const { left, top } = this.canvas.getSelectionElement().getBoundingClientRect()
+      const { left, top } = this.canvas
+        .getSelectionElement()
+        .getBoundingClientRect()
       if (event.x < left || event.y < top || item.width === undefined) return
 
       const point = {
@@ -268,7 +281,9 @@ class ServersPlugin {
   }
 
   _getSaveSvgOption() {
-    const workspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
+    const workspace = this.canvas
+      .getObjects()
+      .find((item) => item.id === 'workspace')
     let fontFamilyArry = this.canvas
       .getObjects()
       .filter((item) => item.type == 'textbox')

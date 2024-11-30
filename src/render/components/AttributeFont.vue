@@ -1,22 +1,13 @@
-<!--
- * @Author: 秦少卫
- * @Date: 2024-05-21 10:35:12
- * @LastEditors: June
- * @LastEditTime: 2024-07-25 23:31:14
- * @Description: 字体属性
--->
-
 <template>
-  <div
-    class="box attr-item-box"
-    v-if="mixinState.mSelectMode === 'one' && textType.includes(mixinState.mSelectOneType)"
-  >
-    <el-divider content-position="left"><h4>字体属性</h4></el-divider>
+  <div class="box attr-item-box" v-if="isOne && isMatchType">
+    <el-divider content-position="left"
+      ><h4>{{ $t('editor.attrSetting.font.title') }}</h4></el-divider
+    >
     <div>
       <div class="flex-view">
         <div class="flex-item">
           <div class="left font-selector">
-            <el-select v-model="baseAttr.fontFamily" @on-change="changeFontFamily">
+            <el-select v-model="baseAttr.fontFamily" @change="changeFontFamily">
               <el-option
                 v-for="item in fontsList"
                 :value="item.name"
@@ -38,7 +29,7 @@
             <InputNumber
               v-model="baseAttr.fontSize"
               @on-change="(value) => changeCommon('fontSize', value)"
-              append="字号"
+              :append="$t('editor.attrSetting.font.fontSize')"
               :min="1"
             ></InputNumber>
           </div>
@@ -50,7 +41,7 @@
           <el-radio-group
             class="button-group"
             v-model="baseAttr.textAlign"
-            @change="(value) => changeCommon('textAlign', value)"
+            @change="(value: any) => changeCommon('textAlign', value)"
             type="button"
           >
             <el-radio-button
@@ -59,7 +50,7 @@
               :value="item"
               :key="item"
             >
-              <span v-html="textAlignListSvg[i]"></span>
+              <SvgIcon extClass="text-20px" color="#fff" :icon="textAlignListSvg[i]" />
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -72,38 +63,20 @@
               style="width: 25%"
               @click="changeFontWeight('fontWeight', baseAttr.fontWeight)"
             >
-              <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <path
-                  d="M793.99865 476a244 244 0 0 0 54-130.42C862.75865 192.98 743.01865 64 593.85865 64H195.01865a32 32 0 0 0-32 32v96a32 32 0 0 0 32 32h63.74v576H195.01865a32 32 0 0 0-32 32v96a32 32 0 0 0 32 32h418.64c141.6 0 268.28-103.5 282-244.8 9.48-96.9-32.78-184.12-101.66-239.2zM418.33865 224h175.52a96 96 0 0 1 0 192h-175.52z m175.52 576h-175.52V576h175.52a112 112 0 0 1 0 224z"
-                  :fill="baseAttr.fontWeight === 'bold' ? '#305ef4' : '#666'"
-                ></path>
-              </svg>
+              <SvgIcon extClass="text-20px" color="#fff" icon="atb-fontWeight" />
             </el-button>
             <el-button style="width: 25%" @click="changeFontStyle('fontStyle', baseAttr.fontStyle)">
-              <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <path
-                  d="M832 96v64a32 32 0 0 1-32 32h-125.52l-160 640H608a32 32 0 0 1 32 32v64a32 32 0 0 1-32 32H224a32 32 0 0 1-32-32v-64a32 32 0 0 1 32-32h125.52l160-640H416a32 32 0 0 1-32-32V96a32 32 0 0 1 32-32h384a32 32 0 0 1 32 32z"
-                  :fill="baseAttr.fontStyle === 'italic' ? '#305ef4' : '#666'"
-                ></path>
-              </svg>
+              <SvgIcon extClass="text-20px" color="#fff" icon="atb-fontStyle" />
             </el-button>
             <el-button
               style="width: 25%"
               @click="changeLineThrough('linethrough', baseAttr.linethrough)"
             >
-              <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <path
-                  d="M893.088 501.792H125.344a32 32 0 0 0 0 64h767.744a32 32 0 0 0 0-64zM448 448h112V208h288V96H160v112h288zM448 640h112v288H448z"
-                  :fill="baseAttr.linethrough ? '#305ef4' : '#666'"
-                ></path>
-              </svg>
+              <SvgIcon extClass="text-20px" color="#fff" icon="atb-linethrough" />
             </el-button>
             <el-button style="width: 25%" @click="changeUnderline('underline', baseAttr.underline)">
               <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <path
-                  d="M703.232 67.008h127.488v413.248c0 158.016-142.656 286.016-318.72 286.016-176 0-318.72-128-318.72-286.016V67.008h127.488v413.248c0 39.872 18.176 78.144 51.136 107.776 36.8 32.96 86.528 51.072 140.096 51.072s103.36-18.112 140.032-51.136c33.024-29.632 51.2-67.968 51.2-107.776V67.008zM193.28 871.616h637.44v85.376H193.28v-85.376z"
-                  :fill="baseAttr.underline ? '#305ef4' : '#666'"
-                ></path>
+                <SvgIcon extClass="text-20px" color="#fff" icon="atb-underline" />
               </svg>
             </el-button>
           </el-button-group>
@@ -116,25 +89,27 @@
             v-model="baseAttr.lineHeight"
             @on-change="(value) => changeCommon('lineHeight', value)"
             :step="0.1"
-            :append="$t('attributes.line_height')"
+            :append="$t('editor.attrSetting.font.lineHeight')"
           ></InputNumber>
         </div>
         <div class="right">
           <InputNumber
             v-model="baseAttr.charSpacing"
             @on-change="(value) => changeCommon('charSpacing', value)"
-            :append="$t('attributes.char_spacing')"
+            :append="$t('editor.attrSetting.font.space')"
           ></InputNumber>
         </div>
       </div>
 
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">{{ $t('background') }}</span>
+          <span class="label">{{ $t('editor.attrSetting.font.background') }}</span>
           <div class="content">
             <el-color-picker
               v-model="baseAttr.textBackgroundColor"
-              @change="(value) => changeCommon('textBackgroundColor', value)"
+              @change="
+                (value: any) => changeCommon('textBackgroundColor', value)
+              "
               show-alpha
             />
           </div>
@@ -144,17 +119,21 @@
   </div>
 </template>
 
-<script setup name="AttrBute">
-import useSelect from '@/hooks/select'
+<script lang="ts" setup>
 import { ElLoading } from 'element-plus'
 import InputNumber from './InputNumber'
-const update = getCurrentInstance()
-const { mixinState, canvasEditor } = useSelect()
+import { useEditorStore } from '@/store/modules/editor'
+import useSelect from '@/hooks/select'
 
 // 文字元素
 const textType = ['i-text', 'textbox', 'text']
+
+const editorStore = useEditorStore()
+const { isMatchType, isOne } = useSelect(textType)
+const update = getCurrentInstance()
+
 // 属性值
-const baseAttr = reactive({
+const baseAttr = reactive<Record<string, any>>({
   fontSize: 0,
   fontFamily: '',
   lineHeight: 0,
@@ -168,46 +147,59 @@ const baseAttr = reactive({
   overline: false
 })
 
-const fontsList = ref([])
-canvasEditor.getFontList().then((list) => {
+const fontsList: any = ref([])
+editorStore.editor?.getFontList().then((list: any) => {
   fontsList.value = list
 })
 
 // 字体对齐方式
-const textAlignList = ['left', 'center', 'right']
+const textAlignList = ['left', 'center', 'right', 'justify']
 // 对齐图标
 const textAlignListSvg = [
-  '<svg t="1650441458823" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3554" width="18" height="18"><path d="M198.4 198.4h341.333333c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533334 19.2v57.6c0 8.533333-2.133333 14.933333-8.533334 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-341.333333c-8.533333 0-14.933333-2.133333-19.2-8.533334-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533333z m0 170.666667h569.6c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333h-569.6c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533333z m0 170.666666h454.4c8.533333 0 14.933333 2.133333 19.2 8.533334 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333h-454.4c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533334z m0 170.666667h625.066667c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-625.066667c-8.533333 0-14.933333-2.133333-19.2-8.533334-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533333z" p-id="3555"></path></svg>',
-  '<svg t="1650441512015" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3704" width="18" height="18"><path d="M313.6 198.4h398.933333c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533334 19.2v57.6c0 8.533333-2.133333 14.933333-8.533334 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-398.933333c-8.533333 0-14.933333-2.133333-19.2-8.533334-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 10.666667-8.533333 19.2-8.533333z m-115.2 170.666667h625.066667c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333h-625.066667c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533333z m115.2 170.666666h398.933333c8.533333 0 14.933333 2.133333 19.2 8.533334 6.4 6.4 8.533333 12.8 8.533334 19.2v57.6c0 8.533333-2.133333 14.933333-8.533334 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333h-398.933333c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 10.666667-8.533333 19.2-8.533334z m-115.2 170.666667h625.066667c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-625.066667c-8.533333 0-14.933333-2.133333-19.2-8.533334-6.4-6.4-8.533333-12.8-8.533333-19.2v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 4.266667-4.266667 12.8-8.533333 19.2-8.533333z" p-id="3705"></path></svg>',
-  '<svg t="1650441519862" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3854" width="18" height="18"><path d="M454.4 283.733333v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 6.4-6.4 12.8-8.533333 19.2-8.533333h341.333334c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-341.333334c-8.533333 0-14.933333-2.133333-19.2-8.533334-4.266667-4.266667-8.533333-10.666667-8.533333-19.2z m-226.133333 170.666667v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 6.4-6.4 12.8-8.533333 19.2-8.533333h569.6c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333H256c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-4.266667-8.533333-10.666667-8.533333-19.2z m113.066666 170.666667v-57.6c0-8.533333 2.133333-14.933333 8.533334-19.2 6.4-6.4 12.8-8.533333 19.2-8.533334h454.4c8.533333 0 14.933333 2.133333 19.2 8.533334 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533333h-454.4c-8.533333 0-14.933333-2.133333-19.2-8.533333-6.4-4.266667-8.533333-10.666667-8.533334-19.2z m-170.666666 170.666666v-57.6c0-8.533333 2.133333-14.933333 8.533333-19.2 6.4-6.4 12.8-8.533333 19.2-8.533333h625.066667c8.533333 0 14.933333 2.133333 19.2 8.533333 6.4 6.4 8.533333 12.8 8.533333 19.2v57.6c0 8.533333-2.133333 14.933333-8.533333 19.2-6.4 6.4-12.8 8.533333-19.2 8.533334h-625.066667c-8.533333 0-14.933333-2.133333-19.2-8.533334-6.4-4.266667-8.533333-10.666667-8.533333-19.2z" p-id="3855"></path></svg>'
+  'text-align-left',
+  'text-align-center',
+  'text-align-right',
+  'text-align-justitfy'
 ]
 
 // 属性获取
-const getObjectAttr = (e) => {
-  const activeObject = canvasEditor.canvas.getActiveObject()
+const getObjectAttr = (e?: any) => {
+  const activeObject = editorStore.canvas?.getActiveObject()
   // 不是当前obj，跳过
   if (e && e.target && e.target !== activeObject) return
-  if (activeObject && textType.includes(activeObject.type)) {
+  // @ts-ignore
+  if (activeObject && isMatchType) {
+    // @ts-ignore
     baseAttr.fontSize = activeObject.get('fontSize')
+    // @ts-ignore
     baseAttr.fontFamily = activeObject.get('fontFamily')
+    // @ts-ignore
     baseAttr.lineHeight = activeObject.get('lineHeight')
+    // @ts-ignore
     baseAttr.textAlign = activeObject.get('textAlign')
+    // @ts-ignore
     baseAttr.underline = activeObject.get('underline')
+    // @ts-ignore
     baseAttr.linethrough = activeObject.get('linethrough')
+    // @ts-ignore
     baseAttr.charSpacing = activeObject.get('charSpacing')
+    // @ts-ignore
     baseAttr.overline = activeObject.get('overline')
+    // @ts-ignore
     baseAttr.fontStyle = activeObject.get('fontStyle')
+    // @ts-ignore
     baseAttr.textBackgroundColor = activeObject.get('textBackgroundColor')
+    // @ts-ignore
     baseAttr.fontWeight = activeObject.get('fontWeight')
   }
 }
 
 // 通用属性改变
-const changeCommon = (key, value) => {
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+const changeCommon = (key: any, value: any) => {
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
     activeObject && activeObject.set(key, value)
-    canvasEditor.canvas.renderAll()
+    editorStore.canvas?.renderAll()
   }
 }
 
@@ -215,111 +207,95 @@ const selectCancel = () => {
   update?.proxy?.$forceUpdate()
 }
 
-const changeFontFamily = async (fontName) => {
+const changeFontFamily = async (fontName: string) => {
   if (!fontName) return
   const loadingINstasncdee = ElLoading.service()
-  canvasEditor.loadFont(fontName).finally(() => loadingINstasncdee.close())
+  editorStore.editor.loadFont(fontName).finally(() => loadingINstasncdee.close())
 }
-const changeFontWeight = (key, value) => {
+const changeFontWeight = (key: any, value: any) => {
   const nValue = value === 'normal' ? 'bold' : 'normal'
   baseAttr.fontWeight = nValue
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   activeObject && activeObject.set(key, nValue)
-  canvasEditor.canvas.renderAll()
+  editorStore.canvas?.renderAll()
 }
 
 // 斜体
-const changeFontStyle = (key, value) => {
+const changeFontStyle = (key: any, value: any) => {
   const nValue = value === 'normal' ? 'italic' : 'normal'
   baseAttr.fontStyle = nValue
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   activeObject && activeObject.set(key, nValue)
-  canvasEditor.canvas.renderAll()
+  editorStore.canvas?.renderAll()
 }
 
 // 中划
-const changeLineThrough = (key, value) => {
+const changeLineThrough = (key: any, value: any) => {
   const nValue = value === false
   baseAttr.linethrough = nValue
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   activeObject && activeObject.set(key, nValue)
-  canvasEditor.canvas.renderAll()
+  editorStore.canvas?.renderAll()
 }
 
 // 下划
-const changeUnderline = (key, value) => {
+const changeUnderline = (key: any, value: any) => {
   const nValue = value === false
   baseAttr.underline = nValue
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   activeObject && activeObject.set(key, nValue)
-  canvasEditor.canvas.renderAll()
+  editorStore.canvas?.renderAll()
 }
 
 onMounted(() => {
   // 获取字体数据
-  getObjectAttr()
-  canvasEditor.on('selectCancel', selectCancel)
-  canvasEditor.on('selectOne', getObjectAttr)
-  canvasEditor.canvas.on('object:modified', getObjectAttr)
+
+  nextTick(() => {
+    getObjectAttr()
+    editorStore.editor?.on('selectCancel', selectCancel)
+    editorStore.editor?.on('selectOne', getObjectAttr)
+    editorStore.canvas?.on('object:modified', getObjectAttr)
+  })
 })
 
 onBeforeUnmount(() => {
-  canvasEditor.off('selectCancel', selectCancel)
-  canvasEditor.off('selectOne', getObjectAttr)
-  canvasEditor.canvas.off('object:modified', getObjectAttr)
+  editorStore.editor?.off('selectCancel', selectCancel)
+  editorStore.editor?.off('selectOne', getObjectAttr)
+  editorStore.canvas?.off('object:modified', getObjectAttr)
 })
 </script>
 
 <style scoped lang="scss">
 :deep(.el-color-picker) {
-  width: 100%;
+  @apply w-full;
 }
 :deep(.el-color-picker__trigger) {
-  width: 100%;
+  @apply w-full;
 }
 :deep(.el-color-picker__color-inner) {
-  justify-content: flex-end;
+  @apply justify-end;
 }
 .right {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  @apply flex justify-end items-center;
   & > span {
     flex: 0 0 36px;
   }
 }
-.asa-number-warp {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  span {
-    font-size: var(--el-form-label-font-size);
-    color: var(--el-text-color-regular);
-  }
-}
+
 .button-group {
-  width: 100%;
+  @apply w-full;
   :deep(.el-radio-button) {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply f-center flex-1;
     .el-radio-button__inner {
-      flex: 1;
+      @apply flex-1;
     }
   }
 }
 .font-selector {
-  :deep(.ivu-select-item) {
-    padding: 1px 4px;
-  }
-
   .font-item {
-    height: 40px;
-    width: 280px;
     background-size: auto 28px;
     background-repeat: no-repeat;
+    @apply w-280px h-40px;
   }
 }
 
@@ -336,15 +312,9 @@ onBeforeUnmount(() => {
   background: #f6f7f9;
 }
 .flex-item {
-  display: inline-flex;
-  flex: 1;
+  @apply flex-1 inline-flex box-border;
   .label {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    display: inline-block;
-    font-size: 14px;
-    // color: #333333;
+    @apply w-32px h-32px leading-32px inline-block text-14px;
   }
   .content {
     flex: 1;
@@ -352,17 +322,7 @@ onBeforeUnmount(() => {
   }
   .slider-box {
     width: calc(100% - 50px);
-    margin-left: 10px;
-  }
-  .left {
-    flex: 1;
-  }
-  .right {
-    flex: 1;
-    margin-left: 10px;
-    & > span {
-      flex: 0 0 48px;
-    }
+    @apply mb-10px;
   }
 }
 </style>

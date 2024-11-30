@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-21 22:09:36
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-04-10 17:33:05
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-23 16:42:14
  * @Description: file content
  */
 
@@ -11,18 +11,22 @@ import { fabric } from 'fabric'
 import Arrow from '../objects/Arrow'
 import ThinTailArrow from '../objects/ThinTailArrow'
 import Editor from '../Editor'
+import { DrawTypes } from '@/enums/editor'
 type IEditor = Editor
 
 class DrawLinePlugin implements IPluginTempl {
   static pluginName = 'DrawLinePlugin'
   static apis = ['setLineType', 'setMode']
   isDrawingLineMode: boolean
-  lineType: string
+  lineType: DrawTypes | ''
   lineToDraw: any
   pointer: any
   pointerPoints: any
   isDrawingLine: boolean
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {
     this.isDrawingLine = false
     this.isDrawingLineMode = false
     this.lineType = ''
@@ -44,7 +48,12 @@ class DrawLinePlugin implements IPluginTempl {
       canvas.requestRenderAll()
       this.isDrawingLine = true
       this.pointer = canvas.getPointer(o.e)
-      this.pointerPoints = [this.pointer.x, this.pointer.y, this.pointer.x, this.pointer.y]
+      this.pointerPoints = [
+        this.pointer.x,
+        this.pointer.y,
+        this.pointer.x,
+        this.pointer.y
+      ]
       let NodeHandler
       let opts: any = {
         strokeWidth: 2,
@@ -52,13 +61,13 @@ class DrawLinePlugin implements IPluginTempl {
         id: uuid()
       }
       switch (this.lineType) {
-        case 'line':
+        case DrawTypes.line:
           NodeHandler = fabric.Line
           break
-        case 'arrow':
+        case DrawTypes.arrow:
           NodeHandler = Arrow
           break
-        case 'thinTailArrow':
+        case DrawTypes.thinTailArrow:
           NodeHandler = ThinTailArrow
           opts = {
             strokeWidth: 2,
@@ -81,7 +90,13 @@ class DrawLinePlugin implements IPluginTempl {
     })
 
     canvas.on('mouse:move', (o) => {
-      if (!this.isDrawingLine || !['line', 'arrow', 'thinTailArrow'].includes(this.lineType)) return
+      if (
+        !this.isDrawingLine ||
+        ![DrawTypes.line, DrawTypes.arrow, DrawTypes.thinTailArrow].includes(
+          this.lineType
+        )
+      )
+        return
       canvas.discardActiveObject()
       const activeObject = canvas.getActiveObject()
       if (activeObject) return

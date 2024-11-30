@@ -1,3 +1,10 @@
+/*
+ * @Author: June
+ * @Description:
+ * @Date: 2024-11-30 17:11:05
+ * @LastEditTime: 2024-11-30 17:43:48
+ * @LastEditors: June
+ */
 module.exports = {
   root: true,
   parser: 'vue-eslint-parser',
@@ -28,6 +35,9 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-this-alias': 'off'
+    '@typescript-eslint/no-this-alias': 'off',
+
+    'prefer-const': 'off', // 暂关
+    '@typescript-eslint/no-unused-vars': 'off'
   }
 }

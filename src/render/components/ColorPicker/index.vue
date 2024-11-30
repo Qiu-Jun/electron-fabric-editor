@@ -2,8 +2,8 @@
  * @Author: ShawnPhang
  * @Date: 2023-05-26 17:42:26
  * @Description: 调色板
- * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-06-20 17:46:09
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-22 08:47:57
 -->
 <template>
   <div class="color-picker">

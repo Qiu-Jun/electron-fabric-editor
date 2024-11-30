@@ -109,7 +109,12 @@ const emit = defineEmits<{
   (e: 'on-change', value: number): void
   (e: 'on-focus', value: FocusEvent): void
   (e: 'on-blur', value: FocusEvent): void
-  (e: 'on-input', value: number | undefined, inputValue: string, ev: Event): void
+  (
+    e: 'on-input',
+    value: number | undefined,
+    inputValue: string,
+    ev: Event
+  ): void
   (e: 'on-change', value: number | undefined, ev: Event): void
 }>()
 
@@ -230,13 +235,20 @@ const clearRepeatTimerProps = {
   onMouseleave: clearRepeatTimer
 }
 
-const handleStepButton = (event: Event, method: StepMethods, needRepeat = false) => {
+const handleStepButton = (
+  event: Event,
+  method: StepMethods,
+  needRepeat = false
+) => {
   event.preventDefault()
   inputRef.value?.focus()
   nextStep(method, event)
   // 长按时持续触发
   if (needRepeat) {
-    repeatTimer = window.setTimeout(() => (event.target as HTMLElement).dispatchEvent(event), SPEED)
+    repeatTimer = window.setTimeout(
+      () => (event.target as HTMLElement).dispatchEvent(event),
+      SPEED
+    )
   }
 }
 
@@ -294,7 +306,9 @@ const getLegalValue = (value: number | undefined): number | undefined => {
   if (isNumber(props.max) && value > props.max) {
     value = props.max
   }
-  return isNumber(mergedPrecision.value) ? NP.round(value, mergedPrecision.value) : value
+  return isNumber(mergedPrecision.value)
+    ? NP.round(value, mergedPrecision.value)
+    : value
 }
 
 const handleChange = (e: Event) => {
@@ -335,7 +349,8 @@ const useSwipe = (target: MaybeRefOrGetter<HTMLElement | null | undefined>) => {
     },
     onSwipe: (e: PointerEvent) => {
       if (!isNumber(startValue.value)) return
-      const newValue = startValue.value + NP.round(posEnd.x - posStart.x, 0) * props.step
+      const newValue =
+        startValue.value + NP.round(posEnd.x - posStart.x, 0) * props.step
       _value.value = getStringValue(newValue)
       props.modelEvent === 'input' ? handleInput(e) : handleChange(e)
     }
@@ -366,7 +381,8 @@ watch(
       isMin.value = _isMin
     }
 
-    const isExceedMinValue = isNumber(valueNumber.value) && valueNumber.value < newVal
+    const isExceedMinValue =
+      isNumber(valueNumber.value) && valueNumber.value < newVal
     if (isExceedMinValue) {
       handleExceedRange()
     }
@@ -380,7 +396,8 @@ watch(
       isMax.value = _isMax
     }
 
-    const isExceedMaxValue = isNumber(valueNumber.value) && valueNumber.value > newVal
+    const isExceedMaxValue =
+      isNumber(valueNumber.value) && valueNumber.value > newVal
     if (isExceedMaxValue) {
       handleExceedRange()
     }
@@ -445,7 +462,11 @@ defineExpose({
       <template v-if="$slots.prefix">
         <slot name="prefix"></slot>
       </template>
-      <label ref="appendLabelRef" :class="`${inputWrapClasses}__label`" v-else-if="append">
+      <label
+        ref="appendLabelRef"
+        :class="`${inputWrapClasses}__label`"
+        v-else-if="append"
+      >
         {{ append }}
       </label>
       <input
@@ -472,7 +493,11 @@ defineExpose({
       <template v-if="$slots.suffix">
         <slot name="suffix"></slot>
       </template>
-      <label ref="prependLabelRef" :class="`${inputWrapClasses}__label`" v-else-if="prepend">
+      <label
+        ref="prependLabelRef"
+        :class="`${inputWrapClasses}__label`"
+        v-else-if="prepend"
+      >
         {{ prepend }}
       </label>
     </div>
@@ -493,7 +518,10 @@ $input-height-large: 40px;
   font-size: 14px;
   color: #515a6e;
   background: $input-group-bg;
-  transition: border 0.2s ease-in-out, background 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+  transition:
+    border 0.2s ease-in-out,
+    background 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
     -webkit-box-shadow 0.2s ease-in-out;
   margin: 0;
   padding: 0;

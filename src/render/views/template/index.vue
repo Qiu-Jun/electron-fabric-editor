@@ -3,7 +3,7 @@
  * @Description: 
  * @Date: 2024-07-24 18:36:42
  * @LastEditors: June
- * @LastEditTime: 2024-07-26 08:55:40
+ * @LastEditTime: 2024-11-22 08:04:17
  * @FilePath: \element-fabric-editor\src\views\template\index.vue
 -->
 <template>
@@ -19,7 +19,12 @@
         </div>
 
         <div class="right">
-          <router-link custom v-slot="{ navigate }" to="/design/editor" target="_blank">
+          <router-link
+            custom
+            v-slot="{ navigate }"
+            to="/design/editor"
+            target="_blank"
+          >
             <el-button link @click="navigate">新建设计</el-button>
           </router-link>
 
@@ -65,20 +70,17 @@
         </div>
 
         <!-- grid布局 -->
-        <div
-          class="img-box grid"
-          id="imgBox"
-          v-masonry
-          transition-duration="0.3s"
-          :gutter="10"
-          item-selector=".grid-item"
-        >
-          <div v-masonry-tile class="img-item grid-item" v-for="info in templList" :key="info.id">
+        <wc-waterfall :gap="10" :cols="5">
+          <div
+            class="img-item grid-item"
+            v-for="info in templList"
+            :key="info.id"
+          >
             <el-tooltip :content="info.name" placement="top">
               <img :src="info.src" :alt="info.name" @click="toInfo(info)" />
             </el-tooltip>
           </div>
-        </div>
+        </wc-waterfall>
         <Page
           class="page"
           :total="total"
@@ -228,17 +230,11 @@ const toInfo = (info) => {
 
 // 流布局
 .img-box {
-  display: grid;
-  width: 1200px;
-  margin: 0 auto;
+  @apply grid w-1200px mx-auto;
   .grid-item {
-    width: 232px;
-    cursor: pointer;
-    margin-bottom: 5px;
-
+    @apply w-232px cursor-pointer mb-5px;
     img {
-      width: 100%;
-      border-radius: 10px;
+      @apply w-full rounded-10px;
       &:hover {
         // animation: 3s linear 1s slidein;
         transform: scale(1.02);
@@ -249,7 +245,6 @@ const toInfo = (info) => {
 
 // 分页
 .page {
-  margin: 20px auto;
-  text-align: center;
+  @apply my-20px mx-auto text-center;
 }
 </style>

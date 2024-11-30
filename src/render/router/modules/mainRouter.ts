@@ -3,8 +3,8 @@
  * @Description:
  * @Date: 2024-07-24 18:35:48
  * @LastEditors: June
- * @LastEditTime: 2024-07-24 18:38:00
- * @FilePath: /element-fabric-editor/src/router/modules/mainRouter.ts
+ * @LastEditTime: 2024-09-12 20:36:28
+ * @FilePath: \element-fabric-editor\src\router\modules\mainRouter.ts
  */
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/home/index.vue')
   },
   {
-    path: '/template',
+    path: '/editor/template',
     component: () => import('@/views/template/index.vue')
   }
 ]

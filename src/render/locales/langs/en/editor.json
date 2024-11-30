@@ -1,0 +1,272 @@
+{
+  "tab": {
+    "add": "Add",
+    "template": "Template",
+    "element": "Element",
+    "text": "Text",
+    "material": "Material",
+    "ai": "AI",
+    "mine": "Mine"
+  },
+  "text": {
+    "title": "TEXT",
+    "headline": "Headline",
+    "subHeadline": "SubHeadline",
+    "text": "Text"
+  },
+  "shape": {
+    "title": "SHAPE",
+    "rect": "Rect",
+    "triangle": "Triangle",
+    "around": "Around",
+    "polygon": "Polygon",
+    "line": "Line"
+  },
+  "codes": {
+    "title": "CODEIMAGE",
+    "qrCode": "QrCode",
+    "barCode": "BarCode"
+  },
+  "insert": {
+    "title": "INSET",
+    "template": "NewTemplate",
+    "image": "InsertImage",
+    "svg": "InsertSVG",
+    "psd": "InsertPSD",
+    "json": "InsertJSON"
+  },
+  "draw": {
+    "title": "DrawElement"
+  },
+  "header": {
+    "allTemplate": "AllTemplate",
+    "preview": "Preview",
+    "clear": "Clear",
+    "save": {
+      "download": "Download",
+      "save_my_spase": "SaveToCloud",
+      "save_as_picture": "SaveAsPicture",
+      "save_as_svg": "SaveAsSvg",
+      "save_as_json": "SaveAsJson",
+      "copy_to_clipboard": "CopyToClipboard",
+      "copy_to_clipboardstr": "CopyToClipboardString"
+    },
+    "ruler": "Ruler",
+    "history": {
+      "undo": "Undo",
+      "redo": "Redo"
+    }
+  },
+  "basics": "Basics",
+  "recommend": "Recommend",
+  "background": "Background",
+  "container": "Container",
+  "element": "Element",
+  "tempalte": "Tempalte",
+  "image": "Image",
+  "panel": {
+    "title": "Panel"
+  },
+  "layer": {
+    "title": "Layer"
+  },
+  "drag": "Drag",
+  "bgSetting": {
+    "size": "Size",
+    "color": "Color",
+    "colorMacthing": "Color Select",
+    "width": "Width",
+    "height": "Height",
+    "bgImage": "BackgroundImage",
+    "addBgImage": "Setting",
+    "removeBgImage": "Remove"
+  },
+  "quickOperation": {
+    "title": "QuickOperation",
+    "lock": "Lock",
+    "editPoly": "EditPoly",
+    "delete": "Delete",
+    "copy": "Copy",
+    "hidden": "Hidden"
+  },
+  "attrSetting": {
+    "color": "Color",
+    "centerAlign": {
+      "name": "CenterAlign",
+      "centerX": "Horizontal",
+      "center": "Horizontal And Vertical",
+      "centerY": "Vertical "
+    },
+    "font": {
+      "title": "Font Attribute",
+      "fontSize": "FontSize",
+      "lineHeight": "LineHeight",
+      "space": "Space",
+      "background": "Background",
+      "decimals": "Decimals",
+      "decimalsOptions": {
+        "none": "None",
+        "bottom": "Bottom",
+        "top": "Top"
+      }
+    },
+    "position": {
+      "title": "Position Attribute",
+      "x": "X",
+      "y": "Y",
+      "rotate": "Rotate",
+      "opacity": "Opacity"
+    },
+    "shadow": {
+      "title": "Shadow",
+      "x": "X",
+      "y": "Y",
+      "blur": "Blur"
+    },
+    "border": {
+      "title": "Border",
+      "width": "Width",
+      "stroke": "Stroke"
+    },
+    "data": {
+      "title": "Data",
+      "id": "ID",
+      "getFontStyle": "GetFontStyle"
+    },
+    "group": {
+      "group": "Group",
+      "unGroup": "UnGroup",
+      "align": {
+        "name": "Align",
+        "left": "Left",
+        "centerX": "CenterX",
+        "right": "Right",
+        "top": "Top",
+        "bottom": "Bottom",
+        "centerY": "CenterY",
+        "averageX": "AverageX",
+        "averageY": "AverageY"
+      },
+      "centerAlign": {
+        "name": "CenterAlign",
+        "centerX": "CenterX",
+        "center": "Center",
+        "centerY": "CenterY"
+      }
+    },
+    "radius": {
+      "name": "AngleRounded",
+      "radius": "radius"
+    },
+    "text": {
+      "content": "TextContent",
+      "path": "TextPath"
+    }
+  },
+  "imageSetting": {
+    "repleaceImg": "RepleaceImage",
+    "crop": {
+      "title": "CropperImage",
+      "create": "CreateCropper",
+      "remove": "RemoveCropper"
+    },
+    "filters": {
+      "title": "Image Filter",
+      "simple": "Simple Filter",
+      "complex": "Complex Filter",
+      "Invert": "Invert",
+      "Sepia": "Sepia",
+      "BlackWhite": "BlackWhite",
+      "Brownie": "Brownie",
+      "Vintage": "Vintage",
+      "Kodachrome": "Kodachrome",
+      "technicolor": "Technicolor",
+      "Polaroid": "Polaroid",
+      "Grayscale": "Grayscale",
+      "GrayscaleList": {
+        "average": "Average",
+        "lightness": "Lightness",
+        "luminosity": "Luminosity"
+      },
+      "RemoveColor": "RemoveColor",
+      "Brightness": "Brightness",
+      "Contrast": "Contrast",
+      "Saturation": "Saturation",
+      "Vibrance": "Vibrance",
+      "HueRotation": "HueRotation",
+      "Noise": "Noise",
+      "Pixelate": "Pixelate",
+      "Blur": "Blur",
+      "Gamma": "Gamma"
+    },
+    "stroke": {
+      "title": "Image Stroke",
+      "enable": "Enable",
+      "size": "Size",
+      "show": "Show",
+      "color": "Color"
+    }
+  },
+  "flip": {
+    "x": "Horizontal",
+    "y": "Vertical"
+  },
+  "grid": "Grid",
+  "waterMark": {
+    "name": "waterMark",
+    "modalTitle": "WaterMarkSetting",
+    "setting": {
+      "name": "Title",
+      "size": "Size",
+      "color": "Color",
+      "angle": "Angle",
+      "position": {
+        "label": "WaterMarkLabel",
+        "lt": "LeftTop",
+        "rt": "RightTop",
+        "lb": "LeftBottom",
+        "rb": "RightBottom",
+        "full": "Full"
+      }
+    }
+  },
+  "importFiles": {
+    "createDesign": {
+      "title": "CreateDesign",
+      "customSize": "CustomSize",
+      "systemSize": "SystemSize"
+    }
+  },
+  "width": "Width",
+  "height": "Height",
+  "type": "Type",
+  "qrCode": {
+    "name": "QRcodeAttribute",
+    "content": "Content",
+    "space": "Space",
+    "splashes": "Splashes",
+    "outAngle": "ExternalAngle",
+    "inAngle": "InteriorAngle",
+    "background": "Background",
+    "fault": "Fault"
+  },
+  "barCode": {
+    "name": "BarCodeAttribute",
+    "text": "Text",
+    "content": "Content",
+    "show": "Show",
+    "color": "Color",
+    "position": "Position",
+    "size": "Size",
+    "background": "BacKground"
+  },
+  "color": "Color",
+
+  "common_elements": "BaseElements",
+  "draw_elements": "DrawElements",
+  "code_img": "CodeImage",
+  "setSizeTip": "SetSize",
+  "tip": {
+    "replaceTip": "Are you sure you want to add it to the canvas?"
+  }
+}

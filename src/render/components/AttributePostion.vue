@@ -1,60 +1,55 @@
-<!--
- * @Author: 秦少卫
- * @Date: 2024-05-21 09:23:36
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-05-21 15:37:27
- * @Description: file content
--->
 <template>
-  <div class="box attr-item-box" v-if="mixinState.mSelectMode === 'one'">
+  <div class="box attr-item-box" v-if="isOne">
     <!-- <h3>位置信息</h3> -->
-    <el-divider content-position="left"><h4>位置信息</h4></el-divider>
+    <el-divider content-position="left">
+      <h4>{{ $t('editor.attrSetting.position.title') }}</h4>
+    </el-divider>
     <!-- 通用属性 -->
-    <div v-show="baseType.includes(mixinState.mSelectOneType)">
+    <div v-show="isMatchType">
       <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="12">
           <InputNumber
             v-model="baseAttr.left"
-            :append="$t('attributes.left')"
+            :append="$t('editor.attrSetting.position.x')"
             @on-change="(value) => changeCommon('left', value)"
           />
         </el-col>
         <el-col :span="12">
           <InputNumber
-            v-model="baseAttr.right"
-            :append="$t('attributes.top')"
+            v-model="baseAttr.left"
+            :append="$t('editor.attrSetting.position.y')"
             @on-change="(value) => changeCommon('top', value)"
           />
         </el-col>
       </el-row>
 
-      <div class="asa-number-warp">
-        <span>{{ $t('attributes.angle') }}</span>
+      <div class="number-warp">
+        <span>{{ $t('editor.attrSetting.position.rotate') }}</span>
         <el-slider
           v-model="baseAttr.angle"
           :max="360"
-          @input="(value) => changeCommon('angle', value)"
+          @input="(value: any) => changeCommon('angle', value)"
         ></el-slider>
       </div>
 
-      <div class="asa-number-warp">
-        <span>{{ $t('attributes.opacity') }}</span>
+      <div class="number-warp">
+        <span>{{ $t('editor.attrSetting.position.opacity') }}</span>
         <el-slider
           v-model="baseAttr.opacity"
-          @input="(value) => changeCommon('opacity', value)"
+          @input="(value: any) => changeCommon('opacity', value)"
         ></el-slider>
       </div>
     </div>
-    <!-- <Divider plain></Divider> -->
   </div>
 </template>
 
-<script setup name="AttrBute">
-import useSelect from '@/hooks/select'
+<script lang="ts" setup>
 import InputNumber from './InputNumber'
+import { useEditorStore } from '@/store/modules/editor'
+import useSelect from '@/hooks/select'
 
+const editorStore = useEditorStore()
 const update = getCurrentInstance()
-const { mixinState, canvasEditor } = useSelect()
 
 // 可修改的元素
 const baseType = [
@@ -71,9 +66,9 @@ const baseType = [
   'arrow',
   'thinTailArrow'
 ]
-
+const { isMatchType, isOne } = useSelect(baseType)
 // 属性值
-const baseAttr = reactive({
+const baseAttr = reactive<Record<string, any>>({
   opacity: 0,
   angle: 0,
   left: 0,
@@ -83,12 +78,13 @@ const baseAttr = reactive({
 })
 
 // 属性获取
-const getObjectAttr = (e) => {
-  const activeObject = canvasEditor.canvas.getActiveObject()
+const getObjectAttr = (e?: any) => {
+  const activeObject = editorStore.canvas?.getActiveObject()
   // 不是当前obj，跳过
   if (e && e.target && e.target !== activeObject) return
-  if (activeObject && baseType.includes(activeObject.type)) {
-    baseAttr.opacity = activeObject.get('opacity') * 100
+  //@ts-ignore
+  if (activeObject && isMatchType) {
+    baseAttr.opacity = (activeObject.get('opacity') ?? 0) * 100
     baseAttr.left = activeObject.get('left')
     baseAttr.top = activeObject.get('top')
     baseAttr.angle = activeObject.get('angle') || 0
@@ -96,23 +92,23 @@ const getObjectAttr = (e) => {
 }
 
 // 通用属性改变
-const changeCommon = (key, value) => {
-  const activeObject = canvasEditor.canvas.getActiveObjects()[0]
+const changeCommon = (key: any, value: any) => {
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
     // 透明度特殊转换
     if (key === 'opacity') {
       activeObject && activeObject.set(key, value / 100)
-      canvasEditor.canvas.renderAll()
+      editorStore.canvas?.renderAll()
       return
     }
     // 旋转角度适配
     if (key === 'angle') {
       activeObject.rotate(value)
-      canvasEditor.canvas.renderAll()
+      editorStore.canvas?.renderAll()
       return
     }
     activeObject && activeObject.set(key, value)
-    canvasEditor.canvas.renderAll()
+    editorStore.canvas?.renderAll()
   }
 }
 
@@ -121,38 +117,31 @@ const selectCancel = () => {
 }
 
 onMounted(() => {
-  // 获取字体数据
-  getObjectAttr()
-  canvasEditor.on('selectCancel', selectCancel)
-  canvasEditor.on('selectOne', getObjectAttr)
-  canvasEditor.canvas.on('object:modified', getObjectAttr)
+  nextTick(() => {
+    // 获取字体数据
+    getObjectAttr()
+    editorStore.editor?.on('selectCancel', selectCancel)
+    editorStore.editor?.on('selectOne', getObjectAttr)
+    editorStore.canvas?.on('object:modified', getObjectAttr)
+  })
 })
 
 onBeforeUnmount(() => {
-  canvasEditor.off('selectCancel', selectCancel)
-  canvasEditor.off('selectOne', getObjectAttr)
-  canvasEditor.canvas.off('object:modified', getObjectAttr)
+  editorStore.editor?.off('selectCancel', selectCancel)
+  editorStore.editor?.off('selectOne', getObjectAttr)
+  editorStore.canvas?.off('object:modified', getObjectAttr)
 })
 </script>
 
 <style lang="scss" scoped>
-.asa-number-warp {
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+.number-warp {
   background: #f6f7f9;
-  border-radius: 5px;
   padding: 0 15px 0 10px;
-  margin-bottom: 10px;
-  position: relative;
-  z-index: 1;
+  @apply w-full box-border flex justify-start items-center rounded-5px mb-10px relative z-1;
   span {
-    display: inline-block;
-    width: 56px;
     font-size: var(--el-form-label-font-size);
     color: var(--el-text-color-regular);
+    @apply w-56px inline-block;
   }
 }
 </style>

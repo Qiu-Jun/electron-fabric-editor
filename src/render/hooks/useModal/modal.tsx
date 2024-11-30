@@ -7,7 +7,9 @@ export type CModalInstance = InstanceType<typeof Modal>
 export const CModal = defineComponent({
   props: {
     content: {
-      type: [String, Function] as PropType<string | JSX.Element | (() => JSX.Element)>
+      type: [String, Function] as PropType<
+        string | JSX.Element | (() => JSX.Element)
+      >
     },
     closeModal: Function as PropType<HookModalProps['closeModal']>,
     open: Boolean

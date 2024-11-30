@@ -1,10 +1,3 @@
-<!--
- * @Description: 
- * @Author: June
- * @Date: 2024-08-21 01:22:41
- * @LastEditTime: 2024-08-21 01:23:49
- * @LastEditors: June
--->
 <template>
   <teleport to="body">
     <el-dialog
@@ -38,7 +31,6 @@ const emits = defineEmits(['update:open', 'ok', 'cancel'])
 
 const props = defineProps({})
 
-// eslint-disable-next-line no-undef
 const openModel = defineModel<boolean>('open')
 
 const handleCancel = debounce(function () {

@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-02-03 23:29:34
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-07-06 12:36:22
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-02 22:19:36
  * @Description: 核心入口文件
  */
 import Editor from './Editor'
@@ -41,6 +41,9 @@ export { default as LockPlugin } from './plugin/LockPlugin'
 export { default as AddBaseTypePlugin } from './plugin/AddBaseTypePlugin'
 import EventType from './eventType'
 import Utils from './utils/utils'
-
-export { EventType, Utils }
+import CustomRect from './objects/CustomRect'
+import CustomTextbox from './objects/CustomTextbox'
+export { EventType, Utils, CustomRect, CustomTextbox }
 export default Editor
+
+export * from '@/interface/Editor'

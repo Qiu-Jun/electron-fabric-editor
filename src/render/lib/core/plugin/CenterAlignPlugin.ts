@@ -1,8 +1,8 @@
 /*
  * @Author: 秦少卫
  * @Date: 2023-06-15 22:49:42
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-07-09 14:12:41
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-10 10:57:01
  * @Description: 居中对齐插件
  */
 
@@ -14,7 +14,10 @@ class CenterAlignPlugin implements IPluginTempl {
   static pluginName = 'CenterAlignPlugin'
   static apis = ['centerH', 'center', 'position', 'centerV']
   // public hotkeys: string[] = ['space'];
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {}
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {}
 
   center(workspace: fabric.Rect, object: fabric.Object) {
     const center = workspace.getCenterPoint()
@@ -39,7 +42,9 @@ class CenterAlignPlugin implements IPluginTempl {
     const anignType = ['centerH', 'center', 'centerV']
     const activeObject = this.canvas.getActiveObject()
     if (anignType.includes(name) && activeObject) {
-      const defaultWorkspace = this.canvas.getObjects().find((item) => item.id === 'workspace')
+      const defaultWorkspace = this.canvas
+        .getObjects()
+        .find((item) => item.id === 'workspace')
       if (defaultWorkspace) {
         this[name](defaultWorkspace, activeObject)
       }
@@ -53,7 +58,7 @@ class CenterAlignPlugin implements IPluginTempl {
       return [
         {
           text: '水平垂直居中',
-          hotkey: 'Ctrl+V',
+          hotkey: '',
           disabled: false,
           onclick: () => this.position('center')
         }

@@ -1,25 +1,14 @@
-<!--
- * @Author: 秦少卫
- * @Date: 2024-06-06 20:04:48
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-06-07 20:56:55
- * @Description: 二维码组件
--->
-
 <template>
-  <div
-    class="box attr-item-box"
-    v-if="
-      mixinState.mSelectMode === 'one' && textType.includes(mixinState.mSelectOneType) && isQrcode
-    "
-  >
+  <div class="box attr-item-box" v-if="isOne && isMatchType && isQrcode">
     <!-- <h3>字体属性</h3> -->
-    <el-divider content-position="left"><h4>二位码属性</h4></el-divider>
+    <el-divider content-position="left">
+      <h4>{{ $t('editor.qrCode.name') }}</h4>
+    </el-divider>
     <div>
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">内容</span>
-          <div class="content">
+          <span class="label">{{ $t('editor.qrCode.content') }}</span>
+          <div class="flex-1">
             <el-input v-model="baseAttr.data" @change="changeCommon" />
           </div>
         </div>
@@ -31,7 +20,7 @@
             <InputNumber
               v-model="baseAttr.width"
               @on-change="changeCommon"
-              append="宽度"
+              :append="$t('editor.width')"
               :min="1"
             ></InputNumber>
           </div>
@@ -41,7 +30,7 @@
             <InputNumber
               v-model="baseAttr.margin"
               @on-change="changeCommon"
-              append="边距"
+              :append="$t('editor.qrCode.space')"
               :min="1"
             ></InputNumber>
           </div>
@@ -50,7 +39,7 @@
 
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">散点</span>
+          <span class="label">{{ $t('editor.qrCode.splashes') }}</span>
           <div class="content">
             <el-color-picker
               id="dotsColor"
@@ -61,7 +50,7 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">类型</span>
+          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
           <div class="content">
             <el-select v-model="baseAttr.dotsType" @change="changeCommon" style="width: 90px">
               <el-option v-for="item in optionsList.DotsType" :value="item" :key="item">
@@ -74,7 +63,7 @@
 
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">外角</span>
+          <span class="label">{{ $t('editor.qrCode.outAngle') }}</span>
           <div class="content">
             <el-color-picker
               id="cornersSquareColor"
@@ -85,7 +74,7 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">类型</span>
+          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
           <div class="content">
             <el-select
               v-model="baseAttr.cornersSquareType"
@@ -101,7 +90,7 @@
       </div>
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">内角</span>
+          <span class="label">{{ $t('editor.qrCode.inAngle') }}</span>
           <div class="content">
             <el-color-picker
               id="cornersDotColor"
@@ -112,7 +101,7 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">类型</span>
+          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
           <div class="content">
             <el-select v-model="baseAttr.cornersDotType" @change="changeCommon" style="width: 90px">
               <el-option v-for="item in optionsList.cornersDotType" :value="item" :key="item">
@@ -125,7 +114,7 @@
 
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">背景</span>
+          <span class="label">{{ $t('editor.qrCode.background') }}</span>
           <div class="content">
             <el-color-picker
               id="background"
@@ -136,7 +125,9 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">容错</span>
+          <span class="label" style="margin-left: 10px">
+            {{ $t('editor.qrCode.fault') }}
+          </span>
           <div class="content">
             <el-select
               v-model="baseAttr.errorCorrectionLevel"
@@ -158,21 +149,22 @@
   </div>
 </template>
 
-<script setup name="AttrBute">
-import useSelect from '@/hooks/select'
+<script lang="ts" setup>
 import InputNumber from './InputNumber'
+import { useEditorStore } from '@/store/modules/editor'
+import useSelect from '@/hooks/select'
 
+const editorStore = useEditorStore()
+const { isOne, isMatchType } = useSelect(['image'])
 const update = getCurrentInstance()
-const { mixinState, canvasEditor } = useSelect()
 
 // 文字元素
-const textType = ['image']
 const extensionType = ref('')
 
 const isQrcode = computed(() => extensionType.value === 'qrcode')
 
 // 属性值
-const baseAttr = reactive({
+const baseAttr = reactive<Record<string, any>>({
   data: '',
   width: 300,
   margin: 10,
@@ -187,28 +179,23 @@ const baseAttr = reactive({
 })
 
 // 属性获取
-const getObjectAttr = (e) => {
-  const activeObject = canvasEditor.canvas.getActiveObject()
+const getObjectAttr = (e: any) => {
+  const activeObject: any = editorStore.canvas?.getActiveObject()
   // 不是当前obj，跳过
   if (e && e.target && e.target !== activeObject) return
   extensionType.value = activeObject?.extensionType || ''
-  if (
-    activeObject &&
-    textType.includes(activeObject.type) &&
-    activeObject?.extensionType === 'qrcode'
-  ) {
+  if (activeObject && isMatchType && activeObject?.extensionType === 'qrcode') {
     const extension = activeObject.get('extension')
     Object.keys(extension).forEach((key) => {
       baseAttr[key] = extension[key]
     })
-    console.log(baseAttr)
   }
 }
 
 // 通用属性改变
 const changeCommon = () => {
-  canvasEditor.setQrCode(toRaw(baseAttr))
-  canvasEditor.canvas.renderAll()
+  editorStore.editor.setQrCode(toRaw(baseAttr))
+  editorStore.canvas?.renderAll()
 }
 
 const selectCancel = () => {
@@ -218,20 +205,27 @@ const selectCancel = () => {
 
 // 容错率
 
-const res = canvasEditor.getQrCodeTypes()
-const optionsList = reactive(res)
+const optionsList = reactive({
+  CornersType: [],
+  DotsType: [],
+  cornersDotType: [],
+  errorCorrectionLevelType: []
+})
 
 onMounted(() => {
-  getObjectAttr()
-  canvasEditor.on('selectCancel', selectCancel)
-  canvasEditor.on('selectOne', getObjectAttr)
-  canvasEditor.canvas.on('object:modified', getObjectAttr)
+  nextTick(() => {
+    const res = editorStore.editor?.getQrCodeTypes()
+    res && Object.assign(optionsList, res)
+    editorStore.editor?.on('selectCancel', selectCancel)
+    editorStore.editor?.on('selectOne', getObjectAttr)
+    editorStore.canvas?.on('object:modified', getObjectAttr)
+  })
 })
 
 onBeforeUnmount(() => {
-  canvasEditor.off('selectCancel', selectCancel)
-  canvasEditor.off('selectOne', getObjectAttr)
-  canvasEditor.canvas.off('object:modified', getObjectAttr)
+  editorStore.editor?.off('selectCancel', selectCancel)
+  editorStore.editor?.off('selectOne', getObjectAttr)
+  editorStore.canvas?.off('object:modified', getObjectAttr)
 })
 </script>
 
@@ -240,45 +234,17 @@ onBeforeUnmount(() => {
   width: 88px;
 }
 .number-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.font-selector {
-  :deep(.ivu-select-item) {
-    padding: 1px 4px;
-  }
-
-  .font-item {
-    height: 40px;
-    width: 330px;
-    background-size: auto 40px;
-    background-repeat: no-repeat;
-  }
+  @apply f-center;
 }
 
 .flex-view {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 5px;
-  display: inline-flex;
-  justify-content: space-between;
-  border-radius: 5px;
   background: #f6f7f9;
-  position: relative;
-  z-index: 1;
+  @apply relative z-1 rounded-5px flex justify-between w-full mb-10px p-5px;
 }
 .flex-item {
-  box-sizing: border-box;
-  display: inline-flex;
-  flex: 1;
+  @apply flex-1 inline-flex box-border;
   .label {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    display: inline-block;
-    font-size: 14px;
-    // color: #333333;
+    @apply w-32px h-32px leading-32px inline-block text-14px;
   }
   .content {
     flex: 1;
@@ -286,14 +252,7 @@ onBeforeUnmount(() => {
   }
   .slider-box {
     width: calc(100% - 50px);
-    margin-left: 10px;
-  }
-  .left {
-    flex: 1;
-  }
-  .right {
-    flex: 1;
-    margin-left: 10px;
+    @apply mb-10px;
   }
 }
 </style>

@@ -1,19 +1,29 @@
 /*
  * @Author: 秦少卫
  * @Date: 2024-07-06 12:34:00
- * @LastEditors: 秦少卫
- * @LastEditTime: 2024-07-06 17:11:03
+ * @LastEditors: June
+ * @LastEditTime: 2024-11-10 11:29:45
  * @Description: 基础元素类型添加
  */
 
 import { fabric } from 'fabric'
-import type Editor from '../Editor'
 import { v4 as uuid } from 'uuid'
+import type { IEditor, IPluginTempl } from '@/lib/core'
+
+type IPlugin = Pick<AddBaseTypePlugin, 'addBaseType' | 'createImgByElement'>
+
+declare module '@/lib/core' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface IEditor extends IPlugin {}
+}
 
 export default class AddBaseTypePlugin implements IPluginTempl {
   static pluginName = 'AddBaseTypePlugin'
   static apis = ['addBaseType', 'createImgByElement']
-  constructor(public canvas: fabric.Canvas, public editor: Editor) {
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {
     this.editor = editor
     this.canvas = canvas
   }
@@ -36,12 +46,15 @@ export default class AddBaseTypePlugin implements IPluginTempl {
     if (!event && center) {
       this._toCenter(item)
     }
+    this.canvas.refreshHistory()
     this.canvas.setActiveObject(item)
     this.canvas.renderAll()
   }
 
   _toEvent(item: fabric.Object, event: DragEvent) {
-    const { left, top } = this.canvas.getSelectionElement().getBoundingClientRect()
+    const { left, top } = this.canvas
+      .getSelectionElement()
+      .getBoundingClientRect()
     if (event.x < left || event.y < top || item.width === undefined) return
     const point = {
       x: event.x - left,
@@ -61,6 +74,7 @@ export default class AddBaseTypePlugin implements IPluginTempl {
 
   _toScale(item: fabric.Object) {
     const { width } = this.editor.getWorkspase()
+    if (width === undefined) return
     item.scaleToWidth(width / 2)
   }
 

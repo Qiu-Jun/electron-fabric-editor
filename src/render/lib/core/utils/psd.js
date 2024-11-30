@@ -6,40 +6,40 @@
  * @Description: PSD转换为fabric.js
  */
 
-import _ from 'lodash-es'
-import { v4 as uuid } from 'uuid'
+import _ from 'lodash-es';
+import { v4 as uuid } from 'uuid';
 
 // 入口文件
 
 async function psdToJson(psdFile) {
   // 初始化
-  const json = getTransform()
+  const json = getTransform();
 
   // 设置背景
-  const { clipPath, workspase } = getClipPath(psdFile)
-  json.clipPath = clipPath
-  json.objects.push(workspase)
+  const { clipPath, workspase } = getClipPath(psdFile);
+  json.clipPath = clipPath;
+  json.objects.push(workspase);
 
   // 拍平
-  const list = flattenTree(psdFile.children)
+  const list = flattenTree(psdFile.children);
 
   // 转换
-  const fabricJhildren = await psdChildrenTransform(list)
-  json.objects.push(...fabricJhildren.reverse())
+  const fabricJhildren = await psdChildrenTransform(list);
+  json.objects.push(...fabricJhildren.reverse());
 
   // 输出文件
-  const jsonStr = JSON.stringify(json, null, 2)
-  return jsonStr
+  const jsonStr = JSON.stringify(json, null, 2);
+  return jsonStr;
 }
 
 async function psdChildrenTransform(children) {
   function attrTransform(childrens) {
     const childrensFilter = childrens.filter((item) => {
       if (item.text) {
-        item.type = 'text'
+        item.type = 'text';
       }
-      return !item.isHidden
-    })
+      return !item.isHidden;
+    });
     return childrensFilter.map(async (item) => {
       // 公共属性映射
       const commonAttr = baseUtils([
@@ -50,8 +50,8 @@ async function psdChildrenTransform(children) {
         'name',
         ['visible', () => true],
         ['opacity', (info) => 255 / info.opacity],
-        ['id', uuid]
-      ])(item)
+        ['id', uuid],
+      ])(item);
 
       // 类型映射
       const typeList = [
@@ -68,12 +68,12 @@ async function psdChildrenTransform(children) {
             //   clipPath.left = maskData.left;
             //   clipPath.top = maskData.top;
             // }
-            const base64 = await getLayerBse64(item)
+            const base64 = await getLayerBse64(item);
             return {
-              src: base64
+              src: base64,
               // clipPath,
-            }
-          }
+            };
+          },
         },
         {
           sourceType: 'text',
@@ -81,34 +81,34 @@ async function psdChildrenTransform(children) {
           attr: ['text'],
           async customTransform(item) {
             const { FontSize, FillColor, Tracking } =
-              item.textProperties.EngineDict.StyleRun.RunArray[0].StyleSheet.StyleSheetData
+              item.textProperties.EngineDict.StyleRun.RunArray[0].StyleSheet.StyleSheetData;
             return {
               charSpacing: Tracking,
               fontFamily: '站酷快乐体',
               fill: getColor(FillColor.Values),
-              fontSize: FontSize || 12
-            }
-          }
-        }
-      ]
+              fontSize: FontSize || 12,
+            };
+          },
+        },
+      ];
 
-      const sourctTypeKey = 'type'
-      const transformTypeInfo = typeList.find((info) => info.sourceType === item[sourctTypeKey])
+      const sourctTypeKey = 'type';
+      const transformTypeInfo = typeList.find((info) => info.sourceType === item[sourctTypeKey]);
       if (transformTypeInfo) {
-        const baseAttr = getAttrByType(transformTypeInfo.targetType)
-        const typeAttr = baseUtils(transformTypeInfo.attr)(item)
+        const baseAttr = getAttrByType(transformTypeInfo.targetType);
+        const typeAttr = baseUtils(transformTypeInfo.attr)(item);
         const customTransformAttr = transformTypeInfo.customTransform
           ? await transformTypeInfo.customTransform(item)
-          : null
-        return _.assign(baseAttr, commonAttr, baseAttr, typeAttr, customTransformAttr)
+          : null;
+        return _.assign(baseAttr, commonAttr, baseAttr, typeAttr, customTransformAttr);
       }
       return {
-        ...getAttrByType('textbox')
-      }
-    })
+        ...getAttrByType('textbox'),
+      };
+    });
   }
-  const resault = await Promise.all(attrTransform(children))
-  return resault
+  const resault = await Promise.all(attrTransform(children));
+  return resault;
 }
 
 function getTransform() {
@@ -116,37 +116,37 @@ function getTransform() {
   const json = {
     version: '5.3.0',
     objects: [],
-    clipPath: null
-  }
+    clipPath: null,
+  };
 
-  return json
+  return json;
 }
 
 function baseUtils(baseAttr) {
   return function (item) {
     const attrs = {
-      desc: {}
-    }
+      desc: {},
+    };
     baseAttr.forEach((attrType) => {
       // 直接转换
       if (typeof attrType === 'string') {
-        const value = _.get(item, attrType)
-        _.set(attrs, attrType, value)
+        const value = _.get(item, attrType);
+        _.set(attrs, attrType, value);
       } else {
-        const [key, transform] = attrType
+        const [key, transform] = attrType;
         if (typeof transform === 'function') {
-          const value = transform(item)
+          const value = transform(item);
           if (value) {
-            _.set(attrs, key, value)
+            _.set(attrs, key, value);
           }
         } else {
-          const value = _.get(item, transform)
-          _.set(attrs, key, value)
+          const value = _.get(item, transform);
+          _.set(attrs, key, value);
         }
       }
-    })
-    return attrs
-  }
+    });
+    return attrs;
+  };
 }
 
 function getAttrByType(type) {
@@ -178,7 +178,7 @@ function getAttrByType(type) {
       skewX: 0,
       skewY: 0,
       selectable: true,
-      hasControls: true
+      hasControls: true,
     },
     textbox: {
       type: 'textbox',
@@ -227,7 +227,7 @@ function getAttrByType(type) {
       minWidth: 20,
       splitByGrapheme: true,
       selectable: true,
-      hasControls: true
+      hasControls: true,
     },
     image: {
       type: 'image',
@@ -261,7 +261,7 @@ function getAttrByType(type) {
       hasControls: true,
       src: '',
       crossOrigin: 'anonymous',
-      filters: []
+      filters: [],
     },
     rect: {
       type: 'rect',
@@ -300,14 +300,14 @@ function getAttrByType(type) {
       selectable: true,
       hasControls: true,
       inverted: false,
-      absolutePositioned: false
-    }
-  }
-  return typeMap[type]
+      absolutePositioned: false,
+    },
+  };
+  return typeMap[type];
 }
 
 function getClipPath(psdFile) {
-  const { width, height } = psdFile
+  const { width, height } = psdFile;
   const clipPath = {
     type: 'rect',
     version: '5.3.0',
@@ -343,8 +343,8 @@ function getClipPath(psdFile) {
     rx: 0,
     ry: 0,
     selectable: true,
-    hasControls: true
-  }
+    hasControls: true,
+  };
   const workspase = {
     type: 'rect',
     version: '5.3.0',
@@ -381,47 +381,47 @@ function getClipPath(psdFile) {
     ry: 0,
     id: 'workspace',
     selectable: false,
-    hasControls: true
-  }
-  return { clipPath, workspase }
+    hasControls: true,
+  };
+  return { clipPath, workspase };
 }
 
 async function getLayerBse64(layer) {
   try {
-    const compositeBuffer = await layer.composite()
-    const canvasElement = document.createElement('canvas')
-    const context = canvasElement.getContext('2d')
-    const imageData = new ImageData(compositeBuffer, layer.width, layer.height)
-    canvasElement.width = layer.width
-    canvasElement.height = layer.height
-    context.putImageData(imageData, 0, 0)
-    const base64 = canvasElement.toDataURL('image/png')
-    return base64
+    const compositeBuffer = await layer.composite();
+    const canvasElement = document.createElement('canvas');
+    const context = canvasElement.getContext('2d');
+    const imageData = new ImageData(compositeBuffer, layer.width, layer.height);
+    canvasElement.width = layer.width;
+    canvasElement.height = layer.height;
+    context.putImageData(imageData, 0, 0);
+    const base64 = canvasElement.toDataURL('image/png');
+    return base64;
   } catch (error) {
-    return ''
+    return '';
   }
 }
 
 function getColor(arr) {
-  const [, r, g, b] = arr
-  return `rgb(${r * 255}, ${g * 255}, ${b * 255})`
+  const [, r, g, b] = arr;
+  return `rgb(${r * 255}, ${g * 255}, ${b * 255})`;
 }
 
 function flattenTree(tree) {
-  const result = []
+  const result = [];
 
   function traverse(nodes) {
     nodes.forEach((node) => {
       if (node.children) {
-        traverse(node.children) // 递归遍历子节点
+        traverse(node.children); // 递归遍历子节点
       } else {
-        result.push(node) // 将当前节点添加到结果数组中
+        result.push(node); // 将当前节点添加到结果数组中
       }
-    })
+    });
   }
 
-  traverse(tree)
-  return result
+  traverse(tree);
+  return result;
 }
 
-export default psdToJson
+export default psdToJson;

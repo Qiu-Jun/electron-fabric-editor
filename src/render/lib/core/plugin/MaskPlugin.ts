@@ -6,27 +6,27 @@
  * @Description: 画布蒙层插件
  */
 
-import { fabric } from 'fabric'
-import Editor from '../Editor'
-type IEditor = Editor
+import { fabric } from 'fabric';
+import Editor from '../Editor';
+type IEditor = Editor;
 
 class MaskPlugin implements IPluginTempl {
-  static pluginName = 'MaskPlugin'
-  static apis = ['setCoverMask', 'workspaceMaskToggle', 'getworkspaceMaskStatus']
-  coverMask: null | fabric.Rect = null
-  workspace: null | fabric.Rect = null
-  workspaceEl!: HTMLElement
-  hackFlag = false
+  static pluginName = 'MaskPlugin';
+  static apis = ['setCoverMask', 'workspaceMaskToggle', 'getworkspaceMaskStatus'];
+  coverMask: null | fabric.Rect = null;
+  workspace: null | fabric.Rect = null;
+  workspaceEl!: HTMLElement;
+  hackFlag = false;
   constructor(public canvas: fabric.Canvas, public editor: IEditor) {
-    this.init()
+    this.init();
   }
 
   private init() {
-    const workspaceEl = document.querySelector('#workspace') as HTMLElement
+    const workspaceEl = document.querySelector('#workspace') as HTMLElement;
     if (!workspaceEl) {
-      throw new Error('element #workspace is missing, plz check!')
+      throw new Error('element #workspace is missing, plz check!');
     }
-    this.workspaceEl = workspaceEl
+    this.workspaceEl = workspaceEl;
   }
 
   /**
@@ -34,25 +34,25 @@ class MaskPlugin implements IPluginTempl {
    * @param val Boolean false
    */
   workspaceMaskToggle() {
-    const workspaceMask = this.getWorkspaceMask()
+    const workspaceMask = this.getWorkspaceMask();
     if (!workspaceMask) {
-      this.initMask()
+      this.initMask();
     } else {
       // 如果有 则删除
-      workspaceMask && this.canvas.remove(workspaceMask)
+      workspaceMask && this.canvas.remove(workspaceMask);
       this.workspace?.clone((cloned: fabric.Rect) => {
-        this.canvas.clipPath = cloned
-        this.coverMask = null
-        this.canvas.requestRenderAll()
-      })
-      this.editor.off('loadJson', this.initMask)
+        this.canvas.clipPath = cloned;
+        this.coverMask = null;
+        this.canvas.requestRenderAll();
+      });
+      this.editor.off('loadJson', this.initMask);
     }
   }
   /**
    * @desc 获取蒙版开关
    */
   getworkspaceMaskStatus() {
-    return this.coverMask !== null
+    return this.coverMask !== null;
   }
 
   /**
@@ -60,76 +60,76 @@ class MaskPlugin implements IPluginTempl {
    * @returns Object
    */
   getWorkspaceMask() {
-    return this.canvas.getObjects().find((item) => item.id === 'coverMask') as fabric.Rect
+    return this.canvas.getObjects().find((item) => item.id === 'coverMask') as fabric.Rect;
   }
 
   // 返回workspace对象
   getWorkspase() {
-    return this.canvas.getObjects().find((item) => item.id === 'workspace') as fabric.Rect
+    return this.canvas.getObjects().find((item) => item.id === 'workspace') as fabric.Rect;
   }
 
   setCoverMask(hack = false) {
     if (!this.coverMask || !this.workspace) {
-      return
+      return;
     }
-    const center = this.canvas.getCenter()
-    const zoom = this.canvas.getZoom()
-    let zoomToPointNumber = zoom
+    const center = this.canvas.getCenter();
+    const zoom = this.canvas.getZoom();
+    let zoomToPointNumber = zoom;
     if (hack) {
       // 比较hack的方法，判断为fabric内部的数据更新问题
-      zoomToPointNumber += 0.0000001 * (this.hackFlag ? 1 : -1)
-      this.hackFlag = !this.hackFlag
+      zoomToPointNumber += 0.0000001 * (this.hackFlag ? 1 : -1);
+      this.hackFlag = !this.hackFlag;
     }
 
-    this.canvas.zoomToPoint(new fabric.Point(center.left, center.top), zoomToPointNumber)
+    this.canvas.zoomToPoint(new fabric.Point(center.left, center.top), zoomToPointNumber);
     if (zoom) {
-      const { workspaceEl } = this
-      const width = workspaceEl.offsetWidth
-      const height = workspaceEl.offsetHeight
-      const cWidth = width / zoom
-      const cHeight = height / zoom
-      this.coverMask.width = cWidth
-      this.coverMask.height = cHeight
-      this.coverMask.left = (this.workspace.left || 0) + (this.workspace.width! - cWidth) / 2
-      this.coverMask.top = (this.workspace.top || 0) + (this.workspace.height! - cHeight) / 2
+      const { workspaceEl } = this;
+      const width = workspaceEl.offsetWidth;
+      const height = workspaceEl.offsetHeight;
+      const cWidth = width / zoom;
+      const cHeight = height / zoom;
+      this.coverMask.width = cWidth;
+      this.coverMask.height = cHeight;
+      this.coverMask.left = (this.workspace.left || 0) + (this.workspace.width! - cWidth) / 2;
+      this.coverMask.top = (this.workspace.top || 0) + (this.workspace.height! - cHeight) / 2;
       this.workspace.clone((clone: fabric.Rect) => {
-        clone.left = -clone.width! / 2
-        clone.top = -clone.height! / 2
-        clone.inverted = true
-        this.coverMask!.clipPath = clone
-        this.canvas.requestRenderAll()
-      })
+        clone.left = -clone.width! / 2;
+        clone.top = -clone.height! / 2;
+        clone.inverted = true;
+        this.coverMask!.clipPath = clone;
+        this.canvas.requestRenderAll();
+      });
     }
   }
 
   initMask(needBindLoadJSON = true) {
-    this.workspace = this.getWorkspase()
+    this.workspace = this.getWorkspase();
     if (!this.workspace) {
-      throw new Error('MaskPlugin must be used after WorkspacePlugin!')
+      throw new Error('MaskPlugin must be used after WorkspacePlugin!');
     }
     const coverMask = new fabric.Rect({
       fill: 'rgba(0,0,0,0.5)',
       id: 'coverMask',
-      strokeWidth: 0
-    })
-    coverMask.set('selectable', false)
-    coverMask.set('hasControls', false)
-    coverMask.set('evented', false)
-    coverMask.hoverCursor = 'default'
+      strokeWidth: 0,
+    });
+    coverMask.set('selectable', false);
+    coverMask.set('hasControls', false);
+    coverMask.set('evented', false);
+    coverMask.hoverCursor = 'default';
     this.canvas.on('object:added', () => {
-      coverMask.bringToFront()
-    })
-    this.canvas.clipPath = undefined
-    this.canvas.add(coverMask)
-    this.coverMask = coverMask
-    this.setCoverMask()
+      coverMask.bringToFront();
+    });
+    this.canvas.clipPath = undefined;
+    this.canvas.add(coverMask);
+    this.coverMask = coverMask;
+    this.setCoverMask();
     // 适配模板和psd的loadjson，在加载完成后再入mask
-    needBindLoadJSON && this.editor.on('loadJson', () => this.initMask(false))
+    needBindLoadJSON && this.editor.on('loadJson', () => this.initMask(false));
   }
 
   destroy() {
-    console.log('pluginDestroy')
+    console.log('pluginDestroy');
   }
 }
 
-export default MaskPlugin
+export default MaskPlugin;

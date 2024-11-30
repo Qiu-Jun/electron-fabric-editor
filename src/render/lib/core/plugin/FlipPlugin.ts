@@ -1,15 +1,14 @@
 import { fabric } from 'fabric'
 import type Editor from '../Editor'
 import { SelectMode } from '../eventType'
-
-// import { t } from '@/language/index';
-const t = (key: string) => key
-// import event from '@/utils/event/notifier';
-
+import { i18n } from '@/locales'
 export default class FlipPlugin implements IPluginTempl {
   static pluginName = 'FlipPlugin'
   static apis = ['flip']
-  constructor(public canvas: fabric.Canvas, public editor: Editor) {}
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: Editor
+  ) {}
 
   flip(type: 'X' | 'Y') {
     const activeObject = this.canvas.getActiveObject()
@@ -28,12 +27,12 @@ export default class FlipPlugin implements IPluginTempl {
           hotkey: '❯',
           subitems: [
             {
-              text: t('flip.x'),
+              text: i18n.global.t('editor.flip.x'),
               hotkey: '|',
               onclick: () => this.flip('X')
             },
             {
-              text: t('flip.y'),
+              text: i18n.global.t('editor.flip.y'),
               hotkey: '-',
               onclick: () => this.flip('Y')
             }

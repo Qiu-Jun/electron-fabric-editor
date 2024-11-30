@@ -183,7 +183,11 @@ export const combinationFilters = [
         step: 0.01
       }
     ],
-    handler(red: number | string, green: number | string, blue: number | string) {
+    handler(
+      red: number | string,
+      green: number | string,
+      blue: number | string
+    ) {
       return {
         gamma: [red, green, blue]
       }

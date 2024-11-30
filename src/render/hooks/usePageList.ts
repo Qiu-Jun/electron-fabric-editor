@@ -34,7 +34,9 @@ export default function usePageList({
 
   // 是否到达底部
   const isDownBottom = computed(() => {
-    return pagination.page === page.value && pagination.page >= pagination.pageCount
+    return (
+      pagination.page === page.value && pagination.page >= pagination.pageCount
+    )
   })
 
   const pageLoading = ref(false)
@@ -123,7 +125,10 @@ const getMaterialInfoUrl = (info) => {
 }
 
 const getMaterialPreviewUrl = (info) => {
-  const imgUrl = info?.data?.attributes?.formats?.small?.url || info?.data?.attributes?.url || ''
+  const imgUrl =
+    info?.data?.attributes?.formats?.small?.url ||
+    info?.data?.attributes?.url ||
+    ''
   return APIHOST + imgUrl
 }
 

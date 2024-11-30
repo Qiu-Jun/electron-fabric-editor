@@ -2,13 +2,18 @@
  * @Author: 秦少卫
  * @Date: 2023-05-19 08:31:34
  * @LastEditors: June
- * @LastEditTime: 2024-08-30 10:03:24
+ * @LastEditTime: 2024-11-10 11:31:24
  * @Description: 拖拽插件
  */
 
-import Editor from '../Editor'
+import { IEditor, IPluginTempl } from '@/lib/core'
+
 type IPlugin = Pick<DringPlugin, 'startDring' | 'endDring'>
-type IEditor = Editor
+
+declare module '@/lib/core' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface IEditor extends IPlugin {}
+}
 
 export class DringPlugin implements IPluginTempl {
   defautOption = {}
@@ -17,7 +22,10 @@ export class DringPlugin implements IPluginTempl {
   static apis = ['startDring', 'endDring']
   hotkeys: string[] = ['space']
   dragMode = false
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {
     this.dragMode = false
     this.init()
   }
@@ -44,7 +52,8 @@ export class DringPlugin implements IPluginTempl {
     const This = this
     this.canvas.on('mouse:down', function (this: ExtCanvas, opt) {
       const evt = opt.e
-      if (evt.altKey || This.dragMode) {
+      // evt.button === 1 为鼠标中键的判断
+      if (evt.altKey || This.dragMode || evt.button === 1) {
         This.canvas.setCursor('grabbing')
         This.canvas.discardActiveObject()
         This._setDring()

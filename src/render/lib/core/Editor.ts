@@ -3,7 +3,6 @@ import hotkeys from 'hotkeys-js'
 import ContextMenu from './ContextMenu'
 import ServersPlugin from './ServersPlugin'
 import { AsyncSeriesHook } from 'tapable'
-
 import Utils from './utils/utils'
 
 class Editor extends EventEmitter {
@@ -47,7 +46,11 @@ class Editor extends EventEmitter {
   use(plugin: IPluginClass, options?: IPluginOption) {
     if (this._checkPlugin(plugin) && this.canvas) {
       this._saveCustomAttr(plugin)
-      const pluginRunTime = new plugin(this.canvas, this, options || {}) as IPluginClass
+      const pluginRunTime = new plugin(
+        this.canvas,
+        this,
+        options || {}
+      ) as IPluginClass
       // 添加插件名称
       pluginRunTime.pluginName = plugin.pluginName
       this.pluginMap[plugin.pluginName] = pluginRunTime
@@ -55,6 +58,7 @@ class Editor extends EventEmitter {
       this._bindingHotkeys(pluginRunTime)
       this._bindingApis(pluginRunTime)
     }
+    return this
   }
 
   destory() {
@@ -98,13 +102,16 @@ class Editor extends EventEmitter {
     this.hooks.forEach((hookName) => {
       const hook = plugin[hookName]
       if (hook) {
-        this.hooksEntity[hookName].tapPromise(plugin.pluginName + hookName, function () {
-          // console.log(hookName, ...arguments);
-          // eslint-disable-next-line prefer-rest-params
-          const result = hook.apply(plugin, [...arguments])
-          // hook 兼容非 Promise 返回值
-          return result instanceof Promise ? result : Promise.resolve(result)
-        })
+        this.hooksEntity[hookName].tapPromise(
+          plugin.pluginName + hookName,
+          function () {
+            // console.log(hookName, ...arguments);
+            // eslint-disable-next-line prefer-rest-params
+            const result = hook.apply(plugin, [...arguments])
+            // hook 兼容非 Promise 返回值
+            return result instanceof Promise ? result : Promise.resolve(result)
+          }
+        )
       }
     })
   }
@@ -144,7 +151,8 @@ class Editor extends EventEmitter {
           let menu: IPluginMenu[] = []
           Object.keys(this.pluginMap).forEach((pluginName) => {
             const pluginRunTime = this.pluginMap[pluginName]
-            const pluginMenu = pluginRunTime.contextMenu && pluginRunTime.contextMenu()
+            const pluginMenu =
+              pluginRunTime.contextMenu && pluginRunTime.contextMenu()
             if (pluginMenu) {
               menu = menu.concat(pluginMenu)
             }

@@ -1,0 +1,57 @@
+{
+  "login": {
+    "title": "欢迎使用",
+    "logout": "退出登录",
+    "welcome": "欢迎使用快图",
+    "login": "登录",
+    "register": "注册",
+    "identifier": "用户名",
+    "username": "用户名",
+    "password": "密码",
+    "email": "邮箱",
+    "identifierValidate": "请输入用户名",
+    "passwordValidate": "请输入6位以上的密码",
+    "emailValidate": "请输入正确的邮箱地址",
+    "logoutTip": "确定要退出吗？",
+    "logoutSuccessTip": "退出成功",
+    "tips": {
+      "loginFirst": "请先登录"
+    }
+  },
+  "loadmore": "查看更多",
+  "nomore": "没有更多数据了",
+  "all": "全部",
+  "upload": {
+    "title": "上传"
+  },
+  "placeholder": {
+    "input": "请输入",
+    "select": "请选择"
+  },
+  "enable": "启动",
+  "close": "关闭",
+  "yes": "是",
+  "no": "否",
+  "okText": "确认",
+  "closeText": "关闭",
+  "cancelText": "取消",
+  "tip": "提示",
+  "loadingText": "加载中",
+
+  "back": "返回",
+  "chooseText": "请选择",
+  "dark": "黑暗主题",
+  "delText": "删除",
+  "inputText": "请输入",
+  "light": "亮色主题",
+  "queryText": "查询",
+  "redo": "刷新",
+  "resetText": "重置",
+  "routes": {
+    "account": {
+      "settings": ""
+    }
+  },
+  "saveText": "保存",
+  "searchText": "搜索"
+}

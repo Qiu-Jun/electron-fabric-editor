@@ -11,7 +11,9 @@
     <div class="item" v-for="item in materialTypeList" :key="item.id">
       <div class="top">
         <h3>{{ item.name }}</h3>
-        <el-button link size="small" @click="emit('selectType', item.id)">查看更多</el-button>
+        <el-button link size="small" @click="emit('selectType', item.id)"
+          >查看更多</el-button
+        >
       </div>
       <div class="img-box">
         <div

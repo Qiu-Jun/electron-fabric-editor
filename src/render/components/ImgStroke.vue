@@ -1,11 +1,11 @@
 <template>
-  <div class="box" v-if="mixinState.mSelectMode === 'one' && isImage">
+  <div class="box mb-20px" v-if="isOne && isImage">
     <el-divider content-position="left">
-      <h4>图像描边</h4>
+      <h4>{{ $t('editor.imageSetting.stroke.title') }}</h4>
     </el-divider>
     <div class="hd-wrap">
-      <div class="hd">
-        <span>启用图像描边</span>
+      <div class="hd flex-1">
+        <span>{{ $t('editor.imageSetting.stroke.enable') }}</span>
         <el-popover trigger="hover" content="只支持png透明图像">
           <template #reference>
             <el-icon color="#f34250"><WarningFilled /></el-icon>
@@ -18,8 +18,8 @@
         size="large"
         inline-prompt
         class="switch"
-        active-text="开启"
-        inactive-text="关闭"
+        :active-text="$t('common.enable')"
+        :inactive-text="$t('common.close')"
         @change="onSwitchChange"
       />
     </div>
@@ -27,7 +27,7 @@
     <template v-if="openImgStroke">
       <div class="hd-wrap">
         <div class="hd">
-          <span>是否只显示描边</span>
+          <span>{{ $t('editor.imageSetting.stroke.show') }}</span>
         </div>
 
         <el-switch
@@ -35,14 +35,14 @@
           v-model="isOnlyStroke"
           size="large"
           class="switch"
-          active-text="是"
-          inactive-text="否"
+          :active-text="$t('common.yes')"
+          :inactive-text="$t('common.no')"
           @change="updateStroke"
         />
       </div>
       <div class="operation">
         <div class="hd" style="flex-basis: 98px">
-          <span>描边大小</span>
+          <span>{{ $t('editor.imageSetting.stroke.size') }}</span>
         </div>
         <div style="width: 100%">
           <el-slider v-model="strokeWidth" :max="50" @change="onSliderChange" />
@@ -51,11 +51,15 @@
 
       <div class="operation" style="justify-content: space-between">
         <div class="hd">
-          <span>描边颜色</span>
+          <span>{{ $t('editor.imageSetting.stroke.color') }}</span>
         </div>
 
         <div>
-          <el-color-picker v-model="strokeColor" @change="onColorChange" placement="left" />
+          <el-color-picker
+            v-model="strokeColor"
+            @change="onColorChange"
+            placement="left"
+          />
         </div>
       </div>
     </template>
@@ -64,10 +68,12 @@
 
 <script name="ImgStroke" lang="ts" setup>
 import { WarningFilled } from '@element-plus/icons-vue'
-import useSelect from '@/hooks/select'
 import { fabric } from 'fabric'
 import { Utils } from '@/lib/core'
+import { useEditorStore } from '@/store/modules/editor'
+import useSelect from '@/hooks/select'
 
+const editorStore = useEditorStore()
 interface IExtendImage {
   [x: string]: any
   originWidth?: number
@@ -75,14 +81,14 @@ interface IExtendImage {
   originSrc?: string
 }
 
-const { mixinState, canvasEditor } = useSelect()
+const { isOne } = useSelect()
 const isImage = ref(false)
 const openImgStroke = ref(false)
 const strokeWidth = ref(5)
 const strokeColor = ref('#000')
 const isOnlyStroke = ref(false)
 const getActiveObject = (): (fabric.Image & IExtendImage) | undefined => {
-  const activeObject = canvasEditor.fabricCanvas?.getActiveObject()
+  const activeObject = editorStore.canvas?.getActiveObject()
   if (!activeObject || !Utils.isImage(activeObject)) return
   return activeObject
 }
@@ -97,7 +103,11 @@ const setOrigin = () => {
 
 const updateStroke = () => {
   const strokeType = unref(isOnlyStroke) ? 'destination-out' : 'source-over'
-  canvasEditor.imageStrokeDraw(unref(strokeColor), unref(strokeWidth), strokeType)
+  editorStore.editor.imageStrokeDraw(
+    unref(strokeColor),
+    unref(strokeWidth),
+    strokeType
+  )
 }
 
 const closeImgStroke = () => {
@@ -105,7 +115,7 @@ const closeImgStroke = () => {
   updateStroke()
 }
 
-const onSwitchChange = async (val: boolean) => {
+const onSwitchChange = async (val: any) => {
   if (val) {
     unref(strokeWidth) === 0 && (strokeWidth.value = 5)
     setOrigin()
@@ -115,12 +125,14 @@ const onSwitchChange = async (val: boolean) => {
   }
 }
 
-const onSliderChange = (val: number) => {
+const onSliderChange = (val: any) => {
+  if (!val) return
   strokeWidth.value = val
   updateStroke()
 }
 
-const onColorChange = (val: string) => {
+const onColorChange = (val: string | null) => {
+  if (!val) return
   strokeColor.value = val
   updateStroke()
 }
@@ -130,36 +142,28 @@ const handleSelectOne = () => {
 }
 
 onMounted(() => {
-  canvasEditor.on('selectOne', handleSelectOne)
+  nextTick(() => {
+    editorStore.editor?.on('selectOne', handleSelectOne)
+  })
 })
 
 onBeforeUnmount(() => {
-  canvasEditor.off('selectOne', handleSelectOne)
+  editorStore.editor.off('selectOne', handleSelectOne)
 })
 </script>
 
 <style lang="scss" scoped>
 .box {
-  margin-bottom: 20px;
   .hd-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    @apply flex justify-between mb-10px;
     .hd {
-      flex: 1;
       & > span {
         margin-right: 5px;
       }
     }
   }
   .operation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .slide-wrap {
-      width: 100%;
-    }
+    @apply flex justify-between items-center;
   }
 }
 </style>

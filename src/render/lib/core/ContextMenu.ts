@@ -7,17 +7,17 @@
  * @Description: 右键菜单
  */
 /* Author: @UnrealSec */
-import './styles/contextMenu.css'
+import './styles/contextMenu.css';
 
 class ContextMenu {
   constructor(container, items) {
-    this.container = container
-    this.dom = null
-    this.shown = false
-    this.root = true
-    this.parent = null
-    this.submenus = []
-    this.items = items
+    this.container = container;
+    this.dom = null;
+    this.shown = false;
+    this.root = true;
+    this.parent = null;
+    this.submenus = [];
+    this.items = items;
 
     this._onclick = (e) => {
       if (
@@ -27,139 +27,139 @@ class ContextMenu {
         !e.target.classList.contains('item') &&
         !e.target.parentElement.classList.contains('item')
       ) {
-        this.hideAll()
+        this.hideAll();
       }
-    }
+    };
 
     this._oncontextmenu = (e) => {
-      e.preventDefault()
+      e.preventDefault();
       if (
         e.target != this.dom &&
         e.target.parentElement != this.dom &&
         !e.target.classList.contains('item') &&
         !e.target.parentElement.classList.contains('item')
       ) {
-        this.hideAll()
-        this.show(e.clientX, e.clientY)
+        this.hideAll();
+        this.show(e.clientX, e.clientY);
       }
-    }
+    };
 
     this._oncontextmenu_keydown = (e) => {
-      if (e.keyCode != 93) return
-      e.preventDefault()
+      if (e.keyCode != 93) return;
+      e.preventDefault();
 
-      this.hideAll()
-      this.show(e.clientX, e.clientY)
-    }
+      this.hideAll();
+      this.show(e.clientX, e.clientY);
+    };
 
     this._onblur = () => {
-      this.hideAll()
-    }
+      this.hideAll();
+    };
   }
 
   getMenuDom() {
-    const menu = document.createElement('div')
-    menu.classList.add('context')
+    const menu = document.createElement('div');
+    menu.classList.add('context');
 
     for (const item of this.items) {
-      menu.appendChild(this.itemToDomEl(item))
+      menu.appendChild(this.itemToDomEl(item));
     }
 
-    return menu
+    return menu;
   }
 
   itemToDomEl(data) {
-    const item = document.createElement('div')
+    const item = document.createElement('div');
 
     if (data === null) {
-      item.classList = 'separator'
-      return item
+      item.classList = 'separator';
+      return item;
     }
 
     if (
       data.hasOwnProperty('color') &&
       /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(data.color.toString())
     ) {
-      item.style.cssText = `color: ${data.color}`
+      item.style.cssText = `color: ${data.color}`;
     }
 
-    item.classList.add('item')
+    item.classList.add('item');
 
-    const label = document.createElement('span')
-    label.classList = 'label'
-    label.innerText = data.hasOwnProperty('text') ? data['text'].toString() : ''
-    item.appendChild(label)
+    const label = document.createElement('span');
+    label.classList = 'label';
+    label.innerText = data.hasOwnProperty('text') ? data['text'].toString() : '';
+    item.appendChild(label);
 
     if (data.hasOwnProperty('disabled') && data['disabled']) {
-      item.classList.add('disabled')
+      item.classList.add('disabled');
     } else {
-      item.classList.add('enabled')
+      item.classList.add('enabled');
     }
 
-    const hotkey = document.createElement('span')
-    hotkey.classList = 'hotkey'
-    hotkey.innerText = data.hasOwnProperty('hotkey') ? data['hotkey'].toString() : ''
-    item.appendChild(hotkey)
+    const hotkey = document.createElement('span');
+    hotkey.classList = 'hotkey';
+    hotkey.innerText = data.hasOwnProperty('hotkey') ? data['hotkey'].toString() : '';
+    item.appendChild(hotkey);
 
     if (
       data.hasOwnProperty('subitems') &&
       Array.isArray(data['subitems']) &&
       data['subitems'].length > 0
     ) {
-      const menu = new ContextMenu(this.container, data['subitems'])
-      menu.root = false
-      menu.parent = this
+      const menu = new ContextMenu(this.container, data['subitems']);
+      menu.root = false;
+      menu.parent = this;
 
       const openSubItems = () => {
-        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return
+        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return;
 
-        this.hideSubMenus()
+        this.hideSubMenus();
 
-        const x = this.dom.offsetLeft + this.dom.clientWidth + item.offsetLeft
-        const y = this.dom.offsetTop + item.offsetTop
+        const x = this.dom.offsetLeft + this.dom.clientWidth + item.offsetLeft;
+        const y = this.dom.offsetTop + item.offsetTop;
 
         if (!menu.shown) {
-          menu.show(x, y)
+          menu.show(x, y);
         } else {
-          menu.hide()
+          menu.hide();
         }
-      }
+      };
 
-      this.submenus.push(menu)
+      this.submenus.push(menu);
 
-      item.classList.add('has-subitems')
-      item.addEventListener('click', openSubItems)
-      item.addEventListener('mousemove', openSubItems)
+      item.classList.add('has-subitems');
+      item.addEventListener('click', openSubItems);
+      item.addEventListener('mousemove', openSubItems);
     } else if (data.hasOwnProperty('submenu') && data['submenu'] instanceof ContextMenu) {
-      const menu = data['submenu']
-      menu.root = false
-      menu.parent = this
+      const menu = data['submenu'];
+      menu.root = false;
+      menu.parent = this;
 
       const openSubItems = () => {
-        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return
+        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return;
 
-        this.hideSubMenus()
+        this.hideSubMenus();
 
-        const x = this.dom.offsetLeft + this.dom.clientWidth + item.offsetLeft
-        const y = this.dom.offsetTop + item.offsetTop
+        const x = this.dom.offsetLeft + this.dom.clientWidth + item.offsetLeft;
+        const y = this.dom.offsetTop + item.offsetTop;
 
         if (!menu.shown) {
-          menu.show(x, y)
+          menu.show(x, y);
         } else {
-          menu.hide()
+          menu.hide();
         }
-      }
+      };
 
-      this.submenus.push(menu)
+      this.submenus.push(menu);
 
-      item.classList.add('has-subitems')
-      item.addEventListener('click', openSubItems)
-      item.addEventListener('mousemove', openSubItems)
+      item.classList.add('has-subitems');
+      item.addEventListener('click', openSubItems);
+      item.addEventListener('mousemove', openSubItems);
     } else {
       item.addEventListener('click', () => {
-        this.hideSubMenus()
+        this.hideSubMenus();
 
-        if (item.classList.contains('disabled')) return
+        if (item.classList.contains('disabled')) return;
 
         if (data.hasOwnProperty('onclick') && typeof data['onclick'] === 'function') {
           const event = {
@@ -168,54 +168,54 @@ class ContextMenu {
             label: label,
             hotkey: hotkey,
             items: this.items,
-            data: data
-          }
+            data: data,
+          };
 
-          data['onclick'](event)
+          data['onclick'](event);
 
           if (!event.handled) {
-            this.hide()
+            this.hide();
           }
         } else {
-          this.hide()
+          this.hide();
         }
-      })
+      });
 
       item.addEventListener('mousemove', () => {
-        this.hideSubMenus()
-      })
+        this.hideSubMenus();
+      });
     }
 
-    return item
+    return item;
   }
 
   hideAll() {
     if (this.root && !this.parent) {
       if (this.shown) {
-        this.hideSubMenus()
+        this.hideSubMenus();
 
-        this.shown = false
-        this.container.removeChild(this.dom)
+        this.shown = false;
+        this.container.removeChild(this.dom);
 
         if (this.parent && this.parent.shown) {
-          this.parent.hide()
+          this.parent.hide();
         }
       }
 
-      return
+      return;
     }
 
-    this.parent.hide()
+    this.parent.hide();
   }
 
   hide() {
     if (this.dom && this.shown) {
-      this.shown = false
-      this.hideSubMenus()
-      this.container.removeChild(this.dom)
+      this.shown = false;
+      this.hideSubMenus();
+      this.container.removeChild(this.dom);
 
       if (this.parent && this.parent.shown) {
-        this.parent.hide()
+        this.parent.hide();
       }
     }
   }
@@ -223,41 +223,41 @@ class ContextMenu {
   hideSubMenus() {
     for (const menu of this.submenus) {
       if (menu.shown) {
-        menu.shown = false
-        menu.container.removeChild(menu.dom)
+        menu.shown = false;
+        menu.container.removeChild(menu.dom);
       }
-      menu.hideSubMenus()
+      menu.hideSubMenus();
     }
   }
 
   show(x, y) {
-    this.dom = this.getMenuDom()
+    this.dom = this.getMenuDom();
 
-    this.dom.style.left = `${x}px`
-    this.dom.style.top = `${y}px`
+    this.dom.style.left = `${x}px`;
+    this.dom.style.top = `${y}px`;
 
-    this.shown = true
-    this.container.appendChild(this.dom)
+    this.shown = true;
+    this.container.appendChild(this.dom);
   }
 
   install() {
-    this.container.addEventListener('contextmenu', this._oncontextmenu)
-    this.container.addEventListener('keydown', this._oncontextmenu_keydown)
-    this.container.addEventListener('click', this._onclick)
-    window.addEventListener('blur', this._onblur)
+    this.container.addEventListener('contextmenu', this._oncontextmenu);
+    this.container.addEventListener('keydown', this._oncontextmenu_keydown);
+    this.container.addEventListener('click', this._onclick);
+    window.addEventListener('blur', this._onblur);
   }
 
   setData(data) {
-    this.items = data
+    this.items = data;
   }
 
   uninstall() {
-    this.dom = null
+    this.dom = null;
     // this.container.removeEventListener('contextmenu', this._oncontextmenu);
-    this.container.removeEventListener('keydown', this._oncontextmenu_keydown)
-    this.container.removeEventListener('click', this._onclick)
-    window.removeEventListener('blur', this._onblur)
+    this.container.removeEventListener('keydown', this._oncontextmenu_keydown);
+    this.container.removeEventListener('click', this._onclick);
+    window.removeEventListener('blur', this._onblur);
   }
 }
 
-export default ContextMenu
+export default ContextMenu;
