@@ -2,7 +2,7 @@
  * @Author: 秦少卫
  * @Date: 2022-09-03 19:16:55
  * @LastEditors: June
- * @LastEditTime: 2024-11-30 17:43:42
+ * @LastEditTime: 2024-11-23 13:14:12
  * @LastEditors: 秦少卫
  * @LastEditTime: 2023-04-10 14:33:18
  * @Description: 保存文件
@@ -41,8 +41,7 @@
   </div>
 </template>
 
-<script setup>
-import { ElLoading } from 'element-plus'
+<script setup name="save-bar">
 import { ArrowDown } from '@element-plus/icons-vue'
 import useMaterial from '@/hooks/useMaterial'
 import { debounce } from 'lodash-es'
