@@ -49,6 +49,7 @@ export default class AddBaseTypePlugin implements IPluginTempl {
     this.canvas.refreshHistory()
     this.canvas.setActiveObject(item)
     this.canvas.renderAll()
+    this.editor.saveState()
   }
 
   _toEvent(item: fabric.Object, event: DragEvent) {
