@@ -84,6 +84,7 @@
   "quickOperation": {
     "title": "QuickOperation",
     "lock": "Lock",
+    "unlock": "UnLock",
     "editPoly": "EditPoly",
     "delete": "Delete",
     "copy": "Copy",

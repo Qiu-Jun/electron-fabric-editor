@@ -10,7 +10,11 @@
         <div class="f-center rounded-4px" style="background: #f8f8f9">
           <span class="label">{{ $t('editor.attrSetting.color') }}</span>
           <div class="content">
-            <el-color-picker v-model="baseAttr.shadow.color" @change="changeCommon" alpha />
+            <el-color-picker
+              v-model="baseAttr.shadow.color"
+              @change="changeCommon"
+              alpha
+            />
           </div>
         </div>
       </el-col>

@@ -1,6 +1,12 @@
 import dayjs from 'dayjs'
 import { useRouter, useRoute } from 'vue-router'
-import { uploadImg, createdTempl, getTmplInfo, updataTempl, removeTempl } from '@/api/user'
+import {
+  uploadImg,
+  createdTempl,
+  getTmplInfo,
+  updataTempl,
+  removeTempl
+} from '@/api/user'
 import { ElMessageBox } from 'element-plus'
 import { useEditorStoreWithOut } from '@/store/modules/editor'
 import { useI18n } from 'vue-i18n'
@@ -15,7 +21,9 @@ export default function useMaterial() {
   const createTmpl = async (width: number, height: number, parentId = '') => {
     editorStore.editor.clear()
     editorStore.editor.setSize(width, height)
-    const name = dayjs().format('YYYY[年]MM[月]DD[日]HH[小时]mm[分钟]ss[秒]') + '创建的作品'
+    const name =
+      dayjs().format('YYYY[年]MM[月]DD[日]HH[小时]mm[分钟]ss[秒]') +
+      '创建的作品'
     const data = await getCanvasCommonData()
     // 上传图片
     const templInfo = await createdTempl({
@@ -41,7 +49,9 @@ export default function useMaterial() {
   }
 
   const createTmplByCommon = async () => {
-    const name = dayjs().format('YYYY[年]MM[月]DD[日]HH[小时]mm[分钟]ss[秒]') + '创建的作品'
+    const name =
+      dayjs().format('YYYY[年]MM[月]DD[日]HH[小时]mm[分钟]ss[秒]') +
+      '创建的作品'
     const data = await getCanvasCommonData()
     // 上传图片
     const templInfo = await createdTempl({
@@ -70,7 +80,7 @@ export default function useMaterial() {
   // 画布转图片
   const uploadFileToInfo = async () => {
     const dataURLtoFile = (dataurl, filename) => {
-      let arr = dataurl.split(','),
+      var arr = dataurl.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
         n = bstr.length,

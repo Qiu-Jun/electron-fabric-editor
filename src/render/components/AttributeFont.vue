@@ -50,7 +50,11 @@
               :value="item"
               :key="item"
             >
-              <SvgIcon extClass="text-20px" color="#fff" :icon="textAlignListSvg[i]" />
+              <SvgIcon
+                extClass="text-20px"
+                color="#fff"
+                :icon="textAlignListSvg[i]"
+              />
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -63,20 +67,38 @@
               style="width: 25%"
               @click="changeFontWeight('fontWeight', baseAttr.fontWeight)"
             >
-              <SvgIcon extClass="text-20px" color="#fff" icon="atb-fontWeight" />
+              <SvgIcon
+                extClass="text-20px"
+                color="#fff"
+                icon="atb-fontWeight"
+              />
             </el-button>
-            <el-button style="width: 25%" @click="changeFontStyle('fontStyle', baseAttr.fontStyle)">
+            <el-button
+              style="width: 25%"
+              @click="changeFontStyle('fontStyle', baseAttr.fontStyle)"
+            >
               <SvgIcon extClass="text-20px" color="#fff" icon="atb-fontStyle" />
             </el-button>
             <el-button
               style="width: 25%"
               @click="changeLineThrough('linethrough', baseAttr.linethrough)"
             >
-              <SvgIcon extClass="text-20px" color="#fff" icon="atb-linethrough" />
+              <SvgIcon
+                extClass="text-20px"
+                color="#fff"
+                icon="atb-linethrough"
+              />
             </el-button>
-            <el-button style="width: 25%" @click="changeUnderline('underline', baseAttr.underline)">
+            <el-button
+              style="width: 25%"
+              @click="changeUnderline('underline', baseAttr.underline)"
+            >
               <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <SvgIcon extClass="text-20px" color="#fff" icon="atb-underline" />
+                <SvgIcon
+                  extClass="text-20px"
+                  color="#fff"
+                  icon="atb-underline"
+                />
               </svg>
             </el-button>
           </el-button-group>
@@ -103,7 +125,9 @@
 
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">{{ $t('editor.attrSetting.font.background') }}</span>
+          <span class="label">{{
+            $t('editor.attrSetting.font.background')
+          }}</span>
           <div class="content">
             <el-color-picker
               v-model="baseAttr.textBackgroundColor"
@@ -210,7 +234,9 @@ const selectCancel = () => {
 const changeFontFamily = async (fontName: string) => {
   if (!fontName) return
   const loadingINstasncdee = ElLoading.service()
-  editorStore.editor.loadFont(fontName).finally(() => loadingINstasncdee.close())
+  editorStore.editor
+    .loadFont(fontName)
+    .finally(() => loadingINstasncdee.close())
 }
 const changeFontWeight = (key: any, value: any) => {
   const nValue = value === 'normal' ? 'bold' : 'normal'

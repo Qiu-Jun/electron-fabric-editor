@@ -37,7 +37,10 @@
         </el-select>
       </el-col>
       <el-col :span="12">
-        <el-input v-model="baseAttr.linkData[1]" :placeholder="$t('common.placeholder.input')" />
+        <el-input
+          v-model="baseAttr.linkData[1]"
+          :placeholder="$t('common.placeholder.input')"
+        />
       </el-col>
     </el-row>
   </div>

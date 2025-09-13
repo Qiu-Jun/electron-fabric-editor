@@ -54,7 +54,11 @@
               :value="item"
               :key="item"
             >
-              <SvgIcon extClass="text-20px" color="#fff" :icon="textAlignListSvg[i]" />
+              <SvgIcon
+                extClass="text-20px"
+                color="#fff"
+                :icon="textAlignListSvg[i]"
+              />
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -64,7 +68,11 @@
         <div :span="12" class="flex-item">
           <span class="label">{{ $t('editor.barCode.color') }}</span>
           <div class="content">
-            <el-color-picker v-model="baseAttr.lineColor" @change="changeCommon" show-alpha />
+            <el-color-picker
+              v-model="baseAttr.lineColor"
+              @change="changeCommon"
+              show-alpha
+            />
           </div>
         </div>
         <div :span="12" class="flex-item" v-if="baseAttr.displayValue">
@@ -82,14 +90,26 @@
         <div class="flex-item">
           <span class="label">{{ $t('editor.barCode.background') }}</span>
           <div class="content">
-            <el-color-picker v-model="baseAttr.background" @change="changeCommon" show-alpha />
+            <el-color-picker
+              v-model="baseAttr.background"
+              @change="changeCommon"
+              show-alpha
+            />
           </div>
         </div>
         <div class="flex-item">
           <span class="label mr-10px">{{ $t('editor.type') }}</span>
           <div class="content">
-            <el-select v-model="baseAttr.format" @on-change="changeCommon" style="width: 90px">
-              <el-option v-for="item in barcodeTypeList" :value="item" :key="item">
+            <el-select
+              v-model="baseAttr.format"
+              @on-change="changeCommon"
+              style="width: 90px"
+            >
+              <el-option
+                v-for="item in barcodeTypeList"
+                :value="item"
+                :key="item"
+              >
                 {{ item }}
               </el-option>
             </el-select>
@@ -139,7 +159,11 @@ const getObjectAttr = (e?: any) => {
   // 不是当前obj，跳过
   if (e && e.target && e.target !== activeObject) return
   extensionType.value = activeObject?.extensionType || ''
-  if (activeObject && isMatchType && activeObject?.extensionType === 'barcode') {
+  if (
+    activeObject &&
+    isMatchType &&
+    activeObject?.extensionType === 'barcode'
+  ) {
     baseAttr.value = activeObject.get('extension').value
     baseAttr.format = activeObject.get('extension').format
     baseAttr.text = activeObject.get('extension').text

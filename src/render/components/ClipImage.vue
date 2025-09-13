@@ -12,7 +12,11 @@
         <el-button text>{{ $t('editor.imageSetting.crop.create') }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item v-for="item in options" :key="item.value" :command="item.value">
+            <el-dropdown-item
+              v-for="item in options"
+              :key="item.value"
+              :command="item.value"
+            >
               {{ item.label }}
             </el-dropdown-item>
           </el-dropdown-menu>

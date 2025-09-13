@@ -2,7 +2,9 @@
   <div class="w-full" v-if="isOne">
     <!-- 通用属性 -->
     <div v-show="isMatchType">
-      <el-ivider plain orientation="left">{{ $t('attributes.exterior') }}</el-ivider>
+      <el-ivider plain orientation="left">{{
+        $t('attributes.exterior')
+      }}</el-ivider>
       <!-- 多边形边数 -->
       <el-row v-if="selectType === 'polygon'" :gutter="12">
         <el-col flex="0.5">
@@ -115,7 +117,10 @@ const changeEdge = (value) => {
   if (!activeObjects || !activeObjects.length) return
   activeObjects[0].set(
     'points',
-    getPolygonVertices(value, Math.min(activeObjects[0].width, activeObjects[0].height) / 2)
+    getPolygonVertices(
+      value,
+      Math.min(activeObjects[0].width, activeObjects[0].height) / 2
+    )
   )
   editorStore.canvas.requestRenderAll()
 }

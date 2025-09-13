@@ -11,9 +11,16 @@
 
         <div class="filter-box overflow-hidden">
           <!-- 无参数滤镜 -->
-          <div class="filter-item" v-for="(value, key) in state.noParamsFilters" :key="key">
+          <div
+            class="filter-item"
+            v-for="(value, key) in state.noParamsFilters"
+            :key="key"
+          >
             {{ key }}
-            <img :src="getImageUrl(key)" @click="changeFilters(key, !noParamsFilters[key])" />
+            <img
+              :src="getImageUrl(key)"
+              @click="changeFilters(key, !noParamsFilters[key])"
+            />
             <el-checkbox
               v-model="state.noParamsFilters[key]"
               @change="(val: any) => changeFilters(key, val)"
@@ -23,23 +30,46 @@
           </div>
         </div>
       </el-collapse-item>
-      <el-collapse-item name="2" :title="$t('editor.imageSetting.filters.complex')">
+      <el-collapse-item
+        name="2"
+        :title="$t('editor.imageSetting.filters.complex')"
+      >
         <!-- 有参数滤镜与组合参数滤镜 -->
         <div class="flex justify-start flex-wrap">
           <div
             class="filter-item has-params"
-            v-for="item in [...state.paramsFilters, ...state.combinationFilters]"
+            v-for="item in [
+              ...state.paramsFilters,
+              ...state.combinationFilters
+            ]"
             :key="item.type"
           >
-            <el-checkbox v-model="item.status" @change="changeFiltersByParams(item.type)">
+            <el-checkbox
+              v-model="item.status"
+              @change="changeFiltersByParams(item.type)"
+            >
               {{ $t('editor.imageSetting.filters.' + item.type) }}
             </el-checkbox>
             <div v-if="item.status" class="content">
               <div v-for="info in item.params" :key="info">
                 <div v-if="info.uiType === uiType.SELECT">
-                  <el-radio-group v-model="info.value" @change="changeFiltersByParams(item.type)">
-                    <el-radio :value="listItem" v-for="listItem in info.list" :key="listItem">
-                      {{ $t('editor.imageSetting.filters.' + item.type + 'List.' + listItem) }}
+                  <el-radio-group
+                    v-model="info.value"
+                    @change="changeFiltersByParams(item.type)"
+                  >
+                    <el-radio
+                      :value="listItem"
+                      v-for="listItem in info.list"
+                      :key="listItem"
+                    >
+                      {{
+                        $t(
+                          'editor.imageSetting.filters.' +
+                            item.type +
+                            'List.' +
+                            listItem
+                        )
+                      }}
                     </el-radio>
                   </el-radio-group>
                 </div>
@@ -144,11 +174,15 @@ const handleSelectOne = () => {
       })
       // 有参数滤镜回显
       paramsFilters.forEach((filterItem) => {
-        const moduleInfo = state.paramsFilters.find((item: any) => item.type === filterItem.type)
+        const moduleInfo = state.paramsFilters.find(
+          (item: any) => item.type === filterItem.type
+        )
         const filterInfo = _getFilter(activeObject, filterItem.type)
         moduleInfo.status = !!filterInfo
         moduleInfo.params.forEach((paramsItem: any) => {
-          paramsItem.value = filterInfo ? filterInfo[paramsItem.key] : paramsItem.value
+          paramsItem.value = filterInfo
+            ? filterInfo[paramsItem.key]
+            : paramsItem.value
         })
       })
 
@@ -264,7 +298,9 @@ function _getFilter(sourceImg: any, type: string) {
  */
 function _removeFilter(sourceImg: any, type: string) {
   const fabricType = _getFabricFilterType(type)
-  sourceImg.filters = sourceImg.filters.filter((value: any) => value.type !== fabricType)
+  sourceImg.filters = sourceImg.filters.filter(
+    (value: any) => value.type !== fabricType
+  )
   sourceImg.applyFilters()
   editorStore.canvas?.renderAll()
 }

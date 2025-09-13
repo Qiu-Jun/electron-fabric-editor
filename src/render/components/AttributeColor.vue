@@ -1,30 +1,30 @@
 <template>
-  <div class="box attr-item-box" v-if="isOne && selectType !== 'image' && selectType !== 'group'">
+  <div
+    class="box attr-item-box"
+    v-if="isOne && selectType !== 'image' && selectType !== 'group'"
+  >
     <el-divider content-position="left"
       ><h4>{{ $t('editor.attrSetting.color') }}</h4></el-divider
     >
     <!-- 通用属性 -->
     <div class="bg-item">
-      <el-popover width="280px" placement="top-start" effect="light" trigger="hover">
+      <el-popover width="340px" effect="light" trigger="hover" @show="onShow">
         <template #reference>
           <div class="color-bar" :style="{ background: baseAttr.fill }"></div>
         </template>
 
-        <div style="width: 100%; box-sizing: border-box; padding: 10px">
-          <ColorPicker
-            v-model:value="baseAttr.fill"
-            :modes="['渐变', '纯色']"
-            @change="colorChange"
-            @nativePick="dropColor"
-          ></ColorPicker>
-        </div>
+        <ColorPicker
+          v-if="showColorPicker"
+          v-model:value="baseAttr.fill"
+          @change="colorChange"
+        ></ColorPicker>
       </el-popover>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import ColorPicker from '@/components/ColorPicker/index.vue'
+import { ColorPicker } from 'color-gradient-picker-vue3'
 import { useEditorStore } from '@/store/modules/editor'
 import { fabric } from 'fabric'
 import useSelect from '@/hooks/select'
@@ -37,6 +37,13 @@ const angleKey = 'gradientAngle'
 const baseAttr: any = reactive({
   fill: ''
 })
+
+const showColorPicker = ref(false)
+const onShow = () => {
+  nextTick(() => {
+    showColorPicker.value = true
+  })
+}
 
 // 属性获取
 const getObjectAttr = (e?: any) => {
@@ -56,18 +63,23 @@ const getObjectAttr = (e?: any) => {
 const colorChange = (value: any) => {
   const activeObject: any = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
-    const color = String(value.color).replace('NaN', '')
-    if (value.mode === '纯色') {
+    console.log(value)
+    const { color, mode, gradientColors, degrees } = value
+    if (mode === 'solid') {
       activeObject.set('fill', color)
-    } else if (value.mode === '渐变') {
+    } else if (mode === 'gradient') {
       const currentGradient = cssToFabricGradient(
-        toRaw(value.stops),
+        gradientColors.map((i: any) => ({
+          color: i.color,
+          offset: i.left / 100
+        })),
         activeObject.width,
         activeObject.height,
-        value.angle
+        degrees
       )
-      activeObject.set('fill', currentGradient, value.angle)
-      activeObject.set(angleKey, value.angle)
+      console.log(currentGradient)
+      activeObject.set('fill', currentGradient, degrees)
+      activeObject.set(angleKey, degrees)
     }
     editorStore.canvas?.renderAll()
   }
@@ -87,7 +99,12 @@ const fabricGradientToCss = (val: any, activeObject: any) => {
   return `linear-gradient(${angle}deg, ${colorStops})`
 }
 // css转Fabric渐变
-const cssToFabricGradient = (stops: any, width: number, height: number, angle: any) => {
+const cssToFabricGradient = (
+  stops: any,
+  width: number,
+  height: number,
+  angle: any
+) => {
   const gradAngleToCoords = (paramsAngle: any) => {
     const anglePI = -parseInt(paramsAngle, 10) * (Math.PI / 180)
     return {

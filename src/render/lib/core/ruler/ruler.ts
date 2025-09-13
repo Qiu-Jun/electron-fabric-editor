@@ -166,12 +166,12 @@ class CanvasRuler {
    * 显示全部辅助线
    */
   public showGuideline() {
-    this.options.canvas
-      .getObjects(fabric.GuideLine.prototype.type)
-      .forEach((guideLine) => {
+    this.options?.canvas
+      ?.getObjects(fabric.GuideLine.prototype.type)
+      .forEach((guideLine: any) => {
         guideLine.set('visible', true)
       })
-    this.options.canvas.renderAll()
+    this.options?.canvas?.renderAll()
   }
 
   /**

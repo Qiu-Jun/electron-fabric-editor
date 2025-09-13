@@ -3,13 +3,14 @@
  * @Description:
  * @Date: 2024-07-24 17:26:12
  * @LastEditors: June
- * @LastEditTime: 2024-11-30 17:29:10
+ * @LastEditTime: 2024-12-10 14:56:56
  * @FilePath: \element-fabric-editor\src\main.ts
  */
 import '@/assets/fonts/font.css'
 import '@/styles/index.scss'
 // 自定义字体文件
 import '@/styles/reset.scss'
+import 'color-gradient-picker-vue3/dist/style.css'
 import 'virtual:svg-icons-register'
 import 'virtual:uno.css'
 import { createApp } from 'vue'

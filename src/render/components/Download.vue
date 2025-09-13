@@ -23,8 +23,17 @@
             <span class="font-bold text-16px">作品类型</span>
           </div>
           <div class="w-full flex justify-between items-center mb-10px">
-            <el-select v-model="imgType" clearable placeholder="Select" style="width: 240px">
-              <el-option v-for="item in imgTypeList" :key="item.type" :value="item.type">
+            <el-select
+              v-model="imgType"
+              clearable
+              placeholder="Select"
+              style="width: 240px"
+            >
+              <el-option
+                v-for="item in imgTypeList"
+                :key="item.type"
+                :value="item.type"
+              >
                 <div>
                   <div>{{ item.name }}</div>
                   <div>{{ item.desc }}</div>

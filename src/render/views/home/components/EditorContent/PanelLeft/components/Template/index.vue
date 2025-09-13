@@ -26,7 +26,11 @@
       />
     </div>
     <!-- 列表 -->
-    <div style="height: calc(100vh - 108px)" id="myTemplBox" v-loading="pageLoading">
+    <div
+      style="height: calc(100vh - 108px)"
+      id="myTemplBox"
+      v-loading="pageLoading"
+    >
       <el-scrollbar
         ref="scrollbarRef"
         key="mysscroll"
@@ -36,7 +40,12 @@
       >
         <!-- 列表 -->
         <wc-waterfall :gap="10" :cols="2">
-          <el-tooltip :content="info.name" v-for="info in pageData" :key="info.src" placement="top">
+          <el-tooltip
+            :content="info.name"
+            v-for="info in pageData"
+            :key="info.src"
+            placement="top"
+          >
             <div class="tmpl-img-box">
               <el-image
                 :src="info.previewSrc"
@@ -92,7 +101,7 @@ const {
   fields: ['name']
 })
 
-typeValue.value = 20
+typeValue.value = ''
 
 // 替换提示
 const beforeClearTip = (info) => {

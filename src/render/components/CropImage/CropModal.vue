@@ -12,7 +12,13 @@
       <div class="options">
         <label>裁剪比例</label>
         <div class="flex mt-2 ratio-item-wrapper">
-          <div class="ratio-item" :class="{ active: !fixed }" @click="changeRatio()">自由</div>
+          <div
+            class="ratio-item"
+            :class="{ active: !fixed }"
+            @click="changeRatio()"
+          >
+            自由
+          </div>
           <div
             class="ratio-item"
             :class="{
@@ -20,7 +26,9 @@
             }"
             @click="changeRatio([1, 1])"
           >
-            <div class="ratio-item-content" style="height: 70px; width: 70px">1:1</div>
+            <div class="ratio-item-content" style="height: 70px; width: 70px">
+              1:1
+            </div>
           </div>
           <div
             class="ratio-item"
@@ -29,7 +37,10 @@
             }"
             @click="changeRatio([2, 3])"
           >
-            <div class="ratio-item-content" style="height: 70px; width: calc(70px * 2 / 3)">
+            <div
+              class="ratio-item-content"
+              style="height: 70px; width: calc(70px * 2 / 3)"
+            >
               2:3
             </div>
           </div>
@@ -40,7 +51,10 @@
             }"
             @click="changeRatio([3, 2])"
           >
-            <div class="ratio-item-content" style="height: calc(70px * 2 / 3); width: 70px">
+            <div
+              class="ratio-item-content"
+              style="height: calc(70px * 2 / 3); width: 70px"
+            >
               3:2
             </div>
           </div>
@@ -51,7 +65,10 @@
             }"
             @click="changeRatio([4, 3])"
           >
-            <div class="ratio-item-content" style="height: calc(70px * 3 / 4); width: 70px">
+            <div
+              class="ratio-item-content"
+              style="height: calc(70px * 3 / 4); width: 70px"
+            >
               4:3
             </div>
           </div>
@@ -62,7 +79,10 @@
             }"
             @click="changeRatio([3, 4])"
           >
-            <div class="ratio-item-content" style="width: calc(70px * 3 / 4); height: 70px">
+            <div
+              class="ratio-item-content"
+              style="width: calc(70px * 3 / 4); height: 70px"
+            >
               3:4
             </div>
           </div>
@@ -73,7 +93,10 @@
             }"
             @click="changeRatio([16, 9])"
           >
-            <div class="ratio-item-content" style="height: calc(70px * 9 / 16); width: 70px">
+            <div
+              class="ratio-item-content"
+              style="height: calc(70px * 9 / 16); width: 70px"
+            >
               16:9
             </div>
           </div>
@@ -84,7 +107,10 @@
             }"
             @click="changeRatio([9, 16])"
           >
-            <div class="ratio-item-content" style="width: calc(70px * 9 / 16); height: 70px">
+            <div
+              class="ratio-item-content"
+              style="width: calc(70px * 9 / 16); height: 70px"
+            >
               9:16
             </div>
           </div>
@@ -121,11 +147,18 @@
       </div>
       <div class="preview-wrapper">
         <div
-          style="height: 100px; width: 100px; border: 1px solid rgba(59, 130, 246, 0.5)"
+          style="
+            height: 100px;
+            width: 100px;
+            border: 1px solid rgba(59, 130, 246, 0.5);
+          "
           :style="previewStyle"
         >
           <div :style="previews.div" v-if="previews">
-            <img :src="previews.url" :style="{ ...previews.img, maxWidth: previews.img.width }" />
+            <img
+              :src="previews.url"
+              :style="{ ...previews.img, maxWidth: previews.img.width }"
+            />
           </div>
         </div>
 
@@ -175,7 +208,10 @@ function changeCropperSize(type: 'width' | 'height', value: number) {
     }
   }
   nextTick(() => {
-    cropperRef.value.goAutoCrop(Number(cropperWidth.value), Number(cropperHeight.value))
+    cropperRef.value.goAutoCrop(
+      Number(cropperWidth.value),
+      Number(cropperHeight.value)
+    )
   })
 }
 

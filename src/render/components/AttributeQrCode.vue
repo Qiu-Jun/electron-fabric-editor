@@ -50,10 +50,20 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
+          <span class="label" style="margin-left: 10px">{{
+            $t('editor.type')
+          }}</span>
           <div class="content">
-            <el-select v-model="baseAttr.dotsType" @change="changeCommon" style="width: 90px">
-              <el-option v-for="item in optionsList.DotsType" :value="item" :key="item">
+            <el-select
+              v-model="baseAttr.dotsType"
+              @change="changeCommon"
+              style="width: 90px"
+            >
+              <el-option
+                v-for="item in optionsList.DotsType"
+                :value="item"
+                :key="item"
+              >
                 {{ item }}
               </el-option>
             </el-select>
@@ -74,14 +84,20 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
+          <span class="label" style="margin-left: 10px">{{
+            $t('editor.type')
+          }}</span>
           <div class="content">
             <el-select
               v-model="baseAttr.cornersSquareType"
               @change="changeCommon"
               style="width: 90px"
             >
-              <el-option v-for="item in optionsList.cornersDotType" :value="item" :key="item">
+              <el-option
+                v-for="item in optionsList.cornersDotType"
+                :value="item"
+                :key="item"
+              >
                 {{ item }}
               </el-option>
             </el-select>
@@ -101,10 +117,20 @@
           </div>
         </div>
         <div class="flex-item">
-          <span class="label" style="margin-left: 10px">{{ $t('editor.type') }}</span>
+          <span class="label" style="margin-left: 10px">{{
+            $t('editor.type')
+          }}</span>
           <div class="content">
-            <el-select v-model="baseAttr.cornersDotType" @change="changeCommon" style="width: 90px">
-              <el-option v-for="item in optionsList.cornersDotType" :value="item" :key="item">
+            <el-select
+              v-model="baseAttr.cornersDotType"
+              @change="changeCommon"
+              style="width: 90px"
+            >
+              <el-option
+                v-for="item in optionsList.cornersDotType"
+                :value="item"
+                :key="item"
+              >
                 {{ item }}
               </el-option>
             </el-select>

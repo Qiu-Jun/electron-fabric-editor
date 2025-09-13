@@ -159,6 +159,7 @@
   "quickOperation": {
     "title": "快捷操作",
     "lock": "锁定",
+    "unlock": "解锁",
     "delete": "删除",
     "copy": "复制",
     "editPoly": "编辑多边形",

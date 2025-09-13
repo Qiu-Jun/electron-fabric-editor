@@ -158,7 +158,9 @@ const getObjectAttr = (e?: any) => {
   if (activeObject && !groupType.includes(activeObject.type)) {
     baseAttr.stroke = activeObject.get('stroke')
     baseAttr.strokeWidth = activeObject.get('strokeWidth')
-    const strokeDashArray = JSON.stringify(activeObject.get('strokeDashArray') || [])
+    const strokeDashArray = JSON.stringify(
+      activeObject.get('strokeDashArray') || []
+    )
     const target = strokeDashList.find((item) => {
       return (
         JSON.stringify(item.value.strokeDashArray) === strokeDashArray &&
