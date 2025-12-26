@@ -12,8 +12,9 @@
 [vue-fabric-editor 的 Electron 版本](https://github.com/nihaojob/vue-fabric-editor)
 
 ## 关于分支
-+ main分支基于vite-electron 手写
-+ electron egg分支基于[electron egg](https://github.com/dromara/electron-egg)脚手架
+
+- main分支基于vite-electron 手写
+- electron egg分支基于[electron egg](https://github.com/dromara/electron-egg)脚手架
 
 ## 技术栈
 
@@ -23,31 +24,34 @@
 - Pinia
 - Vite
 - Unocss
+- [使用开源的electron脚手架替换自己写的(2025-12-26)](https://github.com/buqiyuan/electron-vite-monorepo.git)
 
-## 启动
+## Getting Started
 
 ```bash
-# 启动electron
-pnpm dev
-
-# 启动web
-pnpm devweb
-
-# 打包web
-pnpm build
-
-# 打包跨平台全部
-pnpm build:all
-
-# 打包win
-pnpm build:win
-
-# 打包mac
-pnpm build:mac
+pnpm install
+pnpm run dev
 ```
 
+## Build
 
+```bash
+pnpm build
+```
+
+# Pack App (Dev)
+
+```bash
+pnpm pack:dev
+```
+
+# Pack App (Prod)
+
+```bash
+pnpm pack:prod
+```
 ## 管理员
+
 <!-- readme: collaborators -start -->
 <table>
 <tr>
@@ -69,6 +73,7 @@ pnpm build:mac
 <!-- readme: collaborators -end -->
 
 ## 贡献者
+
 <!-- readme: collaborators,contributors -start -->
 <table>
 <tr>

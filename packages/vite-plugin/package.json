@@ -1,0 +1,30 @@
+{
+  "name": "@repo/vite-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "npx tsx watch ./src/index.ts"
+  },
+  "dependencies": {
+    "javascript-obfuscator": "^4.1.1",
+    "terser": "^5.31.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

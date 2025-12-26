@@ -1,158 +1,66 @@
 {
-  "name": "electron-fabric-vue",
-  "version": "0.0.2",
-  "keywords": [
-    "electron",
-    "vite",
-    "vue3",
-    "fabricjs",
-    "canvas"
-  ],
-  "description": "electron-fabric-vue",
-  "main": "dist-electron/main/index.js",
-  "scripts": {
-    "dev": "vite --mode develectron",
-    "devweb": "vite --mode devweb",
-    "build": "vite build --mode production",
-    "build:all": "pnpm build && electron-builder --mac --windows",
-    "build:mac": "pnpm build && electron-builder --mac",
-    "build:win": "pnpm build && electron-builder --windows",
-    "prettire": "npx prettier --write .",
-    "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix",
-    "prepare": "husky install",
-    "commit": "npx git-cz"
+  "name": "electron-fabric-editor",
+  "type": "module",
+  "version": "0.0.0",
+  "private": false,
+  "packageManager": "pnpm@10.18.3",
+  "author": {
+    "name": "June",
+    "email": "1601745371@qq.com",
+    "url": "https://github.com/Qiu-Jun"
   },
-  "dependencies": {
-    "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0",
-    "@element-plus/icons-vue": "^2.3.1",
-    "@vueuse/core": "^10.2.0",
-    "@webtoon/psd": "^0.4.0",
-    "axios": "^1.6.0",
-    "color-gradient-picker-vue3": "^3.1.3",
-    "dayjs": "^1.11.7",
-    "electron-store": "^8.1.0",
-    "electron-updater": "^6.1.4",
-    "element-plus": "^2.8.0",
-    "events": "^3.3.0",
-    "exceljs": "^4.4.0",
-    "fabric": "^5.2.1",
-    "fabric-history": "^2.0.0",
-    "file-saver": "^2.0.5",
-    "fontfaceobserver": "^2.1.0",
-    "hotkeys-js": "^3.13.7",
-    "jsbarcode": "^3.11.6",
-    "lodash-es": "^4.17.21",
-    "number-precision": "^1.6.0",
-    "pinia": "^2.2.8",
-    "qr-code-styling": "1.6.0-rc.1",
-    "qs": "^6.12.0",
-    "tapable": "^2.2.1",
-    "unocss": "^0.61.3",
-    "uuid": "^9.0.0",
-    "vue": "^3.4.33",
-    "vue-cropper": "^1.1.4",
-    "vue-i18n": "^9.2.2",
-    "vue-router": "^4.1.6",
-    "vue3-justified-layout": "^0.0.6",
-    "wc-waterfall": "^0.1.3"
+  "license": "MIT",
+  "engines": {
+    "pnpm": ">=10.18.3",
+    "node": ">=22.20.0"
+  },
+  "volta": {
+    "node": "22.20.0",
+    "pnpm": "10.18.3"
+  },
+  "scripts": {
+    "dev": "tsx scripts/watch.ts --watch",
+    "start": "tsx scripts/watch.ts",
+    "dev:pkg": "pnpm -F \"./packages/**\" dev",
+    "build:pkg": "pnpm -F \"./packages/**\" build",
+    "build": "turbo run build",
+    "dev:p": "turbo run dev --parallel",
+    "compile": "pnpm build && turbo run compile",
+    "pack:dev": "pnpm run build && pnpm -F electron-main run pack:dev",
+    "pack:prod": "pnpm run build && pnpm -F electron-main run pack:prod",
+    "postinstall": "npm run build:pkg",
+    "lint": "turbo run lint",
+    "lint:fix": "eslint . --fix",
+    "clean:cache": "npx rimraf node_modules/.cache/ && npx rimraf node_modules/.vite",
+    "clean:lib": "npx rimraf --glob node_modules **/node_modules",
+    "reinstall": "npx rimraf pnpm-lock.yaml && pnpm clean:lib"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.4",
-    "@types/fabric": "^5.3.5",
-    "@types/fontfaceobserver": "^2.1.3",
-    "@types/lodash-es": "^4.17.10",
-    "@types/node": "^18.15.0",
-    "@types/qs": "^6.9.14",
-    "@types/uuid": "^9.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
-    "@vitejs/plugin-vue": "^4.0.0",
-    "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "commitizen": "^4.3.0",
-    "commitlint-config-cz": "^0.13.3",
-    "cz-customizable": "^7.0.0",
-    "dotenv": "^16.4.5",
-    "electron": "^31.2.0",
-    "electron-builder": "^24.6.4",
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.7.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.9.0",
-    "husky": "^8.0.0",
-    "less": "^4.2.0",
-    "less-loader": "^11.1.3",
-    "lint-staged": "^13.2.0",
-    "prettier": "^2.8.4",
-    "sass": "^1.58.3",
-    "sass-loader": "^13.2.0",
-    "style-resources-loader": "^1.5.0",
-    "typescript": "^4.9.5",
-    "unplugin-auto-import": "^0.16.2",
-    "unplugin-vue-components": "^0.24.1",
-    "vite": "^5.3.3",
-    "vite-plugin-electron": "^0.28.7",
-    "vite-plugin-html": "^3.2.2",
-    "vite-plugin-svg-icons": "^2.0.1",
-    "vite-plugin-vue-setup-extend-plus": "^0.1.0",
-    "vue-tsc": "^1.2.0"
-  },
-  "build": {
-    "appId": "com.JuneFabricEditor.app",
-    "productName": "Fabric-Editor",
-    "files": [
-      "dist/**/*",
-      "dist-electron/**/*",
-      "resources/**/*"
-    ],
-    "directories": {
-      "output": "release"
-    },
-    "mac": {
-      "icon": "./resources/icon.png",
-      "artifactName": "${productName}_${version}.${ext}"
-    },
-    "win": {
-      "icon": "./resources/icon.png",
-      "artifactName": "${productName}_${version}.${ext}",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "runAfterFinish": true,
-      "installerIcon": "./resources/icon.ico",
-      "uninstallerIcon": "./resources/icon.ico",
-      "installerHeaderIcon": "./resources/icon.ico",
-      "shortcutName": "图片编辑器"
-    }
-  },
-  "author": "June",
-  "license": "MIT",
-  "lint-staged": {
-    "*.{vue,js,ts,tsx,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "@antfu/eslint-config": "^6.4.2",
+    "@dotenvx/dotenvx": "^1.51.1",
+    "@types/node": "^22.14.1",
+    "@unocss/eslint-plugin": "^66.5.10",
+    "axios": "^1.13.2",
+    "cross-env": "^10.1.0",
+    "eslint": "9.39.1",
+    "eslint-plugin-format": "^1.1.0",
+    "lint-staged": "^16.2.7",
+    "rimraf": "6.1.2",
+    "simple-git-hooks": "^2.13.1",
+    "tsx": "^4.21.0",
+    "turbo": "^2.6.3",
+    "vite": "^7.2.6",
+    "vite-plugin-dts": "^4.5.4"
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-customizable"
+      "path": "git-cz"
     }
+  },
+  "lint-staged": {
+    "packages/**/.{js,jsx,ts,tsx,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
