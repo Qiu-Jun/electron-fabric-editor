@@ -1,8 +1,13 @@
-packages:
-  - 'apps/*'
-  - 'packages/*'
+catalogMode: prefer
 
-# Define a catalog of version ranges.
+cleanupUnusedCatalogs: true
+
+shellEmulator: true
+
+trustPolicy: no-downgrade
+packages:
+  - apps/*
+  - packages/*
 catalog:
   axios: ^1.13.2
   typescript: ^5.9.3

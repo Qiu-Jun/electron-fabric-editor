@@ -19,6 +19,9 @@
     "pnpm": "10.18.3"
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "pnpm build:pkg",
+    "prepare": "husky install",
     "dev": "tsx scripts/watch.ts --watch",
     "start": "tsx scripts/watch.ts",
     "dev:pkg": "pnpm -F \"./packages/**\" dev",
@@ -28,15 +31,18 @@
     "compile": "pnpm build && turbo run compile",
     "pack:dev": "pnpm run build && pnpm -F electron-main run pack:dev",
     "pack:prod": "pnpm run build && pnpm -F electron-main run pack:prod",
-    "postinstall": "npm run build:pkg",
     "lint": "turbo run lint",
     "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"./**/*.{html,vue,ts,js,json,md}\"",
+    "commit": "git-cz",
     "clean:cache": "npx rimraf node_modules/.cache/ && npx rimraf node_modules/.vite",
     "clean:lib": "npx rimraf --glob node_modules **/node_modules",
     "reinstall": "npx rimraf pnpm-lock.yaml && pnpm clean:lib"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.4.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@dotenvx/dotenvx": "^1.51.1",
     "@types/node": "^22.14.1",
     "@unocss/eslint-plugin": "^66.5.10",
@@ -44,6 +50,8 @@
     "cross-env": "^10.1.0",
     "eslint": "9.39.1",
     "eslint-plugin-format": "^1.1.0",
+    "git-cz": "^4.9.0",
+    "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "rimraf": "6.1.2",
     "simple-git-hooks": "^2.13.1",
