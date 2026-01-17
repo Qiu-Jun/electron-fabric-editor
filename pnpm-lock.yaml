@@ -163,8 +163,8 @@ importers:
         specifier: ^1.6.0
         version: 1.13.2
       color-gradient-picker-vue3:
-        specifier: ^3.1.3
-        version: 3.1.3(vue@3.5.26(typescript@5.9.3))
+        specifier: ^3.1.5
+        version: 3.1.5(vue@3.5.26(typescript@5.9.3))
       dayjs:
         specifier: ^1.11.7
         version: 1.11.19
@@ -2684,8 +2684,8 @@ packages:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
 
-  color-gradient-picker-vue3@3.1.3:
-    resolution: {integrity: sha512-FIKO3ONKSu6Abh24JCVEc7yOUyGQzcVW0UV64k+ReDZMwB9uOPA3g8TJwCYyypcL5VipUXxUoYZLVuxgcwGcGw==}
+  color-gradient-picker-vue3@3.1.5:
+    resolution: {integrity: sha512-789e6nxWwyjtIbDfpXuGZ7NcWRTvLubSvtVpcJTk2fKauHx1d67Sb1mJ+ru2oc0+dk3jmSdV9Ju4cCLQ4B/Gvg==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       vue: ^3.0.0
@@ -6765,6 +6765,7 @@ packages:
   vue-i18n@9.14.5:
     resolution: {integrity: sha512-0jQ9Em3ymWngyiIkj0+c/k7WgaPO+TNzjKSNq9BvBQaKJECqn9cd9fL4tkDhB5G1QBskGl9YxxbDAhgbFtpe2g==}
     engines: {node: '>= 16'}
+    deprecated: v9 and v10 no longer supported. please migrate to v11. about maintenance status, see https://vue-i18n.intlify.dev/guide/maintenance.html
     peerDependencies:
       vue: ^3.0.0
 
@@ -8251,7 +8252,7 @@ snapshots:
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.19.3
+      '@types/node': 18.19.130
       '@types/responselike': 1.0.3
 
   '@types/conventional-commits-parser@5.0.2':
@@ -8288,7 +8289,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.19.3
+      '@types/node': 18.19.130
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -8324,7 +8325,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.19.3
+      '@types/node': 18.19.130
 
   '@types/semver@7.7.1': {}
 
@@ -8347,7 +8348,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.19.3
+      '@types/node': 18.19.130
     optional: true
 
   '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)':
@@ -9681,7 +9682,7 @@ snapshots:
     dependencies:
       color-name: 1.1.4
 
-  color-gradient-picker-vue3@3.1.3(vue@3.5.26(typescript@5.9.3)):
+  color-gradient-picker-vue3@3.1.5(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       html2canvas: 1.4.1
       lodash-es: 4.17.22
@@ -11722,7 +11723,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.19.3
+      '@types/node': 18.19.130
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
