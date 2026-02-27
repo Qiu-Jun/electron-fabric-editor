@@ -1,25 +1,15 @@
 <!--
  * @Author: June
- * @Description: 
+ * @Description:
  * @Date: 2024-09-06 00:10:51
  * @LastEditTime: 2024-11-28 16:14:15
  * @LastEditors: June
  * @FilePath: \element-fabric-editor\src\components\ReplaceImg.vue
 -->
-<template>
-  <div v-if="isOne && type === 'image'" class="attr-item-box mt-8px">
-    <div class="bg-item">
-      <el-button @click="repleace" text>
-        {{ $t('editor.imageSetting.repleaceImg') }}
-      </el-button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
+import useSelect from '@/hooks/select'
 import { Utils } from '@/lib/core'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
 
 const editorStore = useEditorStore()
 const { isOne } = useSelect()
@@ -29,7 +19,7 @@ const update = getCurrentInstance()
 const type = ref('')
 
 // 替换图片
-const repleace = async () => {
+async function repleace() {
   const activeObject: any = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject && activeObject.type === 'image') {
     // 图片
@@ -47,13 +37,14 @@ const repleace = async () => {
     activeObject.setSrc(imgEl.src, () => {
       activeObject.set('scaleX', (width * scaleX) / imgEl.width)
       activeObject.set('scaleY', (height * scaleY) / imgEl.height)
+      activeObject.set('originSrc', imgEl.src)
       editorStore.canvas?.renderAll()
     })
     imgEl.remove()
   }
 }
 
-const init = () => {
+function init() {
   const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
     // @ts-ignore
@@ -72,6 +63,17 @@ onBeforeUnmount(() => {
   editorStore.editor?.off('selectOne', init)
 })
 </script>
+
+<template>
+  <div v-if="isOne && type === 'image'" class="attr-item-box mt-8px">
+    <div class="bg-item">
+      <el-button text @click="repleace">
+        {{ $t('editor.imageSetting.repleaceImg') }}
+      </el-button>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 :deep(.el-button) {
   width: 100%;

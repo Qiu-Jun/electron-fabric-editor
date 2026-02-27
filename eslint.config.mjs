@@ -11,6 +11,7 @@ export default antfu(
   {
     // Without `files`, they are general rules for all files
     rules: {
+      'ts/ban-ts-comment': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'no-console': 'off',
       'n/prefer-global/process': 'off',

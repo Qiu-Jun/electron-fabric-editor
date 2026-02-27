@@ -10,7 +10,12 @@ import type { fabric } from 'fabric'
 import type Editor from '../Editor'
 
 type IEditor = Editor
-
+// interface IStrokeOps {
+//   enabled: boolean
+//   width: number
+//   color: string
+//   type: 'destination-out' | 'source-over' | 'source-in'
+// }
 interface IExtendImage {
   [x: string]: any
   originWidth?: number
@@ -21,7 +26,10 @@ class ImageStrokePlugin implements IPluginTempl {
   static pluginName = 'ImageStroke'
   static apis = ['imageStrokeDraw']
   //   public options: Required<IStrokeOps>;
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor,
+  ) {
     // this.options = Object.assign(
     //   {
     //     enabled: false,
@@ -39,7 +47,7 @@ class ImageStrokePlugin implements IPluginTempl {
       img.crossOrigin = 'anonymous'
       img.onload = () => resolve(img)
       // eslint-disable-next-line prefer-promise-reject-errors
-      img.onerror = () => reject('')
+      img.onerror = () => reject()
       img.src = src
     })
   }
@@ -56,8 +64,14 @@ class ImageStrokePlugin implements IPluginTempl {
   //     this.options[key] = val;
   //   }
 
-  async imageStrokeDraw(stroke: string, strokeWidth: number, type = 'source-over') {
-    const activeObject = this.canvas.getActiveObject() as (fabric.Image & IExtendImage) | undefined
+  async imageStrokeDraw(
+    stroke: string,
+    strokeWidth: number,
+    type = 'source-over',
+  ) {
+    const activeObject = this.canvas.getActiveObject() as
+      | (fabric.Image & IExtendImage)
+      | undefined
     if (!activeObject)
       return
     const w = activeObject.originWidth || 0
@@ -69,7 +83,16 @@ class ImageStrokePlugin implements IPluginTempl {
       return
     // 描边等于0 说明关闭了开关或者不需要描边  直接从原图绘制
     if (strokeWidth === 0) {
+      const { scaleX, scaleY, width, height } = activeObject
       activeObject.setSrc(src, () => {
+        activeObject.set(
+          'scaleX',
+          (width! * scaleX!) / (activeObject.width || 1),
+        )
+        activeObject.set(
+          'scaleY',
+          (height! * scaleY!) / (activeObject.height || 1),
+        )
         activeObject.canvas?.renderAll()
       })
       return
@@ -101,7 +124,13 @@ class ImageStrokePlugin implements IPluginTempl {
     canvas = null
     if (!res)
       return
+    const { scaleX, scaleY, width, height } = activeObject
     activeObject.setSrc(res, () => {
+      activeObject.set('scaleX', (width! * scaleX!) / (activeObject.width || 1))
+      activeObject.set(
+        'scaleY',
+        (height! * scaleY!) / (activeObject.height || 1),
+      )
       activeObject.canvas?.renderAll()
     })
   }
