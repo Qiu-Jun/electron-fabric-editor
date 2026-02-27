@@ -163,8 +163,8 @@ importers:
         specifier: ^1.6.0
         version: 1.13.2
       color-gradient-picker-vue3:
-        specifier: ^3.1.5
-        version: 3.1.5(vue@3.5.26(typescript@5.9.3))
+        specifier: ^3.1.6
+        version: 3.1.7(vue@3.5.26(typescript@5.9.3))
       dayjs:
         specifier: ^1.11.7
         version: 1.11.19
@@ -2684,8 +2684,8 @@ packages:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
 
-  color-gradient-picker-vue3@3.1.5:
-    resolution: {integrity: sha512-789e6nxWwyjtIbDfpXuGZ7NcWRTvLubSvtVpcJTk2fKauHx1d67Sb1mJ+ru2oc0+dk3jmSdV9Ju4cCLQ4B/Gvg==}
+  color-gradient-picker-vue3@3.1.7:
+    resolution: {integrity: sha512-oak6poQNJZXTivneE+OwLJYisY4JpKV62xLFLBL04XyKIJg8nRbMJAy5VIiATwFNnZZwwCMftzuh2FCDDJu9Tg==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       vue: ^3.0.0
@@ -9682,7 +9682,7 @@ snapshots:
     dependencies:
       color-name: 1.1.4
 
-  color-gradient-picker-vue3@3.1.5(vue@3.5.26(typescript@5.9.3)):
+  color-gradient-picker-vue3@3.1.7(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       html2canvas: 1.4.1
       lodash-es: 4.17.22
