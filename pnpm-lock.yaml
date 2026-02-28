@@ -9,6 +9,9 @@ catalogs:
     axios:
       specifier: ^1.13.2
       version: 1.13.2
+    color-gradient-picker-vue3:
+      specifier: ^3.1.7
+      version: 3.1.7
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
@@ -163,7 +166,7 @@ importers:
         specifier: ^1.6.0
         version: 1.13.2
       color-gradient-picker-vue3:
-        specifier: ^3.1.6
+        specifier: 'catalog:'
         version: 3.1.7(vue@3.5.26(typescript@5.9.3))
       dayjs:
         specifier: ^1.11.7
@@ -184,7 +187,7 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       fabric:
-        specifier: ~5.3.0
+        specifier: 5.3.0
         version: 5.3.0(encoding@0.1.13)
       fabric-history:
         specifier: ^2.0.0
@@ -8027,7 +8030,7 @@ snapshots:
 
   '@npmcli/fs@4.0.0':
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
@@ -12588,7 +12591,7 @@ snapshots:
 
   node-abi@4.24.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   node-addon-api@1.7.2:
     optional: true
@@ -12598,7 +12601,7 @@ snapshots:
 
   node-api-version@0.2.1:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   node-fetch-h2@2.3.0:
     dependencies:
@@ -12620,7 +12623,7 @@ snapshots:
       make-fetch-happen: 14.0.3
       nopt: 8.1.0
       proc-log: 5.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       tar: 7.5.2
       tinyglobby: 0.2.15
       which: 5.0.0
