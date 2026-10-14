@@ -42,7 +42,5 @@ export default class FlipPlugin implements IPluginTempl {
     }
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }

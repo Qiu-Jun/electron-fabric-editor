@@ -7,11 +7,13 @@
  * @FilePath: \ai-desing\src\locales\lang\zh_CN.ts
  */
 import { genMessage } from '../helper'
-import { Recordable } from 'typings/global'
 
-const modulesFiles = import.meta.glob<Recordable>('./zh-CN/**/*.json', {
-  eager: true
-})
+const modulesFiles = import.meta.glob<Record<string, any>>(
+  './zh-CN/**/*.json',
+  {
+    eager: true
+  }
+)
 
 export default {
   message: {

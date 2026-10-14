@@ -1,16 +1,23 @@
-import '@/assets/fonts/font.css'
+/*
+ * @Author: June
+ * @Description:
+ * @Date: 2024-07-24 17:26:12
+ * @LastEditors: June
+ * @LastEditTime: 2024-12-10 14:56:56
+ * @FilePath: \element-fabric-editor\src\main.ts
+ */
 import '@/styles/index.scss'
 // 自定义字体文件
 import '@/styles/reset.scss'
 import 'color-gradient-picker-vue3/dist/style.css'
 import 'virtual:svg-icons-register'
 import 'virtual:uno.css'
-import 'wc-waterfall'
 import { createApp } from 'vue'
-import { setupI18n } from '@/locales/index'
 import App from './App.vue'
-import { router, setupRouter } from './router'
+import { setupI18n } from '@/locales'
+import { setupRouter, router } from './router'
 import { setupStore } from './store'
+import 'wc-waterfall'
 
 async function bootstrap() {
   const app = createApp(App)

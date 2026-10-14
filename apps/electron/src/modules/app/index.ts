@@ -5,6 +5,7 @@ import path from 'node:path'
 import { appProtocolName, mediaProtocolName } from '/@/constants'
 import { isPackaged } from '/@/constants/common'
 import { createTray } from '/@/modules/app/tray'
+import { setupCors } from '/@/modules/cors'
 import { ipcMain } from '/@/modules/ipc'
 import { getMainWindow, restoreOrCreateWindow } from './mainWindow'
 // Inspect GPU info when debugging problems
@@ -77,6 +78,8 @@ export async function setupApp() {
     // })
 
     handleCustomProtocol()
+    // Bypass CORS so the renderer can load remote images, fonts and APIs
+    setupCors()
     // Restore the main window
     await restoreOrCreateWindow()
     // Create the tray icon

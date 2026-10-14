@@ -2,95 +2,81 @@
  * @Author: 秦少卫
  * @Date: 2024-04-24 14:07:06
  * @LastEditors: June
- * @LastEditTime: 2024-07-24 20:24:12
+ * @LastEditTime: 2026-09-04 14:30:00
  * @Description: 用户接口登录
  */
 
 import { apiHost } from '@/constants/app'
-import axios from 'axios'
-const baseURL = apiHost
-
-const instance = axios.create({ baseURL })
-
-instance.interceptors.request.use(function (config) {
-  const token = getToken()
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`
-  }
-  return config
-})
+import { createHttp } from './http'
 
 const tokenKey = 'token'
-function getToken() {
-  const token = localStorage.getItem(tokenKey)
-  return token
-}
 
-// 详情
-export const getUserInfo = (data: any) => instance.get('/api/users/me', data)
+const http = createHttp(apiHost, {
+  getToken: () => localStorage.getItem(tokenKey),
+  tokenPrefix: 'Bearer '
+})
+
+// 当前用户详情
+export const getUserInfo = () => http.get('/api/users/me')
 
 // 登录
-export const login = (data: any) => instance.post('/api/auth/local', data)
+export const login = (data: any) => http.post('/api/auth/local', data)
 
 // 注册
 export const register = (data: any) =>
-  instance.post('/api/auth/local/register', data)
+  http.post('/api/auth/local/register', data)
 
 // 登出
 export const logout = () => localStorage.setItem(tokenKey, '')
 
 // 自动登录
 export const autoLogin = (data: any) =>
-  instance.post('/api/custom/autoAuthUser', data)
+  http.post('/api/custom/autoAuthUser', data)
 
 // 设置token
 export const setToken = (token: string) => localStorage.setItem(tokenKey, token)
 
 // 获取个人素材列表
-export const getFileList = (data: any) =>
-  instance.get('/api/user-materials?populate=*', data)
+export const getFileList = (params?: any) =>
+  http.get('/api/user-materials?populate=*', { params })
 
 // 上传素材
-export const uploadImg = (data: any) => instance.post('/api/upload', data)
+export const uploadImg = (data: any) => http.post('/api/upload', data)
 
 // 创建素材
 export const createdMaterial = (data: any) =>
-  instance.post('/api/user-materials', data)
+  http.post('/api/user-materials', data)
 
 // 删除素材
-export const removeMaterial = (id: any) =>
-  instance.delete('/api/user-materials/' + id)
+export const removeMaterial = (id: number | string) =>
+  http.delete('/api/user-materials/' + id)
 
 // 创建模板
-export const createdTempl = (data: any) =>
-  instance.post('/api/user-templs', data)
+export const createdTempl = (data: any) => http.post('/api/user-templs', data)
 
-// 删除素材
-export const removeTempl = (data: any) =>
-  instance.delete(`/api/user-templs/${data}`)
+// 删除模板
+export const removeTempl = (id: number | string) =>
+  http.delete(`/api/user-templs/${id}`)
 
-// 更新素材
-export const updataTempl = (id: any, data: any) =>
-  instance.put(`/api/user-templs/${id}`, data)
+// 更新模板
+export const updateTempl = (id: number | string, data: any) =>
+  http.put(`/api/user-templs/${id}`, data)
 
-// 查询素材列表
-export const getTmplList = (data: any) =>
-  instance.get(`/api/user-templs?${data}`)
+// 查询模板列表
+export const getTmplList = (query: string) =>
+  http.get(`/api/user-templs?${query}`)
 
-// 查询素材列表
-export const getTmplInfo = (data: any) =>
-  instance.get(`/api/user-templs/${data}`)
+// 查询模板详情
+export const getTmplInfo = (id: number | string) =>
+  http.get(`/api/user-templs/${id}`)
 
 // 获取用户树菜单
 export const getUserFileTypeTree = () =>
-  instance.get(`/api/user-templ/getUerFileTypeTree`)
+  http.get(`/api/user-templ/getUerFileTypeTree`)
 
 // 获取菜单树
-export const getFileTypeTree = (data: any) =>
-  instance.get(`/api/custom/getUerFileTypeTree`, {
-    params: data
-  })
+export const getFileTypeTree = (params?: any) =>
+  http.get(`/api/custom/getUerFileTypeTree`, { params })
 
-// 获取用户树菜单
-export const getUerFileTree = () =>
-  instance.get(`/api/user-templ/getUerFileTree`)
+// 获取用户文件树
+export const getUerFileTree = () => http.get(`/api/user-templ/getUerFileTree`)

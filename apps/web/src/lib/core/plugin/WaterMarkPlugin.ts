@@ -1,192 +1,179 @@
 /*
  * @Author: June
- * @Description: 水印插件
+ * @Description: 画布水印插件：在画板区域叠加文字水印（单角/平铺），支持随画布尺寸自动重绘
  * @Date: 2024-04-21 08:30:48
- * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-05-23 17:56:45
+ * @LastEditors: June
+ * @LastEditTime: 2026-09-04 18:30:00
  */
-import { cloneDeep } from 'lodash-es';
-import { fabric } from 'fabric';
-import Editor from '../Editor';
+import { fabric } from 'fabric'
+import { debounce } from 'lodash-es'
+import type { DebouncedFunc } from 'lodash-es'
+import Editor from '../Editor'
 
+// 水印位置（枚举值仅为内部标识）
 enum POSITION {
   lt = 'Left_Top',
-  lb = 'Left_Right',
+  lb = 'Left_Bottom',
   rt = 'Right_Top',
   rb = 'Right_Bottom',
-  full = 'Full',
+  full = 'Full'
 }
 
-type IEditor = Editor;
-type IPosition = POSITION.lt | POSITION.lb | POSITION.rt | POSITION.rb | POSITION.full; // lt 左上 lr 左上 rt 右上  rb 右下 full 平铺 后续可扩展其他功能
-type IDrawOps = {
-  text: string;
-  size: number;
-  fontFamily: string;
-  color: string;
-  isRotate: boolean;
-  position: IPosition;
-};
+type IEditor = Editor
+type IPosition = POSITION
+interface IDrawOps {
+  text: string
+  size: number
+  fontFamily: string
+  color: string
+  isRotate: boolean
+  position: IPosition
+}
 
 const defaultOptions: IDrawOps = {
   text: '',
   size: 24,
-  isRotate: false, // 是否倾斜
-  fontFamily: '汉体', // 可考虑自定义字体
-  color: '#ccc', // 可考虑自定义颜色
-  position: POSITION.lt,
-};
+  isRotate: false, // 平铺时是否倾斜
+  fontFamily: '汉体', // 本地兜底字体，由 FontPlugin 动态注册
+  color: '#ccc',
+  position: POSITION.lt
+}
 
 class WaterMarkPlugin implements IPluginTempl {
-  static pluginName = 'WaterMarkPlugin';
-  static apis = ['drawWaterMark', 'clearWaterMMatk', 'updateDrawStatus'];
-  private hadDraw = false;
-  private drawOps: IDrawOps = defaultOptions;
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {
-    this.init();
+  static pluginName = 'WaterMarkPlugin'
+  static apis = ['drawWaterMark', 'clearWaterMark', 'updateDrawStatus']
+  private hadDraw = false
+  private drawOps: IDrawOps = { ...defaultOptions }
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {
+    this.init()
   }
 
-  private createCanvas(width: number, height: number) {
-    const waterCanvas: HTMLCanvasElement = document.createElement('canvas');
-    waterCanvas.width = width;
-    waterCanvas.height = height;
-    waterCanvas.style.position = 'fixed';
-    waterCanvas.style.opacity = '0';
-    waterCanvas.style.zIndex = '-1';
-    return waterCanvas;
-  }
-
-  // 待优化
-  private drawing: Record<IPosition, (...arg: any[]) => void> = {
-    [POSITION.lt]: (width: number, height: number, cb: (imgString: string) => void) => {
-      let waterCanvas: HTMLCanvasElement | null = this.createCanvas(width, height);
-      const w = waterCanvas.width || width;
-      let ctx: CanvasRenderingContext2D | null = waterCanvas.getContext('2d')!;
-      ctx.fillStyle = this.drawOps.color;
-      ctx.font = `${this.drawOps.size}px ${this.drawOps.fontFamily}`;
-      ctx.fillText(this.drawOps.text, 10, this.drawOps.size + 10, w - 20);
-      cb && cb(waterCanvas.toDataURL());
-      waterCanvas = null;
-      ctx = null;
-    },
-    [POSITION.rt]: (width: number, height: number, cb: (imgString: string) => void) => {
-      let waterCanvas: HTMLCanvasElement | null = this.createCanvas(width, height);
-      let ctx: CanvasRenderingContext2D | null = waterCanvas.getContext('2d')!;
-      const w = waterCanvas.width || width;
-      ctx.fillStyle = this.drawOps.color;
-      ctx.font = `${this.drawOps.size}px ${this.drawOps.fontFamily}`;
-      ctx.fillText(
-        this.drawOps.text,
-        w - ctx.measureText(this.drawOps.text).width - 20,
-        this.drawOps.size + 10,
-        w - 20
-      );
-      cb && cb(waterCanvas.toDataURL());
-      waterCanvas = null;
-      ctx = null;
-    },
-    [POSITION.lb]: (width: number, height: number, cb: (imgString: string) => void) => {
-      let waterCanvas: HTMLCanvasElement | null = this.createCanvas(width, height);
-      let ctx: CanvasRenderingContext2D | null = waterCanvas.getContext('2d')!;
-      const w = waterCanvas.width || width;
-      const h = waterCanvas.height || height;
-      ctx.fillStyle = this.drawOps.color;
-      ctx.font = `${this.drawOps.size}px ${this.drawOps.fontFamily}`;
-      ctx.fillText(this.drawOps.text, 10, h - this.drawOps.size, w - 20);
-      cb && cb(waterCanvas.toDataURL());
-      waterCanvas = null;
-      ctx = null;
-    },
-    [POSITION.rb]: (width: number, height: number, cb: (imgString: string) => void) => {
-      let waterCanvas: HTMLCanvasElement | null = this.createCanvas(width, height);
-      let ctx: CanvasRenderingContext2D | null = waterCanvas.getContext('2d')!;
-      const w = waterCanvas.width || width;
-      ctx.fillStyle = this.drawOps.color;
-      ctx.font = `${this.drawOps.size}px ${this.drawOps.fontFamily}`;
-      ctx.fillText(
-        this.drawOps.text,
-        w - ctx.measureText(this.drawOps.text).width - 20,
-        height - this.drawOps.size,
-        width - 20
-      );
-      cb && cb(waterCanvas.toDataURL());
-      waterCanvas = null;
-      ctx = null;
-    },
-    [POSITION.full]: (width: number, height: number, cb: (imgString: string) => void) => {
-      const angle = -30; // 按逆时针30度算
-      const R = (angle * Math.PI) / 180;
-      const font = `${this.drawOps.size}px ${this.drawOps.fontFamily}`;
-      let waterCanvas: HTMLCanvasElement | null = this.createCanvas(width, height);
-      let ctx: CanvasRenderingContext2D | null = waterCanvas.getContext('2d')!;
-      ctx.font = font;
-      const textW = ctx.measureText(this.drawOps.text).width + 40;
-      let patternCanvas: HTMLCanvasElement | null = this.createCanvas(
-        this.drawOps.isRotate ? textW * Math.abs(Math.cos(R)) + this.drawOps.size : textW,
-        this.drawOps.isRotate
-          ? textW * Math.abs(Math.sin(R)) + this.drawOps.size
-          : this.drawOps.size + 20
-      );
-      document.body.appendChild(patternCanvas);
-      let ctxWater: CanvasRenderingContext2D | null = patternCanvas.getContext('2d')!;
-      ctxWater.textAlign = 'left';
-      ctxWater.textBaseline = 'top';
-      ctxWater.font = font;
-      ctxWater.fillStyle = `${this.drawOps.color}`;
-      if (this.drawOps.isRotate) {
-        ctxWater.translate(0, textW * Math.abs(Math.sin(R)));
-        ctxWater.rotate(R);
-        ctxWater.fillText(this.drawOps.text, 0, 0);
-      } else {
-        ctxWater.fillText(this.drawOps.text, 10, 10);
-      }
-      ctx.fillStyle = ctx.createPattern(patternCanvas, 'repeat')!;
-      ctx.fillRect(0, 0, width, height);
-      cb && cb(waterCanvas.toDataURL());
-      waterCanvas = null;
-      patternCanvas = null;
-      ctx = null;
-      ctxWater = null;
-    },
-  };
-
-  drawWaterMark(ops: IDrawOps) {
-    this.drawOps = Object.assign(cloneDeep(this.drawOps), ops);
-    if (!this.drawOps.text) return;
-    const workspace = this.canvas.getObjects().find((item: any) => item.id === 'workspace');
-    const { width, height, left, top }: any = workspace;
-    this.drawing[this.drawOps?.position](width, height, (imgString: string) => {
-      this.canvas.overlayImage = undefined;
-      this.hadDraw = true;
-      this.canvas.setOverlayImage(imgString, this.canvas.renderAll.bind(this.canvas), {
+  // 绘制水印并叠加到画板区域（等待字体就绪后再绘制）
+  async drawWaterMark(ops?: Partial<IDrawOps>) {
+    this.drawOps = { ...this.drawOps, ...ops }
+    if (!this.drawOps.text) return
+    const workspace = this.canvas
+      .getObjects()
+      .find((item: any) => item.id === 'workspace')
+    if (!workspace) return
+    try {
+      // 等待水印字体加载完成，避免回退字体被固化进图片
+      await document.fonts.load(
+        `${this.drawOps.size}px ${this.drawOps.fontFamily}`
+      )
+    } catch (error) {
+      // 字体加载失败时继续用当前可用字体绘制
+    }
+    const { width, height, left, top } = workspace as any
+    const imgString = this.renderWaterMarkDataURL(width, height)
+    this.hadDraw = true
+    this.canvas.overlayImage = undefined
+    this.canvas.setOverlayImage(
+      imgString,
+      this.canvas.renderAll.bind(this.canvas),
+      {
         left: left || 0,
         top: top || 0,
         originX: 'left',
-        originY: 'top',
-      });
-    });
+        originY: 'top'
+      }
+    )
   }
 
-  // 更新handDrow 导入json时无法知道是否绘制
+  // 生成水印图：四角按坐标绘制，平铺模式用 pattern 重复填充
+  private renderWaterMarkDataURL(width: number, height: number): string {
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext('2d')!
+    const { color, size, fontFamily, text, position } = this.drawOps
+    ctx.fillStyle = color
+    ctx.font = `${size}px ${fontFamily}`
+    const margin = 10
+    if (position === POSITION.full) {
+      const tile = this.createTileCanvas()
+      ctx.fillStyle = ctx.createPattern(tile, 'repeat')!
+      ctx.fillRect(0, 0, width, height)
+    } else {
+      const textWidth = ctx.measureText(text).width
+      const isLeft = position === POSITION.lt || position === POSITION.lb
+      const isTop = position === POSITION.lt || position === POSITION.rt
+      const x = isLeft ? margin : width - textWidth - margin
+      const y = isTop ? size + margin : height - margin
+      ctx.fillText(text, x, y, width - margin * 2)
+    }
+    return canvas.toDataURL()
+  }
+
+  // 生成平铺用的小块画布（可倾斜 -30°）
+  private createTileCanvas(): HTMLCanvasElement {
+    const { size, fontFamily, text, color, isRotate } = this.drawOps
+    const angle = -30
+    const rad = (angle * Math.PI) / 180
+    const pad = 20
+    const textWidth = this.measureTextWidth(text, size, fontFamily) + pad
+    const tile = document.createElement('canvas')
+    tile.width = isRotate
+      ? textWidth * Math.abs(Math.cos(rad)) + size
+      : textWidth
+    tile.height = isRotate
+      ? textWidth * Math.abs(Math.sin(rad)) + size
+      : size + pad
+    const ctx = tile.getContext('2d')!
+    ctx.font = `${size}px ${fontFamily}`
+    ctx.fillStyle = color
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'top'
+    if (isRotate) {
+      ctx.translate(0, textWidth * Math.abs(Math.sin(rad)))
+      ctx.rotate(rad)
+      ctx.fillText(text, 0, 0)
+    } else {
+      ctx.fillText(text, pad / 2, pad / 2)
+    }
+    return tile
+  }
+
+  private measureTextWidth(
+    text: string,
+    size: number,
+    fontFamily: string
+  ): number {
+    const ctx = document.createElement('canvas').getContext('2d')!
+    ctx.font = `${size}px ${fontFamily}`
+    return ctx.measureText(text).width
+  }
+
+  // 画布尺寸变化时按当前配置重绘（防抖，忽略事件参数）
+  private refresh: DebouncedFunc<() => void> = debounce(() => {
+    if (this.hadDraw) this.drawWaterMark()
+  }, 250)
+
+  // 更新 hadDraw；导入 json 时无法知道是否已绘制
   updateDrawStatus(status: boolean) {
-    this.hadDraw = status;
+    this.hadDraw = status
   }
 
-  clearWaterMMatk() {
-    if (!this.hadDraw) return;
-    this.canvas.overlayImage = undefined;
-    this.canvas.renderAll();
-    this.hadDraw = false;
-    this.drawOps = defaultOptions;
+  clearWaterMark() {
+    if (!this.hadDraw) return
+    this.canvas.overlayImage = undefined
+    this.canvas.renderAll()
+    this.hadDraw = false
+    this.drawOps = { ...defaultOptions }
   }
 
   init() {
-    this.editor.on('sizeChange', this.drawWaterMark.bind(this));
+    // 保存同一引用，保证 destroy 能正确解绑
+    this.editor.on('sizeChange', this.refresh)
   }
 
   destroy() {
-    this.editor.off('sizeChange', this.drawWaterMark);
+    this.editor.off('sizeChange', this.refresh)
+    this.refresh.cancel()
   }
 }
 
-export default WaterMarkPlugin;
+export default WaterMarkPlugin

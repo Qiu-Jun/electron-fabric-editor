@@ -52,6 +52,22 @@
       "copy_to_clipboardstr": "CopyToClipboardString"
     },
     "ruler": "Ruler",
+    "waterMark": {
+      "title": "Watermark",
+      "text": "Text",
+      "textPlaceholder": "Enter watermark text",
+      "position": "Position",
+      "posLt": "TopLeft",
+      "posRt": "TopRight",
+      "posLb": "BottomLeft",
+      "posRb": "BottomRight",
+      "posFull": "Tile",
+      "size": "Size",
+      "color": "Color",
+      "rotate": "Rotate",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
     "history": {
       "undo": "Undo",
       "redo": "Redo"
@@ -79,13 +95,15 @@
     "height": "Height",
     "bgImage": "BackgroundImage",
     "addBgImage": "Setting",
-    "removeBgImage": "Remove"
+    "removeBgImage": "Remove",
+    "removeBgConfirm": "Remove the canvas background?"
   },
   "quickOperation": {
     "title": "QuickOperation",
     "lock": "Lock",
     "unlock": "UnLock",
     "editPoly": "EditPoly",
+    "editPolyTip": "Please select a polygon element",
     "delete": "Delete",
     "copy": "Copy",
     "hidden": "Hidden"
@@ -165,7 +183,7 @@
     }
   },
   "imageSetting": {
-    "repleaceImg": "RepleaceImage",
+    "replaceImg": "Replace Image",
     "crop": {
       "title": "CropperImage",
       "create": "CreateCropper",
@@ -203,6 +221,7 @@
     "stroke": {
       "title": "Image Stroke",
       "enable": "Enable",
+      "tip": "Only transparent PNG images are supported",
       "size": "Size",
       "show": "Show",
       "color": "Color"
@@ -258,6 +277,8 @@
     "show": "Show",
     "color": "Color",
     "position": "Position",
+    "positionBottom": "Bottom",
+    "positionTop": "Top",
     "size": "Size",
     "background": "BacKground"
   },

@@ -1,50 +1,66 @@
+<template>
+  <div class="editor-wrap">
+    <el-container>
+      <!-- 头部区域 -->
+      <el-header>
+        <EditorHeader />
+      </el-header>
+      <el-main>
+        <EditorContent />
+      </el-main>
+    </el-container>
+  </div>
+</template>
+
 <script lang="ts" setup>
-import { width } from '@webtoon/psd/dist/utils'
-import { fabric } from 'fabric'
 import { useRoute } from 'vue-router'
+import { fabric } from 'fabric'
 // hooks
 import { apiHost } from '@/constants/app'
-import { useTemplate } from '@/hooks/useTemplate'
+
 import Editor, {
-  AddBaseTypePlugin,
+  DringPlugin,
   AlignGuidLinePlugin,
-  BarCodePlugin,
+  ControlsPlugin,
   // ControlsRotatePlugin,
   CenterAlignPlugin,
-  ControlsPlugin,
-  CopyPlugin,
-  DeleteHotKeyPlugin,
-  DrawLinePlugin,
-  DrawPolygonPlugin,
-  DringPlugin,
-  FlipPlugin,
-  FontPlugin,
-  FreeDrawPlugin,
-  GroupAlignPlugin,
-  GroupPlugin,
-  GroupTextEditorPlugin,
-  HistoryPlugin,
-  ImageStroke,
   LayerPlugin,
-  LockPlugin,
-  MaterialPlugin,
+  CopyPlugin,
   MoveHotKeyPlugin,
-  PathTextPlugin,
-  PolygonModifyPlugin,
-  PsdPlugin,
-  QrCodePlugin,
-  ResizePlugin,
-  RulerPlugin,
-  SimpleClipImagePlugin,
+  DeleteHotKeyPlugin,
+  GroupPlugin,
+  DrawLinePlugin,
+  GroupTextEditorPlugin,
+  GroupAlignPlugin,
   WorkspacePlugin,
+  HistoryPlugin,
+  FlipPlugin,
+  RulerPlugin,
+  MaterialPlugin,
+  FontPlugin,
+  PolygonModifyPlugin,
+  DrawPolygonPlugin,
+  FreeDrawPlugin,
+  PathTextPlugin,
+  PsdPlugin,
+  SimpleClipImagePlugin,
+  BarCodePlugin,
+  QrCodePlugin,
+  ImageStroke,
+  ResizePlugin,
+  LockPlugin,
+  AddBaseTypePlugin,
+  PreviewPlugin,
+  WaterMarkPlugin
 } from '@/lib/core'
-import { useEditorStore } from '@/store/modules/editor'
-import { useTemplateStore } from '@/store/modules/template'
-import EditorContent from './components/EditorContent/index.vue'
 import EditorHeader from './components/EditorHeader/index.vue'
+import EditorContent from './components/EditorContent/index.vue'
+import { useEditorStore } from '@/store/modules/editor'
+import { useTemplate } from '@/hooks/useTemplate'
+import { useTemplateStore } from '@/store/modules/template'
 
 defineOptions({
-  name: 'Home',
+  name: 'Home'
 })
 
 const templateStore = useTemplateStore()
@@ -60,9 +76,7 @@ onMounted(() => {
     stopContextMenu: true, // 禁止默认右键菜单
     controlsAboveOverlay: true, // 超出clipPath后仍然展示控制条
     // imageSmoothingEnabled: false, // 解决文字导出后不清晰问题
-    preserveObjectStacking: true, // 当选择画布中的对象时，让对象不在顶层。
-    width: 900,
-    height: 2000,
+    preserveObjectStacking: true // 当选择画布中的对象时，让对象不在顶层。
   })
 
   // 初始化编辑器
@@ -93,16 +107,18 @@ onMounted(() => {
     .use(BarCodePlugin)
     .use(QrCodePlugin)
     .use(FontPlugin, {
-      repoSrc: APIHOST,
+      repoSrc: APIHOST
     })
     .use(MaterialPlugin, {
-      repoSrc: APIHOST,
+      repoSrc: APIHOST
     })
     .use(PsdPlugin)
     .use(ImageStroke)
     .use(ResizePlugin)
     .use(LockPlugin)
     .use(AddBaseTypePlugin)
+    .use(PreviewPlugin)
+    .use(WaterMarkPlugin)
 
   editorStore.setEditor(canvasEditor)
   editorStore.setCanvas(canvas)
@@ -121,22 +137,12 @@ onMounted(() => {
   templateStore.addTemplate(createTemplate())
 })
 
-onUnmounted(() => canvasEditor.destory())
+onUnmounted(() => {
+  // 释放所有页面缩略图的blob URL,防止路由切换后内存泄漏
+  templateStore.resetTemplate()
+  canvasEditor.destroy()
+})
 </script>
-
-<template>
-  <div class="editor-wrap">
-    <el-container>
-      <!-- 头部区域 -->
-      <el-header>
-        <EditorHeader />
-      </el-header>
-      <el-main>
-        <EditorContent />
-      </el-main>
-    </el-container>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .editor-wrap {

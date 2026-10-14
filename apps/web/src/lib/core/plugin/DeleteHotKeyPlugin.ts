@@ -52,9 +52,7 @@ class DeleteHotKeyPlugin implements IPluginTempl {
     }
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default DeleteHotKeyPlugin

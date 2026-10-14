@@ -1,13 +1,12 @@
 <!--
  * @Author: June
- * @Description: 
+ * @Description: 隐藏快捷操作
  * @Date: 2024-09-05 23:18:42
- * @LastEditTime: 2024-11-28 14:24:54
+ * @LastEditTime: 2026-09-14 10:30:00
  * @LastEditors: June
- * @FilePath: \ai-desing\src\views\editor\components\Hide.vue
 -->
 <template>
-  <el-button text :content="$t('editor.quickOperation.hide')" v-if="isOne">
+  <el-button text :content="$t('editor.quickOperation.hidden')" v-if="isOne">
     <el-button
       v-if="isHide"
       @click="doHide(false)"
@@ -21,33 +20,25 @@
 <script lang="ts" setup>
 import { View, Hide } from '@element-plus/icons-vue'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const { isOne } = useSelect()
+const { isOne } = useAttrPanel({
+  // 回显隐藏状态
+  getAttrs: (activeObject: any) => {
+    isHide.value = activeObject.visible === false
+  }
+})
+
 const isHide = ref(false)
 
-const doHide = (hide: any) => {
+const doHide = (hide: boolean) => {
   // 修改visible属性
   const activeObject: any = editorStore.canvas?.getActiveObject()
   activeObject.set('visible', !hide)
   editorStore.canvas?.requestRenderAll()
   isHide.value = hide
 }
-
-const handleSelected = () => {
-  const activeObject = editorStore.canvas?.getActiveObject()
-  // @ts-ignore
-  isHide.value = !activeObject.visible
-}
-
-onMounted(() => {
-  editorStore.editor?.on('selectOne', handleSelected)
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectOne', handleSelected)
-})
 </script>
 
 <style lang="scss" scoped>

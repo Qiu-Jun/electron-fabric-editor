@@ -37,7 +37,7 @@
 
     <!-- 二级  二级有两个宽度不一样的 -->
     <div
-      v-if="panelPositoin === 'left'"
+      v-if="panelPosition === 'left'"
       class="relative h-full transition-all transition-ease left-style-panel"
       :class="[
         !showPanel ? '-ml-312px' : '',
@@ -66,20 +66,34 @@
 import { debounce } from 'lodash-es'
 import { tabList } from '@/constants/editor'
 import { editorTabs, panels } from '@/enums/editor'
-import { Create, Template, Material, Ai, Text, Mine, Panel } from './components'
+import Panel from './components/Panel/index.vue'
 import { useEditorStore } from '@/store/modules/editor'
 import { storeToRefs } from 'pinia'
 
 const editorStore = useEditorStore()
-const { panelType, showPanel, tabType, panelPositoin } =
+const { panelType, showPanel, tabType, panelPosition } =
   storeToRefs(editorStore)
+
+// 二级面板按需异步加载，减小首屏包体积
 const tabComMap: Record<editorTabs, any> = {
-  [editorTabs.create]: Create,
-  [editorTabs.template]: Template,
-  [editorTabs.ai]: Ai,
-  [editorTabs.text]: Text,
-  [editorTabs.material]: Material,
-  [editorTabs.mine]: Mine,
+  [editorTabs.create]: defineAsyncComponent(
+    () => import('./components/Create/index.vue')
+  ),
+  [editorTabs.template]: defineAsyncComponent(
+    () => import('./components/Template/index.vue')
+  ),
+  [editorTabs.ai]: defineAsyncComponent(
+    () => import('./components/Ai/index.vue')
+  ),
+  [editorTabs.text]: defineAsyncComponent(
+    () => import('./components/Text/index.vue')
+  ),
+  [editorTabs.material]: defineAsyncComponent(
+    () => import('./components/Material/index.vue')
+  ),
+  [editorTabs.mine]: defineAsyncComponent(
+    () => import('./components/Mine/index.vue')
+  ),
   [editorTabs.none]: ''
 }
 
@@ -93,7 +107,7 @@ const currentTab = ref<editorTabs>(editorTabs.template)
 const tabChange = debounce(function (type: editorTabs, _subType: panels) {
   currentTab.value = type
   !unref(showPanel) && editorStore.setShowPanel(true)
-  unref(panelPositoin) === 'bottom' && editorStore.setPanelPositoin('left')
+  unref(panelPosition) === 'bottom' && editorStore.setPanelPosition('left')
   unref(panelType) !== panels.menu && (panelType.value = _subType)
   editorStore.setTabType(type)
 }, 250)

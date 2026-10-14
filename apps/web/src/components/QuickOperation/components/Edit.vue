@@ -19,8 +19,10 @@
 
 <script setup lang="ts">
 import { useEditorStore } from '@/store/modules/editor'
+import { useI18n } from 'vue-i18n'
 import useSelect from '@/hooks/select'
 
+const { t } = useI18n()
 const editorStore = useEditorStore()
 const { isMatchType } = useSelect(['polygon'])
 const onEditPolygon = () => {
@@ -28,7 +30,7 @@ const onEditPolygon = () => {
   if (obj && obj.type === 'polygon') {
     editorStore.editor.activeEdit()
   } else {
-    ElMessage.warning('请检查选择polygon')
+    ElMessage.warning(t('editor.quickOperation.editPolyTip'))
   }
 }
 </script>

@@ -51,7 +51,7 @@
               {{ $t('editor.imageSetting.filters.' + item.type) }}
             </el-checkbox>
             <div v-if="item.status" class="content">
-              <div v-for="info in item.params" :key="info">
+              <div v-for="info in item.params" :key="info.key">
                 <div v-if="info.uiType === uiType.SELECT">
                   <el-radio-group
                     v-model="info.value"
@@ -104,11 +104,44 @@
 import { uiType, paramsFilters, combinationFilters } from '@/constants/filter'
 import { useEditorStore } from '@/store/modules/editor'
 import { fabric } from 'fabric'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
-const { isOne } = useSelect()
 const editorStore = useEditorStore()
-const update = getCurrentInstance()
+const { isOne } = useAttrPanel({
+  // 选中图片时回显滤镜状态
+  getAttrs: (activeObject) => {
+    state.type = activeObject.type
+    if (state.type === 'image') {
+      // 无参数滤镜回显
+      Object.keys(noParamsFilters).forEach((type) => {
+        state.noParamsFilters[type] = !!_getFilter(activeObject, type)
+      })
+      // 有参数滤镜回显
+      paramsFilters.forEach((filterItem) => {
+        const moduleInfo = state.paramsFilters.find(
+          (item: any) => item.type === filterItem.type
+        )
+        const filterInfo = _getFilter(activeObject, filterItem.type)
+        moduleInfo.status = !!filterInfo
+        moduleInfo.params.forEach((paramsItem: any) => {
+          paramsItem.value = filterInfo
+            ? filterInfo[paramsItem.key]
+            : paramsItem.value
+        })
+      })
+
+      // 组合滤镜回显
+      combinationFilters.forEach((filterItem) => {
+        const moduleInfo = state.combinationFilters.find(
+          (item: any) => item.type === filterItem.type
+        )
+        const filterInfo = _getFilter(activeObject, filterItem.type)
+        moduleInfo.status = !!filterInfo
+        // 不回显具体参数
+      })
+    }
+  }
+})
 // 无参数滤镜
 const noParamsFilters = {
   BlackWhite: false,
@@ -161,56 +194,6 @@ const changeFiltersByParams = (type: string) => {
     _removeFilter(activeObject, type)
   }
 }
-
-const handleSelectOne = () => {
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  if (activeObject) {
-    state.type = activeObject.type
-    if (state.type === 'image') {
-      // 无参数滤镜回显
-      Object.keys(noParamsFilters).forEach((type) => {
-        state.noParamsFilters[type] = !!_getFilter(activeObject, type)
-        update?.proxy?.$forceUpdate()
-      })
-      // 有参数滤镜回显
-      paramsFilters.forEach((filterItem) => {
-        const moduleInfo = state.paramsFilters.find(
-          (item: any) => item.type === filterItem.type
-        )
-        const filterInfo = _getFilter(activeObject, filterItem.type)
-        moduleInfo.status = !!filterInfo
-        moduleInfo.params.forEach((paramsItem: any) => {
-          paramsItem.value = filterInfo
-            ? filterInfo[paramsItem.key]
-            : paramsItem.value
-        })
-      })
-
-      // 组合滤镜回显
-      combinationFilters.forEach((filterItem) => {
-        const moduleInfo = state.combinationFilters.find(
-          (item: any) => item.type === filterItem.type
-        )
-        const filterInfo = _getFilter(activeObject, filterItem.type)
-        moduleInfo.status = !!filterInfo
-        // 不回显具体参数
-      })
-    }
-    update?.proxy?.$forceUpdate()
-  }
-}
-
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectOne', handleSelectOne)
-  })
-})
-
-onBeforeUnmount(() => {
-  nextTick(() => {
-    editorStore.editor?.off('selectOne', handleSelectOne)
-  })
-})
 
 // 图片地址拼接
 function getImageUrl(name: any) {

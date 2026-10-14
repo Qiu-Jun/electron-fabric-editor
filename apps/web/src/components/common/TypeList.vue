@@ -59,7 +59,7 @@ const props = defineProps({
 const materialTypeList = ref([])
 const getMaterialTypesHandler = async () => {
   const res = await props.typeApi()
-  materialTypeList.value = res.data.data.map((item) => {
+  materialTypeList.value = (res?.data?.data ?? []).map((item) => {
     return {
       name: item.attributes.name,
       id: item.id,
@@ -86,7 +86,7 @@ const getMaterialsByTypeHandler = async () => {
         pageSize: 8
       }
     })
-    materialTypeList.value[i].list = props.formatData(res.data.data)
+    materialTypeList.value[i].list = props.formatData(res?.data?.data ?? [])
 
     i++
   }

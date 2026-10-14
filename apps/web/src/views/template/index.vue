@@ -1,104 +1,11 @@
 <!--
  * @Author: June
- * @Description:
+ * @Description: 
  * @Date: 2024-07-24 18:36:42
  * @LastEditors: June
  * @LastEditTime: 2024-11-22 08:04:17
  * @FilePath: \element-fabric-editor\src\views\template\index.vue
 -->
-<script name="Home" setup>
-import { Search } from '@element-plus/icons-vue'
-import { ElLoading } from 'element-plus'
-import qs from 'qs'
-import { useRouter } from 'vue-router'
-import { getTmplList, getTmplTypes } from '@/api/material'
-import Lang from '@/components/Lang.vue'
-import Login from '@/components/Login.vue'
-// 顶部组件
-import Logo from '@/components/Logo.vue'
-import { getMaterialPreviewUrl } from '@/hooks/usePageList'
-// 路由
-import Banner from './components/Banner.vue'
-
-const router = useRouter()
-
-// 分类列表
-const typeList = ref([])
-async function getTypeListHandel() {
-  const res = await getTmplTypes()
-  typeList.value = res.data.data.map((item) => {
-    return {
-      id: item.id,
-      name: item.attributes.name,
-    }
-  })
-}
-getTypeListHandel()
-
-// 模板列表
-const templList = ref([])
-const total = ref(0)
-const page = ref(1)
-const pageSize = ref(20)
-
-const filters = reactive({
-  name: {
-    $containsi: '',
-  },
-  templ_type: {
-    $in: [],
-  },
-})
-
-async function getTmplListHandel() {
-  const params = {
-    populate: {
-      img: '*',
-    },
-    filters: toRaw(filters),
-    fields: ['name'],
-    pagination: {
-      page: page.value,
-      pageSize: pageSize.value,
-    },
-  }
-  const loadingInstance = ElLoading.service()
-  try {
-    const res = await getTmplList(qs.stringify(params))
-    templList.value = []
-    await nextTick()
-    total.value = res.data.meta.pagination.total
-    templList.value = res.data.data.map(item => ({
-      id: item.id,
-      name: item.attributes.name,
-      src: getMaterialPreviewUrl(item.attributes.img),
-    }))
-  }
-  catch (error) {
-    console.log(error)
-  }
-  loadingInstance.close()
-}
-
-function search() {
-  page.value = 1
-  getTmplListHandel()
-}
-getTmplListHandel()
-
-function toInfo(info) {
-  const href = router.resolve({
-    path: '/',
-    query: {
-      tempId: info.id,
-    },
-  })
-  console.log(href, 1111)
-  // 点击事件
-  window.open(href.href, '_blank')
-}
-</script>
-
 <template>
   <div class="home">
     <el-container>
@@ -112,15 +19,8 @@ function toInfo(info) {
         </div>
 
         <div class="right">
-          <router-link
-            v-slot="{ navigate }"
-            custom
-            to="/design/editor"
-            target="_blank"
-          >
-            <el-button link @click="navigate">
-              新建设计
-            </el-button>
+          <router-link custom v-slot="{ navigate }" to="/">
+            <el-button link @click="navigate">新建设计</el-button>
           </router-link>
 
           <el-divider direction="vertical" />
@@ -135,17 +35,17 @@ function toInfo(info) {
         :style="{
           margin: '40px 20px 0',
           minHeight: '500px',
-          minWidth: '1200px',
+          minWidth: '1200px'
         }"
       >
         <Banner />
         <div class="search-box">
           <el-input
-            v-model="filters.name.$containsi"
             size="large"
             class="search-input"
             clearable
             search
+            v-model="filters.name.$containsi"
             enter-button
             placeholder="请输入关键词"
             @search="search"
@@ -156,10 +56,10 @@ function toInfo(info) {
           </el-input>
           <el-tabs v-model="filters.templ_type.$in" @tab-click="search">
             <el-tab-pane
-              v-for="item in typeList"
-              :key="item.id"
               :name="item.id"
               :label="item.name"
+              :key="item.id"
+              v-for="item in typeList"
             />
           </el-tabs>
         </div>
@@ -167,29 +67,120 @@ function toInfo(info) {
         <!-- grid布局 -->
         <wc-waterfall :gap="10" :cols="5">
           <div
+            class="img-item grid-item"
             v-for="info in templList"
             :key="info.id"
-            class="img-item grid-item"
           >
             <el-tooltip :content="info.name" placement="top">
-              <img :src="info.src" :alt="info.name" @click="toInfo(info)">
+              <img :src="info.src" :alt="info.name" @click="toInfo(info)" />
             </el-tooltip>
           </div>
         </wc-waterfall>
         <Page
-          v-model="page"
           class="page"
           :total="total"
-          :page-size="pageSize"
-          show-sizer
+          v-model="page"
           @on-change="getTmplListHandel"
           @on-page-size-change="(val) => (pageSize = val)"
+          :page-size="pageSize"
+          show-sizer
         />
       </el-main>
     </el-container>
   </div>
 </template>
 
+<script name="Home" setup>
+import { Search } from '@element-plus/icons-vue'
+import { ElLoading } from 'element-plus'
+import qs from 'qs'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+// 路由
+import Banner from './components/Banner.vue'
+// 顶部组件
+import Logo from '@/components/Logo.vue'
+import Lang from '@/components/Lang.vue'
+import Login from '@/components/Login.vue'
+
+import { getMaterialPreviewUrl } from '@/hooks/usePageList'
+import { getTmplTypes, getTmplList } from '@/api/material'
+
+// 分类列表
+const typeList = ref([])
+const getTypeListHandel = async () => {
+  const res = await getTmplTypes()
+  typeList.value = res.data.data.map((item) => {
+    return {
+      id: item.id,
+      name: item.attributes.name
+    }
+  })
+}
+getTypeListHandel()
+
+// 模板列表
+const templList = ref([])
+const total = ref(0)
+const page = ref(1)
+const pageSize = ref(20)
+
+const filters = reactive({
+  name: {
+    $containsi: ''
+  },
+  templ_type: {
+    $in: []
+  }
+})
+
+const getTmplListHandel = async () => {
+  const params = {
+    populate: {
+      img: '*'
+    },
+    filters: toRaw(filters),
+    fields: ['name'],
+    pagination: {
+      page: page.value,
+      pageSize: pageSize.value
+    }
+  }
+  const loadingInstance = ElLoading.service()
+  try {
+    const res = await getTmplList(qs.stringify(params))
+    templList.value = []
+    await nextTick()
+    total.value = res.data.meta.pagination.total
+    templList.value = res.data.data.map((item) => ({
+      id: item.id,
+      name: item.attributes.name,
+      src: getMaterialPreviewUrl(item.attributes.img)
+    }))
+  } catch (error) {
+    // 错误已忽略，不影响主流程
+  }
+  loadingInstance.close()
+}
+
+const search = () => {
+  page.value = 1
+  getTmplListHandel()
+}
+getTmplListHandel()
+
+const toInfo = (info) => {
+  const href = router.resolve({
+    path: '/',
+    query: {
+      tempId: info.id
+    }
+  })
+  // 点击事件
+  window.open(href.href, '_blank')
+}
+</script>
 <style lang="scss" scoped>
 // header
 :deep(.el-header) {

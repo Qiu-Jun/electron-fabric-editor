@@ -84,7 +84,7 @@ onMounted(async () => {
       ...list
     ]
   } catch (error) {
-    console.log(error)
+    // 错误已忽略，不影响主流程
   }
 
   loading.value = false

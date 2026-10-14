@@ -6,5 +6,5 @@
  * @LastEditors: June
 -->
 <template>
-  <div class="box-border p-10px">计划中</div>
+  <div class="box-border p-10px">私聊定制</div>
 </template>

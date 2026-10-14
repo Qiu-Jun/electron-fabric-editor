@@ -8,33 +8,21 @@
 
 <template>
   <div class="logo inline-block mr-10px">
-    <a class="flex h-full align-center" :href="webInfo.url" target="_blank">
-      <img class="inline-block" :src="webInfo.img" alt="webInfo.name" />
+    <a
+      class="flex h-full align-center"
+      href="https://github.com/ikuaitu/element-fabric-editor"
+      target="_blank"
+    >
+      <img
+        class="inline-block"
+        src="@/assets/logo.png"
+        alt="element-fabric-editor"
+      />
     </a>
   </div>
 </template>
 
-<script setup name="Logo">
-import { apiHost } from '@/constants/app'
-import { getWebInfo } from '@/api/material'
-import { get, pick } from 'lodash-es'
-const baseURL = apiHost
-
-const webInfo = ref({
-  name: '',
-  logo: '',
-  url: ''
-})
-
-const getWebInfoFun = async () => {
-  const res = await getWebInfo()
-  const info = pick(res.data.data.attributes, ['name', 'url'])
-  info.img = baseURL + get(res.data, 'data.attributes.logo.data.attributes.url')
-  webInfo.value = info
-}
-
-getWebInfoFun()
-</script>
+<script setup name="Logo"></script>
 
 <style scoped lang="scss">
 .logo {

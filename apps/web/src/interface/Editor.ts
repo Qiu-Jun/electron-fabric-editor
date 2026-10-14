@@ -8,7 +8,7 @@
 import type Editor from '@/lib/core'
 
 // IEditor类型包含插件实例，Editor不包含插件实例
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+
 export interface IEditor extends Editor {}
 
 // 生命周期事件类型

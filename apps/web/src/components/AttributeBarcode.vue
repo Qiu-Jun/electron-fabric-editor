@@ -1,6 +1,5 @@
 <template>
   <div class="attr-item-box" v-if="isOne && isMatchType && isBarcode">
-    <!-- <h3>字体属性</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.barCode.name') }}</h4>
     </el-divider>
@@ -34,8 +33,14 @@
           <span class="label">{{ $t('editor.barCode.position') }}</span>
           <div class="content">
             <el-select v-model="baseAttr.textPosition" @change="changeCommon">
-              <el-option value="bottom">bottom</el-option>
-              <el-option value="top">top</el-option>
+              <el-option
+                :label="$t('editor.barCode.positionBottom')"
+                value="bottom"
+              ></el-option>
+              <el-option
+                :label="$t('editor.barCode.positionTop')"
+                value="top"
+              ></el-option>
             </el-select>
           </div>
         </div>
@@ -65,7 +70,7 @@
       </div>
 
       <div class="flex-view">
-        <div :span="12" class="flex-item">
+        <div class="flex-item">
           <span class="label">{{ $t('editor.barCode.color') }}</span>
           <div class="content">
             <el-color-picker
@@ -75,7 +80,7 @@
             />
           </div>
         </div>
-        <div :span="12" class="flex-item" v-if="baseAttr.displayValue">
+        <div class="flex-item" v-if="baseAttr.displayValue">
           <div class="content f-center">
             <InputNumber
               v-model="baseAttr.fontSize"
@@ -88,7 +93,9 @@
       </div>
       <div class="flex-view">
         <div class="flex-item">
-          <span class="label">{{ $t('editor.barCode.background') }}</span>
+          <span class="label mr-10px">{{
+            $t('editor.barCode.background')
+          }}</span>
           <div class="content">
             <el-color-picker
               v-model="baseAttr.background"
@@ -102,7 +109,7 @@
           <div class="content">
             <el-select
               v-model="baseAttr.format"
-              @on-change="changeCommon"
+              @change="changeCommon"
               style="width: 90px"
             >
               <el-option
@@ -123,20 +130,29 @@
 <script setup lang="ts">
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const { isOne, isMatchType } = useSelect(['image'])
-const update = getCurrentInstance()
+const { isOne, isMatchType } = useAttrPanel({
+  matchTypes: ['image'],
+  // 回显条码扩展属性,普通图片不回显
+  getAttrs: (activeObject: any) => {
+    extensionType.value = activeObject.extensionType || ''
+    const extension = activeObject.get('extension')
+    if (extensionType.value === 'barcode' && extension) {
+      Object.keys(baseAttr).forEach((key) => {
+        baseAttr[key] = extension[key]
+      })
+    }
+  }
+})
 
-// 文字元素
-const textType = ['image']
 const extensionType = ref('')
 
 const isBarcode = computed(() => extensionType.value === 'barcode')
 
 // 属性值
-const baseAttr = reactive({
+const baseAttr = reactive<Record<string, any>>({
   value: '',
   format: '',
   text: '12121',
@@ -148,81 +164,22 @@ const baseAttr = reactive({
   displayValue: false
 })
 
-// 字体对齐方式
+// 文字对齐方式
 const textAlignList = ['left', 'center', 'right']
 // 对齐图标
 const textAlignListSvg = ['left', 'center', 'right']
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject: any = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  extensionType.value = activeObject?.extensionType || ''
-  if (
-    activeObject &&
-    isMatchType &&
-    activeObject?.extensionType === 'barcode'
-  ) {
-    baseAttr.value = activeObject.get('extension').value
-    baseAttr.format = activeObject.get('extension').format
-    baseAttr.text = activeObject.get('extension').text
-    baseAttr.textAlign = activeObject.get('extension').textAlign
-    baseAttr.textPosition = activeObject.get('extension').textPosition
-    baseAttr.fontSize = activeObject.get('extension').fontSize
-    baseAttr.background = activeObject.get('extension').background
-    baseAttr.lineColor = activeObject.get('extension').lineColor
-    baseAttr.displayValue = activeObject.get('extension').displayValue
-  }
-}
-
-// 通用属性改变
+// 通用属性改变:整体更新条码
 const changeCommon = () => {
   editorStore.editor.setBarcode(toRaw(baseAttr))
   editorStore.canvas?.renderAll()
 }
 
-const selectCancel = () => {
-  extensionType.value = ''
-  update?.proxy?.$forceUpdate()
-}
-
-const barcodeTypeList = ref([])
+const barcodeTypeList = ref<string[]>([])
 
 onMounted(() => {
   nextTick(() => {
-    getObjectAttr()
-    barcodeTypeList.value = editorStore.editor?.getBarcodeTypes()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
+    barcodeTypeList.value = editorStore.editor?.getBarcodeTypes() || []
   })
 })
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
-
-<style scoped lang="scss">
-:deep(.el-color-picker__trigger) {
-  width: 88px;
-}
-
-.flex-item {
-  @apply flex-1 inline-flex box-border;
-  .label {
-    @apply w-32px h-32px leading-32px inline-block text-14px;
-  }
-  .content {
-    flex: 1;
-    // width: 60px;
-  }
-  .slider-box {
-    width: calc(100% - 50px);
-    @apply mb-10px;
-  }
-}
-</style>

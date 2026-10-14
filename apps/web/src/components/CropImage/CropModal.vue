@@ -199,7 +199,6 @@ const cropperWidth = ref(0)
 const cropperHeight = ref(0)
 
 function changeCropperSize(type: 'width' | 'height', value: number) {
-  console.log(value)
   if (fixed.value) {
     if (type === 'width') {
       cropperHeight.value = (value * fixedRatio.value[1]) / fixedRatio.value[0]
@@ -221,7 +220,6 @@ function onPreview(_previews) {
   } else {
     loading.value = false
   }
-  console.log('🚀 ~ onPreview ~ _previews:', _previews)
   cropperWidth.value = _previews.w
   cropperHeight.value = _previews.h
   previewStyle.value = {

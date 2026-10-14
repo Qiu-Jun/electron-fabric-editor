@@ -1,14 +1,13 @@
 <!--
  * @Author: June
- * @Description: 
+ * @Description: 关联数据属性面板
  * @Date: 2024-09-05 23:00:59
- * @LastEditTime: 2024-11-28 16:05:40
+ * @LastEditTime: 2026-09-14 10:10:00
  * @LastEditors: June
- * @FilePath: \ai-desing\src\views\editor\components\AttributeId.vue
+ * @FilePath: \element-fabric-editor\src\components\AttributeId.vue
 -->
 <template>
   <div class="mb-10px attr-item-box" v-if="isOne">
-    <!-- <h3>数据</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.attrSetting.data.title') }}</h4>
     </el-divider>
@@ -47,56 +46,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
-const editorStore = useEditorStore()
-const { isOne } = useSelect()
-const update = getCurrentInstance()
-
-// 属性值
-const baseAttr = reactive({
-  id: 0,
-  linkData: ['', '']
-})
-
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject: any = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject) {
+const { isOne, changeCommon } = useAttrPanel({
+  // 回显关联数据
+  getAttrs: (activeObject) => {
     baseAttr.id = activeObject.get('id')
     baseAttr.linkData = activeObject.get('linkData') || ['', '']
   }
-}
-
-// 通用属性改变
-const changeCommon = (key: any, value: any) => {
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  if (activeObject) {
-    activeObject && activeObject.set(key, value)
-    editorStore.canvas?.renderAll()
-  }
-}
-
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取字体数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
 })
 
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
+// 属性值
+const baseAttr = reactive({
+  id: '',
+  linkData: ['', '']
 })
 </script>

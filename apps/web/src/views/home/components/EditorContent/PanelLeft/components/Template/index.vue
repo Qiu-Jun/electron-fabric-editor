@@ -58,7 +58,7 @@
           </el-tooltip>
         </wc-waterfall>
 
-        <el-divider v-if="isDownBottm">已经到底了</el-divider>
+        <el-divider v-if="isDownBottom">已经到底了</el-divider>
       </el-scrollbar>
     </div>
   </div>
@@ -85,7 +85,7 @@ const {
   pageLoading,
   pageData,
   searchKeyWord,
-  isDownBottm,
+  isDownBottom,
   startGetList,
   nextPage,
   showScroll,
@@ -127,7 +127,8 @@ const getTempData = async (info) => {
   }
   editorStore.editor.loadJSON(
     JSON.stringify(infoRes.data.data.attributes.json),
-    loadingInstance?.close()
+    // 传回调引用,加载完成后才关闭 loading
+    () => loadingInstance?.close()
   )
 }
 
@@ -142,10 +143,11 @@ const getTemplInfo = async () => {
       const infoRes = await getInfo(route.query.tempId)
       editorStore.editor.loadJSON(
         JSON.stringify(infoRes.data.data.attributes.json),
-        loadingInstance?.close()
+        // 传回调引用,加载完成后才关闭 loading
+        () => loadingInstance?.close()
       )
     } catch (error) {
-      console.log(error)
+      // 错误已忽略，不影响主流程
     }
   }
 }

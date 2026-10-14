@@ -1,6 +1,5 @@
 <template>
   <div class="attr-item-box" v-if="isOne && !isGroup">
-    <!-- <h3>边框</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.attrSetting.border.title') }}</h4>
     </el-divider>
@@ -60,13 +59,30 @@
 <script lang="ts" setup>
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
-const { isOne, isGroup } = useSelect()
 const editorStore = useEditorStore()
-const update = getCurrentInstance()
+const { isOne, isGroup } = useAttrPanel({
+  // 回显描边属性,组合元素不支持描边
+  getAttrs: (activeObject) => {
+    if (activeObject.type === 'group') return
+    baseAttr.stroke = activeObject.get('stroke')
+    baseAttr.strokeWidth = activeObject.get('strokeWidth')
+    const strokeDashArray = JSON.stringify(
+      activeObject.get('strokeDashArray') || []
+    )
+    const target = strokeDashList.find((item) => {
+      return (
+        JSON.stringify(item.value.strokeDashArray) === strokeDashArray &&
+        activeObject.get('strokeLineCap') === item.value.strokeLineCap
+      )
+    })
+    if (target) {
+      baseAttr.strokeDashArray = target.label
+    }
+  }
+})
 
-const groupType = ['group']
 // 属性值
 const baseAttr: any = reactive({
   stroke: '#fff',
@@ -149,35 +165,10 @@ const strokeDashList = [
   }
 ]
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject = editorStore.canvas?.getActiveObject()
-
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject && !groupType.includes(activeObject.type)) {
-    baseAttr.stroke = activeObject.get('stroke')
-    baseAttr.strokeWidth = activeObject.get('strokeWidth')
-    const strokeDashArray = JSON.stringify(
-      activeObject.get('strokeDashArray') || []
-    )
-    const target = strokeDashList.find((item) => {
-      return (
-        JSON.stringify(item.value.strokeDashArray) === strokeDashArray &&
-        activeObject.get('strokeLineCap') === item.value.strokeLineCap
-      )
-    })
-    if (target) {
-      baseAttr.strokeDashArray = target.label
-    }
-  }
-}
-
-// 通用属性改变
+// 通用属性改变,描边统一开启等比缩放
 const changeCommon = (key: string, value: any) => {
   const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
-    // @ts-ignore
     activeObject.set(key, value)
     activeObject.set('strokeUniform', true)
     editorStore.canvas?.renderAll()
@@ -187,54 +178,17 @@ const changeCommon = (key: string, value: any) => {
 // 边框设置
 const borderSet = (key: string) => {
   const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  if (activeObject) {
-    const stroke = strokeDashList.find((item) => item.label === key)
-    // @ts-ignore
+  const stroke = strokeDashList.find((item) => item.label === key)
+  if (activeObject && stroke) {
     activeObject.set(stroke.value)
     editorStore.canvas?.renderAll()
   }
 }
-
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取字体数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
 
 <style scoped lang="scss">
-:deep(.el-color-picker__trigger) {
-  width: 64px;
-}
 :deep(.el-select__wrapper) {
   background: #f8f8f9;
   box-shadow: none;
-}
-.number-warp {
-  background: #f6f7f9;
-  padding: 0 15px 0 10px;
-  @apply box-border w-full flex justify-start items-center rounded-5px mb-10px relative z-1;
-  .label {
-    flex: 0 0 32px;
-    font-size: var(--el-form-label-font-size);
-    color: var(--el-text-color-regular);
-  }
-  .content {
-    @apply w-full;
-  }
 }
 </style>

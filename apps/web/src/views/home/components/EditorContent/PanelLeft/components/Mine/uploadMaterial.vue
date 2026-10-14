@@ -74,11 +74,10 @@ const getFileListHandle = () => {
           imgUrl: apiHost + item.attributes.img?.data?.attributes?.url
         }
       })
-      console.log(fileList.value)
       isLogin.value = true
     })
     .catch((err) => {
-      console.log(err)
+      // 错误已忽略，不影响主流程
       isLogin.value = false
     })
 }
@@ -100,7 +99,7 @@ const uploadImgHandule = () => {
         createdH(info.id, file.name)
       })
       .catch((err) => {
-        console.log(err)
+        // 错误已忽略，不影响主流程
       })
   })
 }

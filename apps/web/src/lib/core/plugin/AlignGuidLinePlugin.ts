@@ -6,42 +6,45 @@
  * @Description: 辅助线功能
  */
 
-import Editor from '../Editor';
-type IEditor = Editor;
+import Editor from '../Editor'
+type IEditor = Editor
 
-import { fabric } from 'fabric';
+import { fabric } from 'fabric'
 
 declare interface VerticalLine {
-  x: number;
-  y1: number;
-  y2: number;
+  x: number
+  y1: number
+  y2: number
 }
 
 declare interface HorizontalLine {
-  x1: number;
-  x2: number;
-  y: number;
+  x1: number
+  x2: number
+  y: number
 }
 
 class AlignGuidLinePlugin implements IPluginTempl {
   defautOption = {
     color: 'rgba(255,95,95,1)',
-    width: 1,
-  };
-  static pluginName = 'AlignGuidLinePlugin';
-  dragMode = false;
-  constructor(public canvas: fabric.Canvas, public editor: IEditor) {
-    this.dragMode = false;
-    this.init();
+    width: 1
+  }
+  static pluginName = 'AlignGuidLinePlugin'
+  dragMode = false
+  constructor(
+    public canvas: fabric.Canvas,
+    public editor: IEditor
+  ) {
+    this.dragMode = false
+    this.init()
   }
   init() {
-    const { canvas } = this;
-    const ctx = canvas.getSelectionContext();
-    const aligningLineOffset = 5;
-    const aligningLineMargin = 4;
-    const This = this;
-    let viewportTransform: number[] | undefined;
-    let zoom = 1;
+    const { canvas } = this
+    const ctx = canvas.getSelectionContext()
+    const aligningLineOffset = 5
+    const aligningLineMargin = 4
+    const _this = this
+    let viewportTransform: number[] | undefined
+    let zoom = 1
 
     function drawVerticalLine(coords: VerticalLine) {
       drawLine(
@@ -49,7 +52,7 @@ class AlignGuidLinePlugin implements IPluginTempl {
         coords.y1 > coords.y2 ? coords.y2 : coords.y1,
         coords.x + 0.5,
         coords.y2 > coords.y1 ? coords.y2 : coords.y1
-      );
+      )
     }
 
     function drawHorizontalLine(coords: HorizontalLine) {
@@ -58,77 +61,88 @@ class AlignGuidLinePlugin implements IPluginTempl {
         coords.y + 0.5,
         coords.x2 > coords.x1 ? coords.x2 : coords.x1,
         coords.y + 0.5
-      );
+      )
     }
 
     function drawLine(x1: number, y1: number, x2: number, y2: number) {
-      if (viewportTransform == null) return;
+      if (viewportTransform == null) return
 
-      ctx.moveTo(x1 * zoom + viewportTransform[4], y1 * zoom + viewportTransform[5]);
-      ctx.lineTo(x2 * zoom + viewportTransform[4], y2 * zoom + viewportTransform[5]);
+      ctx.moveTo(
+        x1 * zoom + viewportTransform[4],
+        y1 * zoom + viewportTransform[5]
+      )
+      ctx.lineTo(
+        x2 * zoom + viewportTransform[4],
+        y2 * zoom + viewportTransform[5]
+      )
     }
 
     function isInRange(value1: number, value2: number) {
-      value1 = Math.round(value1);
-      value2 = Math.round(value2);
-      for (let i = value1 - aligningLineMargin, len = value1 + aligningLineMargin; i <= len; i++) {
+      value1 = Math.round(value1)
+      value2 = Math.round(value2)
+      for (
+        let i = value1 - aligningLineMargin, len = value1 + aligningLineMargin;
+        i <= len;
+        i++
+      ) {
         if (i === value2) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     }
 
-    const verticalLines: VerticalLine[] = [];
-    const horizontalLines: HorizontalLine[] = [];
+    const verticalLines: VerticalLine[] = []
+    const horizontalLines: HorizontalLine[] = []
 
     canvas.on('mouse:down', () => {
-      viewportTransform = canvas.viewportTransform;
-      zoom = canvas.getZoom();
-    });
+      viewportTransform = canvas.viewportTransform
+      zoom = canvas.getZoom()
+    })
 
     canvas.on('object:moving', (e) => {
-      if (viewportTransform === undefined || e.target === undefined) return;
+      if (viewportTransform === undefined || e.target === undefined) return
 
-      const activeObject = e.target;
-      const canvasObjects = canvas.getObjects();
-      const activeObjectCenter = activeObject.getCenterPoint();
-      const activeObjectLeft = activeObjectCenter.x;
-      const activeObjectTop = activeObjectCenter.y;
-      const activeObjectBoundingRect = activeObject.getBoundingRect();
-      const activeObjectHeight = activeObjectBoundingRect.height / viewportTransform[3];
-      const activeObjectWidth = activeObjectBoundingRect.width / viewportTransform[0];
-      let horizontalInTheRange = false;
-      let verticalInTheRange = false;
-      const transform = canvas._currentTransform;
+      const activeObject = e.target
+      const canvasObjects = canvas.getObjects()
+      const activeObjectCenter = activeObject.getCenterPoint()
+      const activeObjectLeft = activeObjectCenter.x
+      const activeObjectTop = activeObjectCenter.y
+      const activeObjectBoundingRect = activeObject.getBoundingRect()
+      const activeObjectHeight =
+        activeObjectBoundingRect.height / viewportTransform[3]
+      const activeObjectWidth =
+        activeObjectBoundingRect.width / viewportTransform[0]
+      let horizontalInTheRange = false
+      let verticalInTheRange = false
+      const transform = canvas._currentTransform
 
-      if (!transform) return;
+      if (!transform) return
 
       // It should be trivial to DRY this up by encapsulating (repeating) creation of x1, x2, y1, and y2 into functions,
       // but we're not doing it here for perf. reasons -- as this a function that's invoked on every mouse move
 
       for (let i = canvasObjects.length; i--; ) {
-        // eslint-disable-next-line no-continue
-        if (canvasObjects[i] === activeObject) continue;
+        if (canvasObjects[i] === activeObject) continue
 
         // 排除辅助线
         if (
           activeObject instanceof fabric.GuideLine &&
           canvasObjects[i] instanceof fabric.GuideLine
         ) {
-          continue;
+          continue
         }
 
-        const objectCenter = canvasObjects[i].getCenterPoint();
-        const objectLeft = objectCenter.x;
-        const objectTop = objectCenter.y;
-        const objectBoundingRect = canvasObjects[i].getBoundingRect();
-        const objectHeight = objectBoundingRect.height / viewportTransform[3];
-        const objectWidth = objectBoundingRect.width / viewportTransform[0];
+        const objectCenter = canvasObjects[i].getCenterPoint()
+        const objectLeft = objectCenter.x
+        const objectTop = objectCenter.y
+        const objectBoundingRect = canvasObjects[i].getBoundingRect()
+        const objectHeight = objectBoundingRect.height / viewportTransform[3]
+        const objectWidth = objectBoundingRect.width / viewportTransform[0]
 
         // snap by the horizontal center line
         if (isInRange(objectLeft, activeObjectLeft)) {
-          verticalInTheRange = true;
+          verticalInTheRange = true
           verticalLines.push({
             x: objectLeft,
             y1:
@@ -138,18 +152,23 @@ class AlignGuidLinePlugin implements IPluginTempl {
             y2:
               activeObjectTop > objectTop
                 ? activeObjectTop + activeObjectHeight / 2 + aligningLineOffset
-                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset,
-          });
+                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
             new fabric.Point(objectLeft, activeObjectTop),
             'center',
             'center'
-          );
+          )
         }
 
         // snap by the left edge
-        if (isInRange(objectLeft - objectWidth / 2, activeObjectLeft - activeObjectWidth / 2)) {
-          verticalInTheRange = true;
+        if (
+          isInRange(
+            objectLeft - objectWidth / 2,
+            activeObjectLeft - activeObjectWidth / 2
+          )
+        ) {
+          verticalInTheRange = true
           verticalLines.push({
             x: objectLeft - objectWidth / 2,
             y1:
@@ -159,18 +178,26 @@ class AlignGuidLinePlugin implements IPluginTempl {
             y2:
               activeObjectTop > objectTop
                 ? activeObjectTop + activeObjectHeight / 2 + aligningLineOffset
-                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset,
-          });
+                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
-            new fabric.Point(objectLeft - objectWidth / 2 + activeObjectWidth / 2, activeObjectTop),
+            new fabric.Point(
+              objectLeft - objectWidth / 2 + activeObjectWidth / 2,
+              activeObjectTop
+            ),
             'center',
             'center'
-          );
+          )
         }
 
         // snap by the right edge
-        if (isInRange(objectLeft + objectWidth / 2, activeObjectLeft + activeObjectWidth / 2)) {
-          verticalInTheRange = true;
+        if (
+          isInRange(
+            objectLeft + objectWidth / 2,
+            activeObjectLeft + activeObjectWidth / 2
+          )
+        ) {
+          verticalInTheRange = true
           verticalLines.push({
             x: objectLeft + objectWidth / 2,
             y1:
@@ -180,18 +207,21 @@ class AlignGuidLinePlugin implements IPluginTempl {
             y2:
               activeObjectTop > objectTop
                 ? activeObjectTop + activeObjectHeight / 2 + aligningLineOffset
-                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset,
-          });
+                : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
-            new fabric.Point(objectLeft + objectWidth / 2 - activeObjectWidth / 2, activeObjectTop),
+            new fabric.Point(
+              objectLeft + objectWidth / 2 - activeObjectWidth / 2,
+              activeObjectTop
+            ),
             'center',
             'center'
-          );
+          )
         }
 
         // snap by the vertical center line
         if (isInRange(objectTop, activeObjectTop)) {
-          horizontalInTheRange = true;
+          horizontalInTheRange = true
           horizontalLines.push({
             y: objectTop,
             x1:
@@ -201,18 +231,23 @@ class AlignGuidLinePlugin implements IPluginTempl {
             x2:
               activeObjectLeft > objectLeft
                 ? activeObjectLeft + activeObjectWidth / 2 + aligningLineOffset
-                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset,
-          });
+                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
             new fabric.Point(activeObjectLeft, objectTop),
             'center',
             'center'
-          );
+          )
         }
 
         // snap by the top edge
-        if (isInRange(objectTop - objectHeight / 2, activeObjectTop - activeObjectHeight / 2)) {
-          horizontalInTheRange = true;
+        if (
+          isInRange(
+            objectTop - objectHeight / 2,
+            activeObjectTop - activeObjectHeight / 2
+          )
+        ) {
+          horizontalInTheRange = true
           horizontalLines.push({
             y: objectTop - objectHeight / 2,
             x1:
@@ -222,8 +257,8 @@ class AlignGuidLinePlugin implements IPluginTempl {
             x2:
               activeObjectLeft > objectLeft
                 ? activeObjectLeft + activeObjectWidth / 2 + aligningLineOffset
-                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset,
-          });
+                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
             new fabric.Point(
               activeObjectLeft,
@@ -231,12 +266,17 @@ class AlignGuidLinePlugin implements IPluginTempl {
             ),
             'center',
             'center'
-          );
+          )
         }
 
         // snap by the bottom edge
-        if (isInRange(objectTop + objectHeight / 2, activeObjectTop + activeObjectHeight / 2)) {
-          horizontalInTheRange = true;
+        if (
+          isInRange(
+            objectTop + objectHeight / 2,
+            activeObjectTop + activeObjectHeight / 2
+          )
+        ) {
+          horizontalInTheRange = true
           horizontalLines.push({
             y: objectTop + objectHeight / 2,
             x1:
@@ -246,8 +286,8 @@ class AlignGuidLinePlugin implements IPluginTempl {
             x2:
               activeObjectLeft > objectLeft
                 ? activeObjectLeft + activeObjectWidth / 2 + aligningLineOffset
-                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset,
-          });
+                : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset
+          })
           activeObject.setPositionByOrigin(
             new fabric.Point(
               activeObjectLeft,
@@ -255,60 +295,58 @@ class AlignGuidLinePlugin implements IPluginTempl {
             ),
             'center',
             'center'
-          );
+          )
         }
       }
 
       if (!horizontalInTheRange) {
-        horizontalLines.length = 0;
+        horizontalLines.length = 0
       }
 
       if (!verticalInTheRange) {
-        verticalLines.length = 0;
+        verticalLines.length = 0
       }
-    });
+    })
 
     canvas.on('before:render', () => {
       // fix 保存图片时报错
       if (canvas.contextTop === null) {
-        return;
+        return
       }
       try {
-        canvas.clearContext(canvas.contextTop);
+        canvas.clearContext(canvas.contextTop)
       } catch (error) {
-        console.log(error);
+        // 错误已忽略，不影响主流程;
       }
-    });
+    })
 
     canvas.on('after:render', () => {
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineWidth = This.defautOption.width;
-      ctx.strokeStyle = This.defautOption.color;
+      ctx.save()
+      ctx.beginPath()
+      ctx.lineWidth = _this.defautOption.width
+      ctx.strokeStyle = _this.defautOption.color
       for (let i = verticalLines.length; i--; ) {
-        drawVerticalLine(verticalLines[i]);
+        drawVerticalLine(verticalLines[i])
       }
       for (let j = horizontalLines.length; j--; ) {
-        drawHorizontalLine(horizontalLines[j]);
+        drawHorizontalLine(horizontalLines[j])
       }
-      ctx.stroke();
-      ctx.restore();
+      ctx.stroke()
+      ctx.restore()
 
       // noinspection NestedAssignmentJS
-      verticalLines.length = 0;
-      horizontalLines.length = 0;
-    });
+      verticalLines.length = 0
+      horizontalLines.length = 0
+    })
 
     canvas.on('mouse:up', () => {
-      verticalLines.length = 0;
-      horizontalLines.length = 0;
-      canvas.renderAll();
-    });
+      verticalLines.length = 0
+      horizontalLines.length = 0
+      canvas.renderAll()
+    })
   }
 
-  destroy() {
-    console.log('pluginDestroy');
-  }
+  destroy() {}
 }
 
-export default AlignGuidLinePlugin;
+export default AlignGuidLinePlugin

@@ -11,7 +11,6 @@ import { IEditor, IPluginTempl } from '@/lib/core'
 type IPlugin = Pick<DringPlugin, 'startDring' | 'endDring'>
 
 declare module '@/lib/core' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface IEditor extends IPlugin {}
 }
 
@@ -49,14 +48,14 @@ export class DringPlugin implements IPluginTempl {
 
   // 拖拽模式;
   _initDring() {
-    const This = this
+    const that = this
     this.canvas.on('mouse:down', function (this: ExtCanvas, opt) {
       const evt = opt.e
       // evt.button === 1 为鼠标中键的判断
-      if (evt.altKey || This.dragMode || evt.button === 1) {
-        This.canvas.setCursor('grabbing')
-        This.canvas.discardActiveObject()
-        This._setDring()
+      if (evt.altKey || that.dragMode || evt.button === 1) {
+        that.canvas.setCursor('grabbing')
+        that.canvas.discardActiveObject()
+        that._setDring()
         this.selection = false
         this.isDragging = true
         this.lastPosX = evt.clientX
@@ -66,10 +65,10 @@ export class DringPlugin implements IPluginTempl {
     })
 
     this.canvas.on('mouse:move', function (this: ExtCanvas, opt) {
-      This.dragMode && This.canvas.setCursor('grab')
+      that.dragMode && that.canvas.setCursor('grab')
       if (this.isDragging) {
-        This.canvas.discardActiveObject()
-        This.canvas.setCursor('grabbing')
+        that.canvas.discardActiveObject()
+        that.canvas.setCursor('grabbing')
         const { e } = opt
         if (!this.viewportTransform) return
         const vpt = this.viewportTransform
@@ -91,7 +90,7 @@ export class DringPlugin implements IPluginTempl {
           obj.selectable = true
         }
       })
-      This.dragMode && This.canvas.setCursor('grab')
+      that.dragMode && that.canvas.setCursor('grab')
       this.requestRenderAll()
     })
   }
@@ -104,12 +103,10 @@ export class DringPlugin implements IPluginTempl {
     this.canvas.requestRenderAll()
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 
   // 快捷键扩展回调
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   hotkeyEvent(eventName: string, e: KeyboardEvent) {
     if (e.code === 'Space' && e.type === 'keydown') {
       if (!this.dragMode) {

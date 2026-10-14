@@ -50,6 +50,8 @@
       <el-divider direction="vertical" />
       <Clear />
       <el-divider direction="vertical" />
+      <WaterMark />
+      <el-divider direction="vertical" />
       <Save />
       <el-divider direction="vertical" />
       <Login />
@@ -58,7 +60,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Clear, History, Preview, Save, MyTemplName } from './components'
+import {
+  Clear,
+  History,
+  Preview,
+  Save,
+  MyTemplName,
+  WaterMark
+} from './components'
 import { useEditorStore } from '@/store/modules/editor'
 
 const editorStore = useEditorStore()

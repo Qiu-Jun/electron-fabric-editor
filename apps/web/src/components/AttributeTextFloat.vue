@@ -29,27 +29,26 @@
 
 <script lang="ts" setup>
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
+
+const matchType = ['i-text', 'textbox', 'text']
+const { isMatchType, isOne } = useAttrPanel({
+  matchTypes: matchType,
+  // 仅含小数点的文字支持上下标
+  getAttrs: (activeObject: any) => {
+    if (activeObject?.text?.includes('.')) {
+      baseAttr.verticalAlign = activeObject.get('verticalAlign')
+    }
+  }
+})
 
 const baseAttr = reactive({
   verticalAlign: 'null'
 })
 
-const matchType = ['i-text', 'textbox', 'text']
-const { isMatchType, isOne } = useSelect(matchType)
-
-const getObjectAttr = (e?: any) => {
-  const activeObject = editorStore.canvas?.getActiveObject() as any
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject && isMatchType && activeObject?.text?.includes('.')) {
-    // @ts-ignore
-    baseAttr.verticalAlign = activeObject.get('verticalAlign')
-  }
-}
-
+// 上标/下标作用于小数点后的部分
 const changeCommon = (key: any, value: any) => {
   const activeObject: any = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject && activeObject.text.includes('.')) {
@@ -74,39 +73,4 @@ const changeCommon = (key: any, value: any) => {
     editorStore.canvas?.renderAll()
   }
 }
-
-const update = getCurrentInstance()
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取字体数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
-
-<style scoped lang="scss">
-.flex-view {
-  background: #f6f7f9;
-  @apply rounded-5px inline-block relative z-1 w-full mb-5px p-5px justify-between;
-}
-.flex-item {
-  @apply inline-flex flex-1;
-  .label {
-    @apply w-32px h-32px leading-32px inline-block text-14px;
-    // color: #333333;
-  }
-}
-</style>

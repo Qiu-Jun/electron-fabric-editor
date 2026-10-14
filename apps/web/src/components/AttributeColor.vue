@@ -25,13 +25,11 @@
 
 <script lang="ts" setup>
 import { ColorPicker } from 'color-gradient-picker-vue3'
-import { useEditorStore } from '@/store/modules/editor'
 import { fabric } from 'fabric'
-import useSelect from '@/hooks/select'
+import { useEditorStore } from '@/store/modules/editor'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
-const { selectType, isOne } = useSelect()
 const editorStore = useEditorStore()
-const update = getCurrentInstance()
 const angleKey = 'gradientAngle'
 // 属性值
 const baseAttr: any = reactive({
@@ -45,12 +43,9 @@ const onShow = () => {
   })
 }
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject: any = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject && isOne) {
+const { isOne, selectType } = useAttrPanel({
+  // 回显填充色,渐变色转为 css 渐变展示
+  getAttrs: (activeObject: any) => {
     const fill = activeObject.get('fill')
     if (typeof fill === 'string') {
       baseAttr.fill = fill
@@ -58,12 +53,11 @@ const getObjectAttr = (e?: any) => {
       baseAttr.fill = fabricGradientToCss(fill, activeObject)
     }
   }
-}
+})
 
 const colorChange = (value: any) => {
   const activeObject: any = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
-    console.log(value)
     const { color, mode, gradientColors, degrees } = value
     if (mode === 'solid') {
       activeObject.set('fill', color)
@@ -77,7 +71,6 @@ const colorChange = (value: any) => {
         activeObject.height,
         degrees
       )
-      console.log(currentGradient)
       activeObject.set('fill', currentGradient, degrees)
       activeObject.set(angleKey, degrees)
     }
@@ -85,20 +78,17 @@ const colorChange = (value: any) => {
   }
 }
 
-const dropColor = (value: any) => {
-  colorChange(value)
-}
-
+// fabric 渐变转 css 渐变
 const fabricGradientToCss = (val: any, activeObject: any) => {
-  // 渐变类型
   if (!val) return
-  const angle = activeObject.get(angleKey, val.degree)
+  const angle = activeObject.get(angleKey) ?? 0
   const colorStops = val.colorStops.map((item: any) => {
     return item.color + ' ' + item.offset * 100 + '%'
   })
   return `linear-gradient(${angle}deg, ${colorStops})`
 }
-// css转Fabric渐变
+
+// css 转 Fabric 渐变
 const cssToFabricGradient = (
   stops: any,
   width: number,
@@ -116,9 +106,10 @@ const cssToFabricGradient = (
   }
 
   const angleCoords = gradAngleToCoords(angle)
+  // 坐标按对象像素计算
   return new fabric.Gradient({
     type: 'linear',
-    gradientUnits: 'pencentage', // pixels or pencentage 像素 或者 百分比
+    gradientUnits: 'pixels',
     coords: {
       x1: angleCoords.x1 * width,
       y1: angleCoords.y1 * height,
@@ -128,26 +119,6 @@ const cssToFabricGradient = (
     colorStops: [...stops]
   })
 }
-
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取字体数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
 
 <style scoped lang="scss">

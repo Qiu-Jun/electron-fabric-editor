@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 /*
  * @Author: 秦少卫
  * @Date: 2023-05-25 22:33:23
@@ -21,11 +20,11 @@ class ContextMenu {
 
     this._onclick = (e) => {
       if (
-        this.dom
-        && e.target != this.dom
-        && e.target.parentElement != this.dom
-        && !e.target.classList.contains('item')
-        && !e.target.parentElement.classList.contains('item')
+        this.dom &&
+        e.target != this.dom &&
+        e.target.parentElement != this.dom &&
+        !e.target.classList.contains('item') &&
+        !e.target.parentElement.classList.contains('item')
       ) {
         this.hideAll()
       }
@@ -34,10 +33,10 @@ class ContextMenu {
     this._oncontextmenu = (e) => {
       e.preventDefault()
       if (
-        e.target != this.dom
-        && e.target.parentElement != this.dom
-        && !e.target.classList.contains('item')
-        && !e.target.parentElement.classList.contains('item')
+        e.target != this.dom &&
+        e.target.parentElement != this.dom &&
+        !e.target.classList.contains('item') &&
+        !e.target.parentElement.classList.contains('item')
       ) {
         this.hideAll()
         this.show(e.clientX, e.clientY)
@@ -45,8 +44,7 @@ class ContextMenu {
     }
 
     this._oncontextmenu_keydown = (e) => {
-      if (e.keyCode != 93)
-        return
+      if (e.keyCode != 93) return
       e.preventDefault()
 
       this.hideAll()
@@ -78,8 +76,8 @@ class ContextMenu {
     }
 
     if (
-      data.hasOwnProperty('color')
-      && /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(data.color.toString())
+      data.hasOwnProperty('color') &&
+      /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(data.color.toString())
     ) {
       item.style.cssText = `color: ${data.color}`
     }
@@ -88,33 +86,33 @@ class ContextMenu {
 
     const label = document.createElement('span')
     label.classList = 'label'
-    label.innerText = data.hasOwnProperty('text') ? data.text.toString() : ''
+    label.innerText = data.hasOwnProperty('text') ? data['text'].toString() : ''
     item.appendChild(label)
 
-    if (data.hasOwnProperty('disabled') && data.disabled) {
+    if (data.hasOwnProperty('disabled') && data['disabled']) {
       item.classList.add('disabled')
-    }
-    else {
+    } else {
       item.classList.add('enabled')
     }
 
     const hotkey = document.createElement('span')
     hotkey.classList = 'hotkey'
-    hotkey.innerText = data.hasOwnProperty('hotkey') ? data.hotkey.toString() : ''
+    hotkey.innerText = data.hasOwnProperty('hotkey')
+      ? data['hotkey'].toString()
+      : ''
     item.appendChild(hotkey)
 
     if (
-      data.hasOwnProperty('subitems')
-      && Array.isArray(data.subitems)
-      && data.subitems.length > 0
+      data.hasOwnProperty('subitems') &&
+      Array.isArray(data['subitems']) &&
+      data['subitems'].length > 0
     ) {
-      const menu = new ContextMenu(this.container, data.subitems)
+      const menu = new ContextMenu(this.container, data['subitems'])
       menu.root = false
       menu.parent = this
 
       const openSubItems = () => {
-        if (data.hasOwnProperty('disabled') && data.disabled == true)
-          return
+        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return
 
         this.hideSubMenus()
 
@@ -123,8 +121,7 @@ class ContextMenu {
 
         if (!menu.shown) {
           menu.show(x, y)
-        }
-        else {
+        } else {
           menu.hide()
         }
       }
@@ -134,15 +131,16 @@ class ContextMenu {
       item.classList.add('has-subitems')
       item.addEventListener('click', openSubItems)
       item.addEventListener('mousemove', openSubItems)
-    }
-    else if (data.hasOwnProperty('submenu') && data.submenu instanceof ContextMenu) {
-      const menu = data.submenu
+    } else if (
+      data.hasOwnProperty('submenu') &&
+      data['submenu'] instanceof ContextMenu
+    ) {
+      const menu = data['submenu']
       menu.root = false
       menu.parent = this
 
       const openSubItems = () => {
-        if (data.hasOwnProperty('disabled') && data.disabled == true)
-          return
+        if (data.hasOwnProperty('disabled') && data['disabled'] == true) return
 
         this.hideSubMenus()
 
@@ -151,8 +149,7 @@ class ContextMenu {
 
         if (!menu.shown) {
           menu.show(x, y)
-        }
-        else {
+        } else {
           menu.hide()
         }
       }
@@ -162,31 +159,31 @@ class ContextMenu {
       item.classList.add('has-subitems')
       item.addEventListener('click', openSubItems)
       item.addEventListener('mousemove', openSubItems)
-    }
-    else {
+    } else {
       item.addEventListener('click', () => {
         this.hideSubMenus()
 
-        if (item.classList.contains('disabled'))
-          return
+        if (item.classList.contains('disabled')) return
 
-        if (data.hasOwnProperty('onclick') && typeof data.onclick === 'function') {
+        if (
+          data.hasOwnProperty('onclick') &&
+          typeof data['onclick'] === 'function'
+        ) {
           const event = {
             handled: false,
-            item,
-            label,
-            hotkey,
+            item: item,
+            label: label,
+            hotkey: hotkey,
             items: this.items,
-            data,
+            data: data
           }
 
-          data.onclick(event)
+          data['onclick'](event)
 
           if (!event.handled) {
             this.hide()
           }
-        }
-        else {
+        } else {
           this.hide()
         }
       })
@@ -263,7 +260,7 @@ class ContextMenu {
 
   uninstall() {
     this.dom = null
-    // this.container.removeEventListener('contextmenu', this._oncontextmenu);
+    this.container.removeEventListener('contextmenu', this._oncontextmenu)
     this.container.removeEventListener('keydown', this._oncontextmenu_keydown)
     this.container.removeEventListener('click', this._onclick)
     window.removeEventListener('blur', this._onblur)

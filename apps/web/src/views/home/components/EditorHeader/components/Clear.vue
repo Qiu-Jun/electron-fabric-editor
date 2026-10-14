@@ -30,8 +30,8 @@ const handleClear = debounce(function () {
     cancelButtonText: '取消'
   }).then(() => {
     editorStore.editor?.clear()
-    editorStore.editor.canvas.clearHistory()
-    editorStore.editor?.historyUpdate()
+    // 重置历史栈为当前状态
+    editorStore.editor?.clearAndSaveState()
   })
 }, 250)
 </script>

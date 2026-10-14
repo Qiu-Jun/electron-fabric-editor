@@ -45,7 +45,7 @@
 import { Plus } from '@element-plus/icons-vue'
 import useMaterial from '@/hooks/useMaterial'
 import { useI18n } from 'vue-i18n'
-import { getUserFileTypeTree, updataTempl } from '@/api/user'
+import { getUserFileTypeTree, updateTempl } from '@/api/user'
 import { ElMessageBox, ElLoading, ElMessage } from 'element-plus'
 import { useEditorStore } from '@/store/modules/editor'
 
@@ -138,7 +138,8 @@ const getTempData = async () => {
   routerToId(props.itemId)
   editorStore.editor.loadJSON(
     JSON.stringify(data.data.attributes.json),
-    loadingInstance.close
+    // 传回调引用,加载完成后才关闭 loading
+    () => loadingInstance.close()
   )
 }
 
@@ -156,7 +157,7 @@ const transfer = async () => {
 
 const transferRequest = async () => {
   const parentId = fileTypeId.value === 'root' ? '' : fileTypeId.value
-  await updataTempl(props.itemId, {
+  await updateTempl(props.itemId, {
     data: {
       parentId: String(parentId)
     }

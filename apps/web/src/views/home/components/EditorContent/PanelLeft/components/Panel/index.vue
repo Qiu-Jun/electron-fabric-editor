@@ -7,10 +7,10 @@
  * @FilePath: \element-fabric-editor\src\views\home\components\Panel.vue
 -->
 <template>
-  <div class="w-full relative">
+  <div class="w-full relative h-full flex flex-col box-border">
     <!-- tab -->
     <div
-      class="w-full h-48px box-border px-16px border-b-1px border-b-solid border-b-[rgba(0_0_0/0.08)] mb-12px"
+      class="w-full h-48px flex-shrink-0 box-border px-16px border-b-1px border-b-solid border-b-[rgba(0_0_0/0.08)] mb-12px"
     >
       <div
         v-show="!showSearch"
@@ -18,17 +18,23 @@
       >
         <ul class="h-full flex justify-start items-center text-14px">
           <li
-            class="h-full f-center cursor-pointer select-none mr-10px"
+            class="h-full box-border f-center cursor-pointer select-none mr-10px"
             :class="[
-              curTab === 'canvas' ? 'text-#333 font-500 tab-active' : ''
+              curTab === 'canvas'
+                ? 'font-500 text-[var(--el-color-primary)] border-b-2px border-b-solid border-b-[var(--el-color-primary)]'
+                : ''
             ]"
             @click="onChangePanel('canvas')"
           >
             {{ $t('editor.panel.title') }}
           </li>
           <li
-            class="h-full f-center cursor-pointer select-none"
-            :class="[curTab === 'layer' ? 'text-#333 font-500 tab-active' : '']"
+            class="h-full box-border f-center cursor-pointer select-none"
+            :class="[
+              curTab === 'layer'
+                ? 'font-500 text-[var(--el-color-primary)] border-b-2px border-b-solid border-b-[var(--el-color-primary)]'
+                : ''
+            ]"
             @click="onChangePanel('layer')"
           >
             {{ $t('editor.layer.title') }}
@@ -65,7 +71,7 @@
       </div>
     </div>
     <!-- 组件 -->
-    <div>
+    <div class="flex-1 overflow-hidden">
       <KeepAlive>
         <component :is="comMap[curTab]"></component>
       </KeepAlive>
@@ -121,7 +127,7 @@ const handleShowSearch = debounce(function () {
 
 const hadleCreateTemplate = debounce(function () {
   const { createTemplate } = useTemplate()
-  templateStore.addTemplate(createTemplate())
+  templateStore.newTemplate(createTemplate())
 }, 250)
 
 watch(

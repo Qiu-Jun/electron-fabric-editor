@@ -7,7 +7,6 @@
  * @FilePath: \element-fabric-editor\src\locales\index.ts
  */
 import { createI18n } from 'vue-i18n'
-import { localeMap } from './config'
 import type { App } from 'vue'
 import { getLocal } from '@/utils/local'
 import { LANG } from '@/constants/app'

@@ -4,15 +4,16 @@ import {
   uploadImg,
   createdTempl,
   getTmplInfo,
-  updataTempl,
+  updateTempl,
   removeTempl
 } from '@/api/user'
 import { ElMessageBox } from 'element-plus'
 import { useEditorStoreWithOut } from '@/store/modules/editor'
 import { useI18n } from 'vue-i18n'
 
-const editorStore = useEditorStoreWithOut()
 export default function useMaterial() {
+  // 在函数内取 store，避免 import 时提前初始化
+  const editorStore = useEditorStoreWithOut()
   const { t } = useI18n()
   const router = useRouter()
   const route = useRoute()
@@ -101,8 +102,8 @@ export default function useMaterial() {
           const [info] = res.data
           return info
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
+          // 错误已忽略，不影响主流程
         })
     }
     const base64 = await canvasEditor.preview()
@@ -123,10 +124,10 @@ export default function useMaterial() {
   }
 
   // 更新详情
-  const updataTemplInfo = async (id, name) => {
+  const updateTemplInfo = async (id, name) => {
     const data = await getCanvasCommonData()
     name && (data.name = name)
-    await updataTempl(id, {
+    await updateTempl(id, {
       data
     })
   }
@@ -152,7 +153,7 @@ export default function useMaterial() {
   }
 
   const reNameFileType = async (name, id) => {
-    await updataTempl(id, {
+    await updateTempl(id, {
       data: {
         name
       }
@@ -163,7 +164,7 @@ export default function useMaterial() {
     createTmpl,
     createTmplByCommon,
     getTemplInfo,
-    updataTemplInfo,
+    updateTemplInfo,
     removeTemplInfo,
     routerToId,
     createdFileType, // 创建文件夹

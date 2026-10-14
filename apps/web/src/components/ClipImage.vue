@@ -6,7 +6,7 @@
  * @LastEditors: June
 -->
 <template>
-  <div v-if="isOne && type === 'image'" class="attr-item-box mt-8px">
+  <div v-if="isOne && selectType === 'image'" class="attr-item-box mt-8px">
     <div class="bg-item" style="margin-bottom: 10px">
       <el-dropdown style="width: 270px" @command="addClipPath">
         <el-button text>{{ $t('editor.imageSetting.crop.create') }}</el-button>
@@ -37,10 +37,9 @@ import { useI18n } from 'vue-i18n'
 import useSelect from '@/hooks/select'
 
 const editorStore = useEditorStore()
-const { isOne } = useSelect()
-const update = getCurrentInstance()
+// 共享选中状态直接判断图片类型,无需本地监听
+const { isOne, selectType } = useSelect()
 const { t } = useI18n()
-const type = ref('')
 const options = [
   {
     label: t('editor.polygonClip'),
@@ -81,23 +80,6 @@ const addClipPath = async (name: string) => {
 const removeClip = () => {
   editorStore.editor.removeClip()
 }
-const init = () => {
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  if (activeObject) {
-    type.value = activeObject.type as string
-    update?.proxy?.$forceUpdate()
-  }
-}
-
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectOne', init)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectOne', init)
-})
 </script>
 <style lang="scss" scoped>
 :deep(.el-button) {

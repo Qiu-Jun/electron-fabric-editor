@@ -6,25 +6,20 @@
  * @Description: 内部插件
  */
 import { fabric } from 'fabric'
-import { blob } from 'node:stream/consumers'
 import { v4 as uuid } from 'uuid'
-import { useTemplateStoreWithOut } from '@/store/modules/template'
-import type Editor from './Editor'
+import Editor from './Editor'
 import { SelectEvent, SelectMode } from './eventType'
 import { clipboardText, downFile, selectFiles } from './utils/utils'
-
+import { useTemplateStoreWithOut } from '@/store/modules/template'
+import type { Template } from '@/types/template'
 type IEditor = Editor
 
-const templateStore = useTemplateStoreWithOut()
-
 function transformText(objects: any) {
-  if (!objects)
-    return
+  if (!objects) return
   objects.forEach((item: any) => {
     if (item.objects) {
       transformText(item.objects)
-    }
-    else {
+    } else {
       item.type === 'text' && (item.type = 'textbox')
     }
   })
@@ -48,9 +43,8 @@ class ServersPlugin {
     'clear',
     'preview',
     'getSelectMode',
-    'getExtensionKey',
+    'getExtensionKey'
   ]
-
   static events = [SelectMode.ONE, SelectMode.MULTI, SelectEvent.CANCEL]
   // public hotkeys: string[] = ['left', 'right', 'down', 'up'];
   constructor(canvas: fabric.Canvas, editor: IEditor) {
@@ -68,21 +62,19 @@ class ServersPlugin {
 
   private _emitSelectEvent() {
     if (!this.canvas) {
-      throw new TypeError('还未初始化')
+      throw TypeError('还未初始化')
     }
 
     const actives = this.canvas
       .getActiveObjects()
-      .filter(item => !(item instanceof fabric.GuideLine)) // 过滤掉辅助线
+      .filter((item) => !(item instanceof fabric.GuideLine)) // 过滤掉辅助线
     if (actives && actives.length === 1) {
       this.selectedMode = SelectMode.ONE
       this.editor.emit(SelectEvent.ONE, actives)
-    }
-    else if (actives && actives.length > 1) {
+    } else if (actives && actives.length > 1) {
       this.selectedMode = SelectMode.MULTI
       this.editor.emit(SelectEvent.MULTI, actives)
-    }
-    else {
+    } else {
       this.editor.emit(SelectEvent.CANCEL)
     }
   }
@@ -107,7 +99,7 @@ class ServersPlugin {
   // 设置path属性
   renderITextPath(textPaths: Record<'id' | 'path', any>[]) {
     textPaths.forEach((item) => {
-      const object = this.canvas.getObjects().find(o => o.id === item.id)
+      const object = this.canvas.getObjects().find((o) => o.id === item.id)
       if (object) {
         fabric.Path.fromObject(item.path, (e) => {
           object.set('path', e)
@@ -116,7 +108,21 @@ class ServersPlugin {
     })
   }
 
-  async loadJSON(jsonFile: string | object, callback?: () => void) {
+  // 递归给图片元素补 crossOrigin，避免画布被污染导致截图/导出失败
+  _ensureImageCrossOrigin(objects: any[]) {
+    objects?.forEach((item) => {
+      if (item.type === 'image' && !item.crossOrigin) {
+        item.crossOrigin = 'anonymous'
+      }
+      item.objects && this._ensureImageCrossOrigin(item.objects)
+    })
+  }
+
+  async loadJSON(
+    jsonFile: string | object,
+    callback?: () => void,
+    options?: { addToTemplate?: boolean }
+  ) {
     // 确保元素存在id
     const temp = typeof jsonFile === 'string' ? JSON.parse(jsonFile) : jsonFile
     const textPaths: Record<'id' | 'path', any>[] = []
@@ -128,6 +134,8 @@ class ServersPlugin {
         item.path = null
       }
     })
+    // 历史模板里的图片可能没有 crossOrigin，补上避免画布被污染
+    this._ensureImageCrossOrigin(temp.objects)
 
     // hookTransform遍历
     const tempTransform = await this._transform(temp)
@@ -141,22 +149,44 @@ class ServersPlugin {
         // 加载后钩子
         this.editor.hooksEntity.hookImportAfter.callAsync(jsonFile, () => {
           // 修复导入带水印的json无法清除问题 #359
-          this.editor?.updateDrawStatus
-          && typeof this.editor.updateDrawStatus === 'function'
-          && this.editor.updateDrawStatus(!!temp.overlayImage)
+          this.editor?.updateDrawStatus &&
+            typeof this.editor.updateDrawStatus === 'function' &&
+            this.editor.updateDrawStatus(!!temp['overlayImage'])
           this.canvas.renderAll()
-          const tempObj = JSON.parse(jsonFile)
-          this.canvas.toCanvasElement(1).toBlob((blob) => {
-            if (blob) {
-              tempObj.image = URL.createObjectURL(blob)
-            }
-            templateStore.addTemplate(tempObj)
-          })
+          // 导入内容落到当前页；页面切换走 addToTemplate: false 跳过
+          if (options?.addToTemplate !== false) {
+            this.canvas.toCanvasElement(1).toBlob((blob) => {
+              // 在使用处获取 store，避免模块 import 时提前初始化
+              useTemplateStoreWithOut().applyToCurrent(
+                this.normalizeTemplate(
+                  jsonFile,
+                  blob ? URL.createObjectURL(blob) : undefined
+                )
+              )
+            })
+          }
           this.editor.emit('loadJson')
           callback && callback()
         })
       })
     })
+  }
+
+  // 画布JSON归一化为页面对象,宽高从画板矩形提取
+  normalizeTemplate(jsonValue: object | string, image?: string): Template {
+    const parsed =
+      typeof jsonValue === 'string' ? JSON.parse(jsonValue) : jsonValue
+    const ws = parsed.objects?.find((o: any) => o.id === 'workspace')
+    const fallback = this.editor.getWorkspaceSize?.() || {}
+    return {
+      id: uuid(),
+      version: parsed.version || fabric.version,
+      zoom: this.editor.getScale?.() || 1,
+      width: ws?.width ?? fallback.width ?? 0,
+      height: ws?.height ?? fallback.height ?? 0,
+      json: JSON.stringify(parsed),
+      image
+    }
   }
 
   async _transform(json: any) {
@@ -193,26 +223,25 @@ class ServersPlugin {
       'editable',
       'extensionType',
       'extension',
-      'verticalAlign',
+      'verticalAlign'
     ]
   }
 
   /**
    * @description: 拖拽添加到画布
    * @param {Event} event
-   * @param {object} item
+   * @param {Object} item
    */
   dragAddItem(item: fabric.Object, event?: DragEvent) {
     if (event) {
       const { left, top } = this.canvas
         .getSelectionElement()
         .getBoundingClientRect()
-      if (event.x < left || event.y < top || item.width === undefined)
-        return
+      if (event.x < left || event.y < top || item.width === undefined) return
 
       const point = {
         x: event.x - left,
-        y: event.y - top,
+        y: event.y - top
       }
       const pointerVpt = this.canvas.restorePointerVpt(point)
       item.left = pointerVpt.x - item.width / 2
@@ -242,7 +271,7 @@ class ServersPlugin {
     // 把文本text转为textgroup，让导入可以编辑
     await transformText(dataUrl.objects)
     const fileStr = `data:text/json;charset=utf-8,${encodeURIComponent(
-      JSON.stringify(dataUrl, null, '\t'),
+      JSON.stringify(dataUrl, null, '\t')
     )}`
     downFile(fileStr, 'json')
   }
@@ -251,7 +280,7 @@ class ServersPlugin {
     this.editor.hooksEntity.hookSaveBefore.callAsync('', () => {
       const { fontOption, svgOption } = this._getSaveSvgOption()
       fabric.fontPaths = {
-        ...fontOption,
+        ...fontOption
       }
       const dataUrl = this.canvas.toSVG(svgOption)
       const fileStr = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(dataUrl)}`
@@ -289,22 +318,21 @@ class ServersPlugin {
   _getSaveSvgOption() {
     const workspace = this.canvas
       .getObjects()
-      .find(item => item.id === 'workspace')
+      .find((item) => item.id === 'workspace')
     let fontFamilyArry = this.canvas
       .getObjects()
-      .filter(item => item.type == 'textbox')
-      .map(item => item.fontFamily)
+      .filter((item) => item.type == 'textbox')
+      .map((item) => item.fontFamily)
     fontFamilyArry = Array.from(new Set(fontFamilyArry))
 
     const fontList = this.editor.getPlugin('FontPlugin').cacheList
 
     const fontEntry = {}
     for (const font of fontFamilyArry) {
-      const item = fontList.find(item => item.name === font)
+      const item = fontList.find((item) => item.name === font)
       fontEntry[font] = item.file
     }
 
-    console.log('_getSaveSvgOption', fontEntry)
     const { left, top, width, height } = workspace as fabric.Object
     return {
       fontOption: fontEntry,
@@ -315,9 +343,9 @@ class ServersPlugin {
           x: left,
           y: top,
           width,
-          height,
-        },
-      },
+          height
+        }
+      }
     }
   }
 
@@ -333,7 +361,7 @@ class ServersPlugin {
       width,
       height,
       left,
-      top,
+      top
     }
     return option
   }
@@ -349,9 +377,7 @@ class ServersPlugin {
     this.canvas.renderAll()
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default ServersPlugin

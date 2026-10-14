@@ -1,14 +1,13 @@
 <!--
  * @Author: June
- * @Description: 
+ * @Description: 圆角属性面板
  * @Date: 2024-09-05 23:05:23
- * @LastEditTime: 2024-11-29 11:14:28
+ * @LastEditTime: 2026-09-14 10:10:00
  * @LastEditors: June
  * @FilePath: \element-fabric-editor\src\components\AttributeRounded.vue
 -->
 <template>
   <div class="box attr-item-box" v-if="isOne && isMatchType">
-    <!-- <h3>圆角</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.attrSetting.radius.name') }}</h4>
     </el-divider>
@@ -42,59 +41,29 @@
 <script lang="ts" setup>
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const update = getCurrentInstance()
-
 // 矩形元素
-const { isOne, isMatchType } = useSelect(['rect'])
+const { isOne, isMatchType } = useAttrPanel({
+  matchTypes: ['rect'],
+  // 回显圆角属性
+  getAttrs: (activeObject) => {
+    baseAttr.rx = activeObject.get('rx')
+  }
+})
+
 // 属性值
 const baseAttr = reactive({
-  rx: 0,
-  ry: 0
+  rx: 0
 })
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
+// 圆角修改时 rx 与 ry 保持一致
+const changeCommon = (value: number) => {
+  const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
-    baseAttr.rx = activeObject.get('rx')
-    baseAttr.ry = activeObject.get('ry')
+    activeObject.set({ rx: value, ry: value })
+    editorStore.canvas?.renderAll()
   }
 }
-
-// 通用属性改变
-const changeCommon = (value) => {
-  const activeObject = editorStore.canvas.getActiveObjects()[0]
-  if (activeObject) {
-    activeObject.set('ry', value)
-    activeObject.set('rx', value)
-    editorStore.canvas.renderAll()
-  }
-}
-
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取圆角数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
-
-<style scoped lang="scss"></style>

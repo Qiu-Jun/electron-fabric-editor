@@ -19,13 +19,7 @@ export const router = createRouter({
 })
 
 export const resetRouter = (): void => {
-  const resetWhiteNameList = ['Login']
-  router.getRoutes().forEach((route) => {
-    const { name } = route
-    if (name && !resetWhiteNameList.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name)
-    }
-  })
+  // 当前路由均为静态注册，无需按白名单移除
 }
 
 export const setupRouter = (app: App<Element>) => app.use(router)

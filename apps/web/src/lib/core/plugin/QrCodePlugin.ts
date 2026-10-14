@@ -7,7 +7,6 @@
  */
 
 import { fabric } from 'fabric'
-import QRCodeStyling from 'qr-code-styling'
 import Editor from '../Editor'
 import { blobToBase64 } from '../utils/utils'
 
@@ -59,6 +58,8 @@ class QrCodePlugin implements IPluginTempl {
   }
 
   async _getBase64Str(options: any): Promise<string> {
+    // 按需加载二维码库，避免进入首屏包
+    const { default: QRCodeStyling } = await import('qr-code-styling')
     const qrCode = new QRCodeStyling(options)
     const blob = await qrCode.getRawData('png')
     if (!blob) return ''
@@ -158,7 +159,7 @@ class QrCodePlugin implements IPluginTempl {
         { crossOrigin: 'anonymous' }
       )
     } catch (error) {
-      console.log(error)
+      // 错误已忽略，不影响主流程
     }
   }
 
@@ -171,9 +172,7 @@ class QrCodePlugin implements IPluginTempl {
     }
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default QrCodePlugin

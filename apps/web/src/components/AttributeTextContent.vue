@@ -1,12 +1,11 @@
 <template>
   <div class="box attr-item-box" v-if="isOne && isMatchType">
-    <!-- <h3>数据</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.attrSetting.text.content') }}</h4>
     </el-divider>
 
-    <el-form :label-width="40" class="form-wrap">
-      <el-form-item :label="$t('editor.attributes.id')">
+    <el-form :label-width="70" class="form-wrap">
+      <el-form-item :label="$t('editor.attrSetting.text.content')">
         <el-input
           v-model="baseAttr.text"
           @change="changeCommon('text', baseAttr.text)"
@@ -16,7 +15,6 @@
     </el-form>
 
     <template v-if="baseAttr.showPathAttr">
-      <!-- <h3>数据</h3> -->
       <el-divider content-position="left">
         <h4>{{ $t('editor.attrSetting.text.path') }}</h4>
       </el-divider>
@@ -24,7 +22,7 @@
         <el-row :gutter="12">
           <el-col flex="1">
             <div class="ivu-col__box">
-              <span class="label">{{ $t('editor.color') }}</span>
+              <span class="label">{{ $t('editor.attrSetting.color') }}</span>
               <div class="content">
                 <el-color-picker
                   v-model="baseAttr.stroke"
@@ -38,7 +36,7 @@
             <InputNumber
               v-model="baseAttr.strokeWidth"
               @on-change="(value) => changeCommon('strokeWidth', value)"
-              :append="$t('editor.width')"
+              :append="$t('editor.attrSetting.border.width')"
               :min="0"
             ></InputNumber>
           </el-col>
@@ -51,22 +49,14 @@
 <script lang="ts" setup>
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
-const { isOne, isMatchType } = useSelect(['i-text'])
 const editorStore = useEditorStore()
-const update = getCurrentInstance()
-const baseAttr: any = reactive({
-  text: '',
-  strokeWidth: 1,
-  stroke: '',
-  showPathAttr: false
-})
-const getObjectAttr = (e?: any) => {
-  const activeObject: any = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject) {
+const { isOne, isMatchType } = useAttrPanel({
+  matchTypes: ['i-text'],
+  // 回显文字内容,路径文字时额外回显描边
+  getAttrs: (activeObject: any) => {
+    if (!('text' in activeObject)) return
     baseAttr.text = activeObject.get('text')
     const path = activeObject.get('path')
     if (path) {
@@ -77,7 +67,16 @@ const getObjectAttr = (e?: any) => {
       baseAttr.showPathAttr = false
     }
   }
-}
+})
+
+const baseAttr: any = reactive({
+  text: '',
+  strokeWidth: 1,
+  stroke: '',
+  showPathAttr: false
+})
+
+// 文字走对象属性,路径文字修改 path 描边
 const changeCommon = (key: any, value: any) => {
   const activeObject: any = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
@@ -86,25 +85,9 @@ const changeCommon = (key: any, value: any) => {
       activeObject.set(key, value)
     } else {
       const path = activeObject.get('path')
-      path.set(key, value)
+      path && path.set(key, value)
     }
     editorStore.canvas?.renderAll()
   }
 }
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>

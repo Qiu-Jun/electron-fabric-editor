@@ -52,7 +52,7 @@ import { useEditorStore } from '@/store/modules/editor'
 const editorStore = useEditorStore()
 const route = useRoute()
 
-const { createTmplByCommon, updataTemplInfo, routerToId } = useMaterial()
+const { createTmplByCommon, updateTemplInfo, routerToId } = useMaterial()
 
 const { t } = useI18n()
 
@@ -86,13 +86,13 @@ const cbMap = {
     const loadingInstance = ElLoading.service()
     try {
       if (route?.query?.id) {
-        await updataTemplInfo(route?.query?.id)
+        await updateTemplInfo(route?.query?.id)
       } else {
         const res = await createTmplByCommon()
         routerToId(res.data.data.id)
       }
     } catch (error) {
-      console.log(error)
+      // 错误已忽略，不影响主流程
       ElMessage.warning('请登录')
     }
     loadingInstance.close()

@@ -8,7 +8,6 @@
 
 import { fabric } from 'fabric'
 import Editor from '../Editor'
-import JsBarcode from 'jsbarcode'
 
 type IEditor = Editor
 
@@ -38,7 +37,9 @@ class BarCodePlugin implements IPluginTempl {
       object.src = url
     }
   }
-  _getBase64Str(option: any) {
+  async _getBase64Str(option: any) {
+    // 按需加载条形码库，避免进入首屏包
+    const { default: JsBarcode } = await import('jsbarcode')
     const canvas = document.createElement('canvas')
     JsBarcode(canvas, option.value, {
       ...option
@@ -61,9 +62,9 @@ class BarCodePlugin implements IPluginTempl {
     }
   }
 
-  addBarcode() {
+  async addBarcode() {
     const option = this._defaultBarcodeOption()
-    const url = this._getBase64Str(JSON.parse(JSON.stringify(option)))
+    const url = await this._getBase64Str(JSON.parse(JSON.stringify(option)))
     fabric.Image.fromURL(
       url,
       (imgEl) => {
@@ -82,9 +83,9 @@ class BarCodePlugin implements IPluginTempl {
     )
   }
 
-  setBarcode(option: any) {
+  async setBarcode(option: any) {
     try {
-      const url = this._getBase64Str(option)
+      const url = await this._getBase64Str(option)
       const activeObject = this.canvas.getActiveObjects()[0]
       fabric.Image.fromURL(
         url,
@@ -103,7 +104,7 @@ class BarCodePlugin implements IPluginTempl {
         { crossOrigin: 'anonymous' }
       )
     } catch (error) {
-      console.log(error)
+      // 错误已忽略，不影响主流程
     }
   }
 
@@ -111,9 +112,7 @@ class BarCodePlugin implements IPluginTempl {
     return Object.values(CodeType)
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default BarCodePlugin

@@ -2,13 +2,13 @@ import {
   defineConfig,
   presetAttributify,
   presetTypography,
-  presetUno,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
 
 export default defineConfig({
-  presets: [presetUno(), presetAttributify(), presetTypography()],
+  presets: [presetWind3(), presetAttributify(), presetTypography()],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {
     colors: {

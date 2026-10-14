@@ -1,8 +1,8 @@
 <!--
  * @Author: June
- * @Description: Description
+ * @Description: 锁定快捷操作
  * @Date: 2024-08-19 12:53:30
- * @LastEditTime: 2024-12-26 14:07:37
+ * @LastEditTime: 2026-09-14 10:30:00
  * @LastEditors: June
 -->
 <template>
@@ -27,40 +27,19 @@
 <script lang="ts" setup>
 import { Lock, Unlock } from '@element-plus/icons-vue'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const { isOne } = useSelect()
+const { isOne } = useAttrPanel({
+  // 回显锁定状态
+  getAttrs: (activeObject: any) => {
+    isLock.value = !activeObject.selectable
+  }
+})
 
 const isLock = ref(false)
-const doLock = (isLock: boolean) => {
-  isLock ? editorStore.editor?.lock() : editorStore.editor?.unLock()
+const doLock = (lock: boolean) => {
+  lock ? editorStore.editor?.lock() : editorStore.editor?.unLock()
+  isLock.value = lock
 }
-
-const handleSelected = (items: any) => {
-  isLock.value = !items[0].selectable
-}
-
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectOne', handleSelected)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectOne', handleSelected)
-})
 </script>
-
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-
-li {
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

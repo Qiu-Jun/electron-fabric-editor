@@ -13,7 +13,6 @@ import type { IEditor, IPluginTempl } from '@/lib/core'
 type IPlugin = Pick<AddBaseTypePlugin, 'addBaseType' | 'createImgByElement'>
 
 declare module '@/lib/core' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface IEditor extends IPlugin {}
 }
 
@@ -110,7 +109,5 @@ export default class AddBaseTypePlugin implements IPluginTempl {
     return fileParts[fileParts.length - 1]
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }

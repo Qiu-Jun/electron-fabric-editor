@@ -1,22 +1,44 @@
+/*
+ * @Author: June
+ * @Description: 通用分页/滚动加载 hook（新增文件需按规范加文件头注释）
+ * @Date: 2026-09-04 15:00:00
+ * @LastEditors: June
+ * @LastEditTime: 2026-09-04 15:00:00
+ * @FilePath: \element-fabric-editor\src\hooks\usePageList.ts
+ */
 import qs from 'qs'
 import { apiHost } from '@/constants/app'
 
 const APIHOST = apiHost
+
+interface IPagerOptions {
+  // 滚动容器选择器
+  el: string
+  // 请求函数，入参为序列化后的查询串
+  apiClient: (query: string) => Promise<any>
+  filters?: Record<string, any>
+  sort?: any[]
+  formatData?: (data: any[]) => any[]
+  fields?: string[]
+  pageSize?: number
+}
+
 export default function usePageList({
   el,
   apiClient,
   filters = {},
   sort = [],
   formatData,
-  fields = []
-}) {
+  fields = [],
+  pageSize = 20
+}: IPagerOptions) {
   //  滚动条根据页面适应
   const showScroll = ref(false)
   const scrollHeight = ref(0)
   const startPage = async () => {
     // 滚动
-    const myTemplBox = document.querySelector(el)
-    scrollHeight.value = myTemplBox.offsetHeight
+    const myTemplBox = document.querySelector(el) as HTMLElement | null
+    scrollHeight.value = myTemplBox?.offsetHeight || 0
     showScroll.value = true
 
     await startGetList()
@@ -28,7 +50,7 @@ export default function usePageList({
   const pagination = reactive({
     page: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize,
     total: 0
   })
 
@@ -59,13 +81,12 @@ export default function usePageList({
       const res = await apiClient(qs.stringify(params))
       const list = formatData ? formatData(res.data.data) : res.data.data
       Object.keys(res.data.meta.pagination).forEach((key) => {
-        pagination[key] = res.data.meta.pagination[key]
+        ;(pagination as any)[key] = res.data.meta.pagination[key]
       })
       pageData.value = [...pageData.value, ...list]
     } catch (error) {
-      console.log(error)
+      // 错误已忽略，不影响主流程
     }
-    // Spin.hide();
     pageLoading.value = false
   }
 
@@ -83,21 +104,21 @@ export default function usePageList({
     }, 1000)
   }
 
-  const addFilterParams = (query, filters) => {
-    Object.keys(filters).forEach((key) => {
-      const itemFilter = {}
-      Object.keys(filters[key]).forEach((myKey) => {
+  const addFilterParams = (query: any, filterConf: Record<string, any>) => {
+    Object.keys(filterConf).forEach((key) => {
+      const itemFilter: Record<string, any> = {}
+      Object.keys(filterConf[key]).forEach((myKey) => {
         const skip = ['$eq', '$contains']
-        const isNone = !filters[key][myKey]
+        const isNone = !filterConf[key][myKey]
         const isSkip = skip.includes(myKey) && isNone
-        // 不好包含跳过条件
+        // 不包含跳过条件
         if (!isSkip) {
-          itemFilter[myKey] = filters[key][myKey]
+          itemFilter[myKey] = filterConf[key][myKey]
         } else {
           // 跳过条件下 判断是否过滤 默认过滤
-          const isFilterEmpty = filters[key].filterEmpty
+          const isFilterEmpty = filterConf[key].filterEmpty
           if (!isFilterEmpty) {
-            itemFilter[myKey] = filters[key][myKey]
+            itemFilter[myKey] = filterConf[key][myKey]
           }
         }
       })
@@ -119,12 +140,14 @@ export default function usePageList({
   }
 }
 
-const getMaterialInfoUrl = (info) => {
+// Strapi 图片字段的原图地址
+const getMaterialInfoUrl = (info: any) => {
   const imgUrl = info?.data?.attributes?.url || ''
   return APIHOST + imgUrl
 }
 
-const getMaterialPreviewUrl = (info) => {
+// Strapi 图片字段的缩略图地址
+const getMaterialPreviewUrl = (info: any) => {
   const imgUrl =
     info?.data?.attributes?.formats?.small?.url ||
     info?.data?.attributes?.url ||

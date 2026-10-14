@@ -6,16 +6,10 @@
  * @FilePath: \vue-fabric-editor\packages\core\plugin\ImageStroke.ts
  * @Description: 图像描边
  */
-import type { fabric } from 'fabric'
-import type Editor from '../Editor'
+import { fabric } from 'fabric'
+import Editor from '../Editor'
 
 type IEditor = Editor
-// interface IStrokeOps {
-//   enabled: boolean
-//   width: number
-//   color: string
-//   type: 'destination-out' | 'source-over' | 'source-in'
-// }
 interface IExtendImage {
   [x: string]: any
   originWidth?: number
@@ -28,7 +22,7 @@ class ImageStrokePlugin implements IPluginTempl {
   //   public options: Required<IStrokeOps>;
   constructor(
     public canvas: fabric.Canvas,
-    public editor: IEditor,
+    public editor: IEditor
   ) {
     // this.options = Object.assign(
     //   {
@@ -46,7 +40,6 @@ class ImageStrokePlugin implements IPluginTempl {
       const img = new Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => resolve(img)
-      // eslint-disable-next-line prefer-promise-reject-errors
       img.onerror = () => reject()
       img.src = src
     })
@@ -67,31 +60,29 @@ class ImageStrokePlugin implements IPluginTempl {
   async imageStrokeDraw(
     stroke: string,
     strokeWidth: number,
-    type = 'source-over',
+    type = 'source-over'
   ) {
     const activeObject = this.canvas.getActiveObject() as
       | (fabric.Image & IExtendImage)
       | undefined
-    if (!activeObject)
-      return
-    const w = activeObject.originWidth || 0
-    const h = activeObject.originHeight || 0
-    const src = activeObject?.originSrc || activeObject.getSrc()
+    if (!activeObject) return
+    const w = activeObject.originWidth || 0,
+      h = activeObject.originHeight || 0,
+      src = activeObject?.originSrc || activeObject.getSrc()
     let canvas: HTMLCanvasElement | null = document.createElement('canvas')
     const ctx = canvas!.getContext('2d')
-    if (!ctx)
-      return
+    if (!ctx) return
     // 描边等于0 说明关闭了开关或者不需要描边  直接从原图绘制
     if (strokeWidth === 0) {
       const { scaleX, scaleY, width, height } = activeObject
       activeObject.setSrc(src, () => {
         activeObject.set(
           'scaleX',
-          (width! * scaleX!) / (activeObject.width || 1),
+          (width! * scaleX!) / (activeObject.width || 1)
         )
         activeObject.set(
           'scaleY',
-          (height! * scaleY!) / (activeObject.height || 1),
+          (height! * scaleY!) / (activeObject.height || 1)
         )
         activeObject.canvas?.renderAll()
       })
@@ -104,15 +95,14 @@ class ImageStrokePlugin implements IPluginTempl {
     canvas!.height = h + strokeWidth * 2
     const dArr = [-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1]
     const img = await this.addImage(src)
-    if (!img)
-      return
+    if (!img) return
     for (let i = 0; i < dArr.length; i += 2) {
       ctx.drawImage(
         img,
         strokeWidth + dArr[i] * strokeWidth,
         strokeWidth + dArr[i + 1] * strokeWidth,
         w,
-        h,
+        h
       )
     }
     ctx.globalCompositeOperation = 'source-in'
@@ -122,14 +112,13 @@ class ImageStrokePlugin implements IPluginTempl {
     ctx.drawImage(img, strokeWidth, strokeWidth, w, h)
     const res = canvas?.toDataURL()
     canvas = null
-    if (!res)
-      return
+    if (!res) return
     const { scaleX, scaleY, width, height } = activeObject
     activeObject.setSrc(res, () => {
       activeObject.set('scaleX', (width! * scaleX!) / (activeObject.width || 1))
       activeObject.set(
         'scaleY',
-        (height! * scaleY!) / (activeObject.height || 1),
+        (height! * scaleY!) / (activeObject.height || 1)
       )
       activeObject.canvas?.renderAll()
     })

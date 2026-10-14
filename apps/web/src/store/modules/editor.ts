@@ -19,12 +19,13 @@ interface IState {
   tabType: editorTabs
   panelType: panels
   showPanel: boolean
-  panelPositoin: 'left' | 'bottom'
+  panelPosition: 'left' | 'bottom'
 }
 
 export const useEditorStore = defineStore({
   id: 'editor',
   state: (): IState => ({
+    // markRaw 避免 fabric 实例被深层代理，消除全项目访问的响应式开销
     editor: null,
     canvas: null,
     zoom: 1, // 缩放比例
@@ -32,14 +33,14 @@ export const useEditorStore = defineStore({
     tabType: editorTabs.template, // 左边栏
     panelType: panels.menu, // 面板类型
     showPanel: true, // 显示面板侧边栏
-    panelPositoin: 'left' // 面板侧栏位置
+    panelPosition: 'left' // 面板侧栏位置
   }),
   actions: {
     setEditor(editor: any) {
-      this.editor = editor
+      this.editor = markRaw(editor)
     },
     setCanvas(ctx: fabric.Canvas) {
-      this.canvas = ctx
+      this.canvas = markRaw(ctx)
     },
     setScale(val: number) {
       this.zoom = val
@@ -56,8 +57,8 @@ export const useEditorStore = defineStore({
     setShowPanel(val: boolean) {
       this.showPanel = val
     },
-    setPanelPositoin(pos: 'left' | 'bottom') {
-      this.panelPositoin = pos
+    setPanelPosition(pos: 'left' | 'bottom') {
+      this.panelPosition = pos
     }
   }
 })

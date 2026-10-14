@@ -1,18 +1,23 @@
 import EventEmitter from 'events'
 import hotkeys from 'hotkeys-js'
-import { AsyncSeriesHook } from 'tapable'
 import ContextMenu from './ContextMenu'
 import ServersPlugin from './ServersPlugin'
+import { AsyncSeriesHook } from 'tapable'
 import Utils from './utils/utils'
 
 class Editor extends EventEmitter {
   private canvas: fabric.Canvas | null = null
   contextMenu: ContextMenu | null = null;
   [key: string]: any
+
+  constructor() {
+    super()
+    // 属性栏组件随选中动态挂载卸载,合理监听数可能超过默认上限10
+    this.setMaxListeners(50)
+  }
   private pluginMap: {
     [propName: string]: IPluginTempl
   } = {}
-
   // 自定义事件
   private customEvents: string[] = []
   // 自定义API
@@ -23,9 +28,8 @@ class Editor extends EventEmitter {
     'hookImportAfter',
     'hookSaveBefore',
     'hookSaveAfter',
-    'hookTransform',
+    'hookTransform'
   ]
-
   public hooksEntity: {
     [propName: string]: AsyncSeriesHook<any, any>
   } = {}
@@ -48,11 +52,10 @@ class Editor extends EventEmitter {
   use(plugin: IPluginClass, options?: IPluginOption) {
     if (this._checkPlugin(plugin) && this.canvas) {
       this._saveCustomAttr(plugin)
-      // eslint-disable-next-line new-cap
       const pluginRunTime = new plugin(
         this.canvas,
         this,
-        options || {},
+        options || {}
       ) as IPluginClass
       // 添加插件名称
       pluginRunTime.pluginName = plugin.pluginName
@@ -64,15 +67,29 @@ class Editor extends EventEmitter {
     return this
   }
 
-  destory() {
-    this.canvas = null
+  destroy() {
+    // 逆序销毁插件，释放各自注册的监听/定时器
+    Object.keys(this.pluginMap)
+      .reverse()
+      .forEach((pluginName) => {
+        try {
+          this.pluginMap[pluginName].destroy?.()
+        } catch (error) {
+          // 单个插件销毁失败不阻断整体销毁流程
+        }
+      })
+    // 解绑所有全局快捷键，避免重复进入编辑器后叠加触发
+    hotkeys.unbind()
+    // 卸载右键菜单及其 window 监听
+    this.contextMenu?.uninstall()
     this.contextMenu = null
+    this.removeAllListeners()
+    this.canvas = null
     this.pluginMap = {}
     this.customEvents = []
     this.customApis = []
     this.hooksEntity = {}
   }
-
   // 获取插件
   getPlugin(name: string) {
     if (this.pluginMap[name]) {
@@ -83,19 +100,19 @@ class Editor extends EventEmitter {
   // 检查组件
   private _checkPlugin(plugin: IPluginClass) {
     const { pluginName, events = [], apis = [] } = plugin
-    // 名称检查
+    //名称检查
     if (this.pluginMap[pluginName]) {
-      throw new Error(`${pluginName}插件重复初始化`)
+      throw new Error(pluginName + '插件重复初始化')
     }
     events.forEach((eventName: string) => {
-      if (this.customEvents.find(info => info === eventName)) {
-        throw new Error(`${pluginName}插件中${eventName}重复`)
+      if (this.customEvents.find((info) => info === eventName)) {
+        throw new Error(pluginName + '插件中' + eventName + '重复')
       }
     })
 
     apis.forEach((apiName: string) => {
-      if (this.customApis.find(info => info === apiName)) {
-        throw new Error(`${pluginName}插件中${apiName}重复`)
+      if (this.customApis.find((info) => info === apiName)) {
+        throw new Error(pluginName + '插件中' + apiName + '重复')
       }
     })
     return true
@@ -109,12 +126,10 @@ class Editor extends EventEmitter {
         this.hooksEntity[hookName].tapPromise(
           plugin.pluginName + hookName,
           function () {
-            // console.log(hookName, ...arguments);
-            // eslint-disable-next-line prefer-rest-params
             const result = hook.apply(plugin, [...arguments])
             // hook 兼容非 Promise 返回值
             return result instanceof Promise ? result : Promise.resolve(result)
-          },
+          }
         )
       }
     })
@@ -136,13 +151,11 @@ class Editor extends EventEmitter {
     this.customApis = this.customApis.concat(apis)
     this.customEvents = this.customEvents.concat(events)
   }
-
   // 代理API事件
   private _bindingApis(pluginRunTime: IPluginTempl) {
     const { apis = [] } = (pluginRunTime.constructor as any) || {}
     apis.forEach((apiName: string) => {
       this[apiName] = function () {
-        // eslint-disable-next-line prefer-rest-params, no-useless-call
         return pluginRunTime[apiName].apply(pluginRunTime, [...arguments])
       }
     })
@@ -150,21 +163,21 @@ class Editor extends EventEmitter {
 
   // 右键菜单
   private _bindContextMenu() {
-    this.canvas
-    && this.canvas.on('mouse:down', (opt) => {
-      if (opt.button === 3) {
-        let menu: IPluginMenu[] = []
-        Object.keys(this.pluginMap).forEach((pluginName) => {
-          const pluginRunTime = this.pluginMap[pluginName]
-          const pluginMenu
-            = pluginRunTime.contextMenu && pluginRunTime.contextMenu()
-          if (pluginMenu) {
-            menu = menu.concat(pluginMenu)
-          }
-        })
-        this._renderMenu(opt, menu)
-      }
-    })
+    this.canvas &&
+      this.canvas.on('mouse:down', (opt) => {
+        if (opt.button === 3) {
+          let menu: IPluginMenu[] = []
+          Object.keys(this.pluginMap).forEach((pluginName) => {
+            const pluginRunTime = this.pluginMap[pluginName]
+            const pluginMenu =
+              pluginRunTime.contextMenu && pluginRunTime.contextMenu()
+            if (pluginMenu) {
+              menu = menu.concat(pluginMenu)
+            }
+          })
+          this._renderMenu(opt, menu)
+        }
+      })
   }
 
   // 渲染右键菜单

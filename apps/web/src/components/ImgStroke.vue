@@ -6,7 +6,10 @@
     <div class="hd-wrap">
       <div class="hd flex-1">
         <span>{{ $t('editor.imageSetting.stroke.enable') }}</span>
-        <el-popover trigger="hover" content="只支持png透明图像">
+        <el-popover
+          trigger="hover"
+          :content="$t('editor.imageSetting.stroke.tip')"
+        >
           <template #reference>
             <el-icon color="#f34250"><WarningFilled /></el-icon>
           </template>
@@ -71,7 +74,7 @@ import { WarningFilled } from '@element-plus/icons-vue'
 import { fabric } from 'fabric'
 import { Utils } from '@/lib/core'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
 interface IExtendImage {
@@ -81,8 +84,13 @@ interface IExtendImage {
   originSrc?: string
 }
 
-const { isOne } = useSelect()
 const isImage = ref(false)
+const { isOne } = useAttrPanel({
+  // 回显是否为图片元素
+  getAttrs: (activeObject) => {
+    isImage.value = Utils.isImage(activeObject)
+  }
+})
 const openImgStroke = ref(false)
 const strokeWidth = ref(5)
 const strokeColor = ref('#000')
@@ -136,20 +144,6 @@ const onColorChange = (val: string | null) => {
   strokeColor.value = val
   updateStroke()
 }
-
-const handleSelectOne = () => {
-  isImage.value = !!getActiveObject()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectOne', handleSelectOne)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor.off('selectOne', handleSelectOne)
-})
 </script>
 
 <style lang="scss" scoped>

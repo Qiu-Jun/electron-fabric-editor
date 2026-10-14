@@ -1,6 +1,5 @@
 <template>
   <div class="box attr-item-box" v-if="isOne">
-    <!-- <h3>阴影</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.attrSetting.shadow.title') }}</h4>
     </el-divider>
@@ -50,31 +49,25 @@
 </template>
 
 <script lang="ts" setup>
+import { fabric } from 'fabric'
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import { fabric } from 'fabric'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const { isOne } = useSelect()
-const update = getCurrentInstance()
+const { isOne } = useAttrPanel({
+  // 回显阴影属性
+  getAttrs: (activeObject) => {
+    baseAttr.shadow = activeObject.get('shadow') || {}
+  }
+})
 
 // 属性值
 const baseAttr: any = reactive({
   shadow: {}
 })
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  if (activeObject) {
-    baseAttr.shadow = activeObject.get('shadow') || {}
-  }
-}
-
-// 通用属性改变
+// 阴影需重建实例才能生效
 const changeCommon = () => {
   const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
@@ -82,32 +75,9 @@ const changeCommon = () => {
     editorStore.canvas?.renderAll()
   }
 }
-
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-onMounted(() => {
-  nextTick(() => {
-    // 获取字体数据
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
 
 <style scoped lang="scss">
-:deep(.el-color-picker__trigger) {
-  width: 56px;
-}
 .label {
   margin-right: 4px;
   font-size: var(--el-form-label-font-size);

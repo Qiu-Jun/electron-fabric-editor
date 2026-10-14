@@ -1,12 +1,13 @@
 <!--
  * @Author: June
- * @Description: Description
+ * @Description: 图片裁剪面板
  * @Date: 2024-11-17 10:30:49
- * @LastEditTime: 2024-11-28 16:19:18
+ * @LastEditTime: 2026-09-14 10:20:00
  * @LastEditors: June
+ * @FilePath: \element-fabric-editor\src\components\CropImage\index.vue
 -->
 <template>
-  <div v-if="isOne && type === 'image'" class="attr-item-box mt-8px">
+  <div v-if="isOne && selectType === 'image'" class="attr-item-box mt-8px">
     <div class="bg-item">
       <el-button class="w-full" @click="cropper" text>
         {{ $t('editor.imageSetting.crop.title') }}
@@ -25,29 +26,16 @@ import CropModal from './CropModal.vue'
 import { Utils } from '@/lib/core'
 const { insertImgFile } = Utils
 
-const update = getCurrentInstance()
-const { isOne } = useSelect()
-const type = ref('')
+const { isOne, selectType } = useSelect()
 const cropperDialogRef = ref()
 const cropper = () => {
-  console.log('🚀 ~ cropper ~ cropper:')
   const activeObject = editorStore.canvas.getActiveObjects()[0]
   if (activeObject && activeObject.type === 'image') {
-    console.log('🚀 ~ cropper ~ activeObject:', activeObject)
     cropperDialogRef.value.open(
       { img: activeObject._element.src },
       async (data) => {
-        console.log('🚀 ~ cropper ~ data:', data)
         const imgEl = await insertImgFile(data)
-        // const width = activeObject.get('width');
-        // const height = activeObject.get('height');
-        // const scaleX = activeObject.get('scaleX');
-        // const scaleY = activeObject.get('scaleY');
-        // console.log('🚀 ~ cropper ~ scaleX:', scaleX);
-        // console.log('🚀 ~ cropper ~ scaleY:', scaleY);
         activeObject.setSrc(imgEl.src, () => {
-          // activeObject.set('scaleX', scaleX);
-          // activeObject.set('scaleY', scaleY);
           editorStore.canvas.renderAll()
         })
         imgEl.remove()
@@ -55,47 +43,4 @@ const cropper = () => {
     )
   }
 }
-
-// 替换图片
-// const repleace = async () => {
-//   const activeObject = canvasEditor.canvas.getActiveObjects()[0];
-//   if (activeObject && activeObject.type === 'image') {
-//     // 图片
-//     const [file] = await selectFiles({ accept: 'image/*', multiple: false });
-//     // 转字符串
-//     const fileStr = await getImgStr(file);
-//     // 字符串转El
-//     const imgEl = await insertImgFile(fileStr);
-//     const width = activeObject.get('width');
-//     const height = activeObject.get('height');
-//     const scaleX = activeObject.get('scaleX');
-//     const scaleY = activeObject.get('scaleY');
-//     activeObject.setSrc(imgEl.src, () => {
-//       activeObject.set('scaleX', (width * scaleX) / imgEl.width);
-//       activeObject.set('scaleY', (height * scaleY) / imgEl.height);
-//       canvasEditor.canvas.renderAll();
-//     });
-//     imgEl.remove();
-//   }
-// };
-
-const init = () => {
-  const activeObject = editorStore.canvas.getActiveObjects()[0]
-
-  if (activeObject) {
-    type.value = activeObject.type
-    console.log(type.value, isOne)
-    update?.proxy?.$forceUpdate()
-  }
-}
-
-onMounted(() => {
-  nextTick(() => {
-    editorStore.editor?.on('selectOne', init)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor.off('selectOne', init)
-})
 </script>

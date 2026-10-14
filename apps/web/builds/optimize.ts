@@ -10,7 +10,6 @@ const include = [
   'sass',
   'axios',
   'dayjs',
-  'unocss',
   'vue-router',
   'vue-i18n',
   'lodash-es',

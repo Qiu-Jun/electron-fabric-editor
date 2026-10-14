@@ -7,23 +7,26 @@
       <div class="flex-view">
         <div class="flex-item">
           <div class="left font-selector">
-            <el-select v-model="baseAttr.fontFamily" @change="changeFontFamily">
-              <el-option
-                v-for="item in fontsList"
-                :value="item.name"
-                :label="item.name"
-                :key="`font-${item.name}`"
-              >
+            <!-- 虚拟滚动下拉,避免一次性渲染上百个带预览图的选项 -->
+            <el-select-v2
+              v-model="baseAttr.fontFamily"
+              :options="fontOptions"
+              popper-class="font-select-popper"
+              @change="changeFontFamily"
+            >
+              <template #item="{ item }">
                 <div
                   class="font-item"
-                  :style="`background-image:url('${item.img}');height: 100%;background-size: 100% 100%;`"
+                  :style="
+                    item.img
+                      ? `background-image:url('${item.img}');background-size: 100% 100%;`
+                      : ''
+                  "
                 >
-                  {{ !item.img ? item : '' }}
-                  <!-- 解决无法选中问题 -->
-                  <span style="display: none">{{ item.name }}</span>
+                  {{ item.label }}
                 </div>
-              </el-option>
-            </el-select>
+              </template>
+            </el-select-v2>
           </div>
           <div class="right">
             <InputNumber
@@ -63,43 +66,25 @@
       <div class="flex-view">
         <div class="flex-item">
           <el-button-group class="button-group">
-            <el-button
-              style="width: 25%"
-              @click="changeFontWeight('fontWeight', baseAttr.fontWeight)"
-            >
+            <el-button style="width: 25%" @click="changeFontWeight">
               <SvgIcon
                 extClass="text-20px"
                 color="#fff"
                 icon="atb-fontWeight"
               />
             </el-button>
-            <el-button
-              style="width: 25%"
-              @click="changeFontStyle('fontStyle', baseAttr.fontStyle)"
-            >
+            <el-button style="width: 25%" @click="changeFontStyle">
               <SvgIcon extClass="text-20px" color="#fff" icon="atb-fontStyle" />
             </el-button>
-            <el-button
-              style="width: 25%"
-              @click="changeLineThrough('linethrough', baseAttr.linethrough)"
-            >
+            <el-button style="width: 25%" @click="changeLineThrough">
               <SvgIcon
                 extClass="text-20px"
                 color="#fff"
                 icon="atb-linethrough"
               />
             </el-button>
-            <el-button
-              style="width: 25%"
-              @click="changeUnderline('underline', baseAttr.underline)"
-            >
-              <svg viewBox="0 0 1024 1024" width="14" height="14">
-                <SvgIcon
-                  extClass="text-20px"
-                  color="#fff"
-                  icon="atb-underline"
-                />
-              </svg>
+            <el-button style="width: 25%" @click="changeUnderline">
+              <SvgIcon extClass="text-20px" color="#fff" icon="atb-underline" />
             </el-button>
           </el-button-group>
         </div>
@@ -147,14 +132,36 @@
 import { ElLoading } from 'element-plus'
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 // 文字元素
 const textType = ['i-text', 'textbox', 'text']
 
 const editorStore = useEditorStore()
-const { isMatchType, isOne } = useSelect(textType)
-const update = getCurrentInstance()
+const { isMatchType, isOne, changeCommon } = useAttrPanel({
+  matchTypes: textType,
+  // 回显文字属性
+  getAttrs: (activeObject) => {
+    keys.forEach((key) => {
+      baseAttr[key] = activeObject.get(key)
+    })
+  }
+})
+
+// 需要回显的属性
+const keys = [
+  'fontSize',
+  'fontFamily',
+  'lineHeight',
+  'textAlign',
+  'underline',
+  'linethrough',
+  'charSpacing',
+  'overline',
+  'fontStyle',
+  'textBackgroundColor',
+  'fontWeight'
+]
 
 // 属性值
 const baseAttr = reactive<Record<string, any>>({
@@ -172,9 +179,18 @@ const baseAttr = reactive<Record<string, any>>({
 })
 
 const fontsList: any = ref([])
+// 字体清单由 FontPlugin 内部缓存,重复调用不会重复请求
 editorStore.editor?.getFontList().then((list: any) => {
   fontsList.value = list
 })
+// el-select-v2 需要 { value, label } 结构
+const fontOptions = computed(() =>
+  fontsList.value.map((item: any) => ({
+    value: item.name,
+    label: item.name,
+    img: item.img
+  }))
+)
 
 // 字体对齐方式
 const textAlignList = ['left', 'center', 'right', 'justify']
@@ -186,118 +202,49 @@ const textAlignListSvg = [
   'text-align-justitfy'
 ]
 
-// 属性获取
-const getObjectAttr = (e?: any) => {
-  const activeObject = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  // @ts-ignore
-  if (activeObject && isMatchType) {
-    // @ts-ignore
-    baseAttr.fontSize = activeObject.get('fontSize')
-    // @ts-ignore
-    baseAttr.fontFamily = activeObject.get('fontFamily')
-    // @ts-ignore
-    baseAttr.lineHeight = activeObject.get('lineHeight')
-    // @ts-ignore
-    baseAttr.textAlign = activeObject.get('textAlign')
-    // @ts-ignore
-    baseAttr.underline = activeObject.get('underline')
-    // @ts-ignore
-    baseAttr.linethrough = activeObject.get('linethrough')
-    // @ts-ignore
-    baseAttr.charSpacing = activeObject.get('charSpacing')
-    // @ts-ignore
-    baseAttr.overline = activeObject.get('overline')
-    // @ts-ignore
-    baseAttr.fontStyle = activeObject.get('fontStyle')
-    // @ts-ignore
-    baseAttr.textBackgroundColor = activeObject.get('textBackgroundColor')
-    // @ts-ignore
-    baseAttr.fontWeight = activeObject.get('fontWeight')
-  }
+const changeFontFamily = async (fontName: string) => {
+  if (!fontName) return
+  const loadingInstance = ElLoading.service()
+  editorStore.editor.loadFont(fontName).finally(() => loadingInstance.close())
 }
 
-// 通用属性改变
-const changeCommon = (key: any, value: any) => {
+// 加粗/斜体/划线类按钮统一走切换逻辑
+const toggleFontAttr = (key: string, nValue: string | boolean) => {
+  baseAttr[key] = nValue
   const activeObject = editorStore.canvas?.getActiveObjects()[0]
   if (activeObject) {
-    activeObject && activeObject.set(key, value)
+    activeObject.set(key, nValue)
     editorStore.canvas?.renderAll()
   }
 }
 
-const selectCancel = () => {
-  update?.proxy?.$forceUpdate()
-}
-
-const changeFontFamily = async (fontName: string) => {
-  if (!fontName) return
-  const loadingINstasncdee = ElLoading.service()
-  editorStore.editor
-    .loadFont(fontName)
-    .finally(() => loadingINstasncdee.close())
-}
-const changeFontWeight = (key: any, value: any) => {
-  const nValue = value === 'normal' ? 'bold' : 'normal'
-  baseAttr.fontWeight = nValue
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  activeObject && activeObject.set(key, nValue)
-  editorStore.canvas?.renderAll()
+const changeFontWeight = () => {
+  toggleFontAttr(
+    'fontWeight',
+    baseAttr.fontWeight === 'normal' ? 'bold' : 'normal'
+  )
 }
 
 // 斜体
-const changeFontStyle = (key: any, value: any) => {
-  const nValue = value === 'normal' ? 'italic' : 'normal'
-  baseAttr.fontStyle = nValue
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  activeObject && activeObject.set(key, nValue)
-  editorStore.canvas?.renderAll()
+const changeFontStyle = () => {
+  toggleFontAttr(
+    'fontStyle',
+    baseAttr.fontStyle === 'normal' ? 'italic' : 'normal'
+  )
 }
 
 // 中划
-const changeLineThrough = (key: any, value: any) => {
-  const nValue = value === false
-  baseAttr.linethrough = nValue
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  activeObject && activeObject.set(key, nValue)
-  editorStore.canvas?.renderAll()
+const changeLineThrough = () => {
+  toggleFontAttr('linethrough', !baseAttr.linethrough)
 }
 
 // 下划
-const changeUnderline = (key: any, value: any) => {
-  const nValue = value === false
-  baseAttr.underline = nValue
-  const activeObject = editorStore.canvas?.getActiveObjects()[0]
-  activeObject && activeObject.set(key, nValue)
-  editorStore.canvas?.renderAll()
+const changeUnderline = () => {
+  toggleFontAttr('underline', !baseAttr.underline)
 }
-
-onMounted(() => {
-  // 获取字体数据
-
-  nextTick(() => {
-    getObjectAttr()
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
-  })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
-})
 </script>
 
 <style scoped lang="scss">
-:deep(.el-color-picker) {
-  @apply w-full;
-}
-:deep(.el-color-picker__trigger) {
-  @apply w-full;
-}
 :deep(.el-color-picker__color-inner) {
   @apply justify-end;
 }
@@ -324,31 +271,14 @@ onBeforeUnmount(() => {
     @apply w-280px h-40px;
   }
 }
+</style>
 
-.flex-view {
-  box-sizing: border-box;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 5px;
-  display: inline-flex;
-  justify-content: space-between;
-  border-radius: 5px;
-  background: #f6f7f9;
-}
-.flex-item {
-  @apply flex-1 inline-flex box-border;
-  .label {
-    @apply w-32px h-32px leading-32px inline-block text-14px;
-  }
-  .content {
-    flex: 1;
-    // width: 60px;
-  }
-  .slider-box {
-    width: calc(100% - 50px);
-    @apply mb-10px;
+<style lang="scss">
+/* 字体下拉弹层挂在 body 下,需全局样式控制选项高度 */
+.font-select-popper {
+  .el-select-dropdown__item {
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

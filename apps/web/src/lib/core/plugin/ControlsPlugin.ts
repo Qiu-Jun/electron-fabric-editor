@@ -6,15 +6,15 @@
  * @Description: 控制条插件
  */
 
+import Editor from '../Editor'
+type IEditor = Editor
+
 import { fabric } from 'fabric'
-import type Editor from '../Editor'
-import edgeImg from '../assets/edgecontrol.svg?url'
 import verticalImg from '../assets/middlecontrol.svg?url'
 // import verticalImg from './middlecontrol.svg';
 import horizontalImg from '../assets/middlecontrolhoz.svg?url'
+import edgeImg from '../assets/edgecontrol.svg?url'
 import rotateImg from '../assets/rotateicon.svg?url'
-
-type IEditor = Editor
 
 /**
  * 实际场景: 在进行某个对象缩放的时候，由于fabricjs默认精度使用的是toFixed(2)。
@@ -29,10 +29,9 @@ function drawImg(
   img: HTMLImageElement,
   wSize: number,
   hSize: number,
-  angle: number | undefined,
+  angle: number | undefined
 ) {
-  if (angle === undefined)
-    return
+  if (angle === undefined) return
   ctx.save()
   ctx.translate(left, top)
   ctx.rotate(fabric.util.degreesToRadians(angle))
@@ -53,7 +52,7 @@ function intervalControl() {
     left: number,
     top: number,
     styleOverride: any,
-    fabricObject: fabric.Object,
+    fabricObject: fabric.Object
   ) {
     drawImg(ctx, left, top, verticalImgIcon, 20, 25, fabricObject.angle)
   }
@@ -63,7 +62,7 @@ function intervalControl() {
     left: number,
     top: number,
     styleOverride: any,
-    fabricObject: fabric.Object,
+    fabricObject: fabric.Object
   ) {
     drawImg(ctx, left, top, horizontalImgIcon, 25, 20, fabricObject.angle)
   }
@@ -77,7 +76,7 @@ function intervalControl() {
       cursorStyleHandler: fabric.controlsUtils.scaleSkewCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingXOrSkewingY,
       getActionName: fabric.controlsUtils.scaleOrSkewActionName,
-      render: renderIcon,
+      render: renderIcon
     })
 
     fabric.Object.prototype.controls.mr = new fabric.Control({
@@ -87,7 +86,7 @@ function intervalControl() {
       cursorStyleHandler: fabric.controlsUtils.scaleSkewCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingXOrSkewingY,
       getActionName: fabric.controlsUtils.scaleOrSkewActionName,
-      render: renderIcon,
+      render: renderIcon
     })
   }
   horizontalImgIcon.onload = () => {
@@ -98,7 +97,7 @@ function intervalControl() {
       cursorStyleHandler: fabric.controlsUtils.scaleSkewCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingYOrSkewingX,
       getActionName: fabric.controlsUtils.scaleOrSkewActionName,
-      render: renderIconHoz,
+      render: renderIconHoz
     })
 
     fabric.Object.prototype.controls.mt = new fabric.Control({
@@ -108,7 +107,7 @@ function intervalControl() {
       cursorStyleHandler: fabric.controlsUtils.scaleSkewCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingYOrSkewingX,
       getActionName: fabric.controlsUtils.scaleOrSkewActionName,
-      render: renderIconHoz,
+      render: renderIconHoz
     })
   }
 }
@@ -123,7 +122,7 @@ function peakControl() {
     left: number,
     top: number,
     styleOverride: any,
-    fabricObject: fabric.Object,
+    fabricObject: fabric.Object
   ) {
     drawImg(ctx, left, top, img, 25, 25, fabricObject.angle)
   }
@@ -135,34 +134,34 @@ function peakControl() {
       y: -0.5,
       cursorStyleHandler: fabric.controlsUtils.scaleCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingEqually,
-      render: renderIconEdge,
+      render: renderIconEdge
     })
     fabric.Object.prototype.controls.bl = new fabric.Control({
       x: -0.5,
       y: 0.5,
       cursorStyleHandler: fabric.controlsUtils.scaleCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingEqually,
-      render: renderIconEdge,
+      render: renderIconEdge
     })
     fabric.Object.prototype.controls.tr = new fabric.Control({
       x: 0.5,
       y: -0.5,
       cursorStyleHandler: fabric.controlsUtils.scaleCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingEqually,
-      render: renderIconEdge,
+      render: renderIconEdge
     })
     fabric.Object.prototype.controls.br = new fabric.Control({
       x: 0.5,
       y: 0.5,
       cursorStyleHandler: fabric.controlsUtils.scaleCursorStyleHandler,
       actionHandler: fabric.controlsUtils.scalingEqually,
-      render: renderIconEdge,
+      render: renderIconEdge
     })
   }
 }
 
 // 删除
-/* function deleteControl(canvas: fabric.Canvas) {
+/*function deleteControl(canvas: fabric.Canvas) {
   const deleteIcon =
     "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
   const delImg = document.createElement('img');
@@ -201,7 +200,7 @@ function peakControl() {
     render: renderDelIcon,
     // cornerSize: 24,
   });
-} */
+}*/
 
 // 旋转
 function rotationControl() {
@@ -212,7 +211,7 @@ function rotationControl() {
     left: number,
     top: number,
     styleOverride: any,
-    fabricObject: fabric.Object,
+    fabricObject: fabric.Object
   ) {
     drawImg(ctx, left, top, img, 40, 40, fabricObject.angle)
   }
@@ -227,7 +226,7 @@ function rotationControl() {
       offsetY: 30,
       // withConnecton: false,
       actionName: 'rotate',
-      render: renderIconRotate,
+      render: renderIconRotate
     })
   }
 }
@@ -236,11 +235,10 @@ class ControlsPlugin implements IPluginTempl {
   static pluginName = 'ControlsPlugin'
   constructor(
     public canvas: fabric.Canvas,
-    public editor: IEditor,
+    public editor: IEditor
   ) {
     this.init()
   }
-
   init() {
     // 删除图标
     // deleteControl(this.canvas);
@@ -259,15 +257,13 @@ class ControlsPlugin implements IPluginTempl {
       borderScaleFactor: 2.5,
       cornerStyle: 'circle',
       cornerStrokeColor: '#0E98FC',
-      borderOpacityWhenMoving: 1,
+      borderOpacityWhenMoving: 1
     })
     // textbox保持一致
     // fabric.Textbox.prototype.controls = fabric.Object.prototype.controls;
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default ControlsPlugin

@@ -34,7 +34,7 @@ import { useEditorStore } from '@/store/modules/editor'
 
 const editorStore = useEditorStore()
 const router = useRouter()
-const { getTemplInfo, updataTemplInfo } = useMaterial()
+const { getTemplInfo, updateTemplInfo } = useMaterial()
 
 const fileName = ref('')
 const route = useRoute()
@@ -115,7 +115,7 @@ const saveTempl = () => {
     return
   }
   loading.value = true
-  updataTemplInfo(route.query.id, fileName.value)
+  updateTemplInfo(route.query.id, fileName.value)
     .then()
     .finally(() => {
       loading.value = false

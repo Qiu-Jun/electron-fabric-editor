@@ -6,96 +6,27 @@
  * @Description: 分页组件
 -->
 
-<script name="ImportJson" setup>
-import { throttle } from 'lodash-es'
-import usePageList from '@/hooks/usePageList'
-
-const props = defineProps({
-  pageListApi: {
-    type: Function,
-  },
-  filters: {
-    type: Object,
-  },
-  domId: {
-    type: String,
-    default: '',
-  },
-  formatData: {
-    type: Function,
-  },
-})
-
-const emit = defineEmits(['back', 'click', 'dragend'])
-
-const sort = []
-
-// 通用分页
-const {
-  pageData,
-  showScroll,
-  scrollHeight,
-  isDownBottom,
-  pageLoading,
-  startPage,
-  startGetList,
-  nextPage,
-} = usePageList({
-  el: `#${props.domId}`,
-  apiClient: props.pageListApi,
-  filters: props.filters,
-  sort,
-  fields: [],
-  formatData: props.formatData,
-})
-
-const scrollbarRef = ref()
-const _scrollTop = ref(0)
-const onScroll = throttle((options) => {
-  if (unref(pageLoading))
-    return
-  const wrapRef = scrollbarRef.value.wrapRef
-  scrollbarRef.value.moveY = (wrapRef.scrollTop * 100) / wrapRef.clientHeight
-  scrollbarRef.value.moveX = (wrapRef.scrollLeft * 100) / wrapRef.clientWidth
-  let poor = wrapRef.scrollHeight - wrapRef.clientHeight
-  // 判断滚动到底部
-  if (options.scrollTop + 2 >= poor) {
-    _scrollTop.value = options.scrollTop
-    console.log('daozdaozi dafjdakfj ')
-    nextPage()
-  }
-}, 300)
-onMounted(async () => {
-  startPage()
-})
-
-defineExpose({
-  startGetList,
-  startPage,
-})
-</script>
-
 <template>
   <!-- 列表 -->
   <div
-    :id="props.domId"
-    v-loading="pageLoading"
     class="page-list-box"
     style="height: calc(100vh - 100px)"
+    :id="props.DOMId"
+    v-loading="pageLoading"
     element-loading-text="Loading..."
     element-loading-svg-view-box="-10, -10, 50, 50"
     element-loading-background="rgba(122, 122, 122, 0.8)"
   >
     <el-scrollbar
-      v-if="showScroll"
       ref="scrollbarRef"
-      :key="props.domId"
+      :key="props.DOMId"
+      v-if="showScroll"
       :height="scrollHeight"
       @scroll="onScroll"
     >
-      <div v-if="pageData.length" class="img-box">
+      <div class="img-box" v-if="pageData.length">
         <!-- 列表 -->
-        <div v-for="info in pageData" :key="info.id" class="img-item">
+        <div class="img-item" v-for="info in pageData" :key="info.id">
           <el-tooltip :content="info.name" placement="top">
             <el-image
               lazy
@@ -109,15 +40,79 @@ defineExpose({
           </el-tooltip>
         </div>
       </div>
-      <el-divider v-if="isDownBottom">
-        {{
-          pageData.length ? '已经到底了' : '暂无内容'
-        }}
-      </el-divider>
+      <el-divider v-if="isDownBottom">{{
+        pageData.length ? '已经到底了' : '暂无内容'
+      }}</el-divider>
     </el-scrollbar>
   </div>
 </template>
 
+<script name="ImportJson" setup>
+import { throttle } from 'lodash-es'
+import usePageList from '@/hooks/usePageList'
+
+const emit = defineEmits(['back', 'click', 'dragend'])
+
+const props = defineProps({
+  pageListApi: {
+    type: Function
+  },
+  filters: {
+    type: Object
+  },
+  DOMId: {
+    type: String,
+    default: ''
+  },
+  formatData: {
+    type: Function
+  }
+})
+
+const sort = []
+
+// 通用分页
+const {
+  pageData,
+  showScroll,
+  scrollHeight,
+  isDownBottom,
+  pageLoading,
+  startPage,
+  startGetList,
+  nextPage
+} = usePageList({
+  el: '#' + props.DOMId,
+  apiClient: props.pageListApi,
+  filters: props.filters,
+  sort,
+  fields: [],
+  formatData: props.formatData
+})
+
+const scrollbarRef = ref()
+const _scrollTop = ref(0)
+const onScroll = throttle(function (options) {
+  if (unref(pageLoading)) return
+  const wrapRef = scrollbarRef.value.wrapRef
+  scrollbarRef.value.moveY = (wrapRef.scrollTop * 100) / wrapRef.clientHeight
+  scrollbarRef.value.moveX = (wrapRef.scrollLeft * 100) / wrapRef.clientWidth
+  let poor = wrapRef.scrollHeight - wrapRef.clientHeight
+  // 判断滚动到底部
+  if (options.scrollTop + 2 >= poor) {
+    _scrollTop.value = options.scrollTop
+    nextPage()
+  }
+}, 300)
+onMounted(async () => {
+  startPage()
+})
+
+defineExpose({
+  startGetList,
+  startPage
+})
+</script>
 <style scoped lang="scss">
 :deep(.el-scrollbar__view) {
   height: 100%;

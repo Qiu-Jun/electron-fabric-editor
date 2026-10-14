@@ -389,7 +389,6 @@ const cancelDraw = () => {
 }
 
 onDeactivated(() => {
-  console.log('onDeactivated, 触发')
   cancelDraw()
 })
 </script>

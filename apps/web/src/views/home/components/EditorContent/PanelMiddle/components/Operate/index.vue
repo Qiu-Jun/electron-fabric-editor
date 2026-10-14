@@ -27,7 +27,7 @@
 
             <div
               class="ml-4px"
-              :class="[panelPositoin === 'bottom' ? 'rotate-270' : '']"
+              :class="[panelPosition === 'bottom' ? 'rotate-270' : '']"
               @click.stop="bottomToggle"
             >
               <SvgIcon icon="unfold" extClass="text-16px" />
@@ -39,7 +39,7 @@
             >
               <el-divider direction="vertical" />
               <SvgIcon
-                :class="[panelPositoin === 'bottom' ? 'rotate-270' : '']"
+                :class="[panelPosition === 'bottom' ? 'rotate-270' : '']"
                 icon="panel-position"
                 extClass="text-16px"
               />
@@ -82,7 +82,7 @@
 
       <!-- 底部画板 -->
       <div
-        v-if="panelPositoin === 'bottom' && showPanel"
+        v-if="panelPosition === 'bottom' && showPanel"
         class="main-panel mt-8px bg-#fff box-border rounded-12px"
       >
         <div class="pb-1px mx-6px">
@@ -103,12 +103,12 @@ import { useEditorStore } from '@/store/modules/editor'
 import { Drag, Zoom } from './components'
 
 const editorStore = useEditorStore()
-const { panelPositoin, showPanel, panelType } = storeToRefs(editorStore)
+const { panelPosition, showPanel, panelType } = storeToRefs(editorStore)
 const changePanelType = debounce(function (type: panels) {
   if (unref(panelType) === type) {
     // 如果相等  那么做显示/隐藏
     editorStore.setShowPanel(!unref(showPanel))
-    unref(panelPositoin) === 'bottom' && editorStore.setPanelPositoin('left')
+    unref(panelPosition) === 'bottom' && editorStore.setPanelPosition('left')
   } else {
     // 如果不是同一个值  那么设置类型并且显示
     editorStore.setPanelType(type)
@@ -121,8 +121,8 @@ const bottomToggle = debounce(function () {
 }, 250)
 
 const changePanelPos = debounce(function () {
-  editorStore.setPanelPositoin(
-    unref(panelPositoin) === 'left' ? 'bottom' : 'left'
+  editorStore.setPanelPosition(
+    unref(panelPosition) === 'left' ? 'bottom' : 'left'
   )
   !unref(showPanel) && editorStore.setShowPanel(true)
 }, 250)

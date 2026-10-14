@@ -92,6 +92,8 @@ class DrawLinePlugin implements IPluginTempl {
     canvas.on('mouse:move', (o) => {
       if (
         !this.isDrawingLine ||
+        // 未选择线型（初始为空串）时不处理
+        !this.lineType ||
         ![DrawTypes.line, DrawTypes.arrow, DrawTypes.thinTailArrow].includes(
           this.lineType
         )
@@ -159,9 +161,7 @@ class DrawLinePlugin implements IPluginTempl {
     })
   }
 
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default DrawLinePlugin

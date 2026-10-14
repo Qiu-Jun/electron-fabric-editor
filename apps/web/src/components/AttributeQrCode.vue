@@ -1,6 +1,5 @@
 <template>
   <div class="box attr-item-box" v-if="isOne && isMatchType && isQrcode">
-    <!-- <h3>字体属性</h3> -->
     <el-divider content-position="left">
       <h4>{{ $t('editor.qrCode.name') }}</h4>
     </el-divider>
@@ -178,13 +177,23 @@
 <script lang="ts" setup>
 import InputNumber from './InputNumber'
 import { useEditorStore } from '@/store/modules/editor'
-import useSelect from '@/hooks/select'
+import useAttrPanel from '@/hooks/useAttrPanel'
 
 const editorStore = useEditorStore()
-const { isOne, isMatchType } = useSelect(['image'])
-const update = getCurrentInstance()
+const { isOne, isMatchType } = useAttrPanel({
+  matchTypes: ['image'],
+  // 回显二维码扩展属性,普通图片不回显
+  getAttrs: (activeObject: any) => {
+    extensionType.value = activeObject.extensionType || ''
+    const extension = activeObject.get('extension')
+    if (extensionType.value === 'qrcode' && extension) {
+      Object.keys(baseAttr).forEach((key) => {
+        baseAttr[key] = extension[key]
+      })
+    }
+  }
+})
 
-// 文字元素
 const extensionType = ref('')
 
 const isQrcode = computed(() => extensionType.value === 'qrcode')
@@ -204,34 +213,14 @@ const baseAttr = reactive<Record<string, any>>({
   background: '#ffffff'
 })
 
-// 属性获取
-const getObjectAttr = (e: any) => {
-  const activeObject: any = editorStore.canvas?.getActiveObject()
-  // 不是当前obj，跳过
-  if (e && e.target && e.target !== activeObject) return
-  extensionType.value = activeObject?.extensionType || ''
-  if (activeObject && isMatchType && activeObject?.extensionType === 'qrcode') {
-    const extension = activeObject.get('extension')
-    Object.keys(extension).forEach((key) => {
-      baseAttr[key] = extension[key]
-    })
-  }
-}
-
-// 通用属性改变
+// 通用属性改变:整体更新二维码
 const changeCommon = () => {
   editorStore.editor.setQrCode(toRaw(baseAttr))
   editorStore.canvas?.renderAll()
 }
 
-const selectCancel = () => {
-  extensionType.value = ''
-  update?.proxy?.$forceUpdate()
-}
-
 // 容错率
-
-const optionsList = reactive({
+const optionsList = reactive<Record<string, string[]>>({
   CornersType: [],
   DotsType: [],
   cornersDotType: [],
@@ -242,43 +231,12 @@ onMounted(() => {
   nextTick(() => {
     const res = editorStore.editor?.getQrCodeTypes()
     res && Object.assign(optionsList, res)
-    editorStore.editor?.on('selectCancel', selectCancel)
-    editorStore.editor?.on('selectOne', getObjectAttr)
-    editorStore.canvas?.on('object:modified', getObjectAttr)
   })
-})
-
-onBeforeUnmount(() => {
-  editorStore.editor?.off('selectCancel', selectCancel)
-  editorStore.editor?.off('selectOne', getObjectAttr)
-  editorStore.canvas?.off('object:modified', getObjectAttr)
 })
 </script>
 
 <style scoped lang="scss">
-:deep(.el-color-picker__trigger) {
-  width: 88px;
-}
 .number-content {
   @apply f-center;
-}
-
-.flex-view {
-  background: #f6f7f9;
-  @apply relative z-1 rounded-5px flex justify-between w-full mb-10px p-5px;
-}
-.flex-item {
-  @apply flex-1 inline-flex box-border;
-  .label {
-    @apply w-32px h-32px leading-32px inline-block text-14px;
-  }
-  .content {
-    flex: 1;
-    // width: 60px;
-  }
-  .slider-box {
-    width: calc(100% - 50px);
-    @apply mb-10px;
-  }
 }
 </style>

@@ -5,13 +5,6 @@
  * @LastEditTime: 2024-11-30 17:39:19
  * @LastEditors: June
  */
-/*
- * @Description:
- * @Author: June
- * @Date: 2024-08-21 13:03:57
- * @LastEditTime: 2024-08-21 13:12:03
- * @LastEditors: June
- */
 import type { PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -67,7 +60,7 @@ export function createVitePlugins(mode: string, command: string, viteEnv: any): 
       inject: 'body-last', // 插入的位置
       customDomId: '__svg__icons__dom__', // svg的id
     }),
-    Unocss(),
+    Unocss({ configFile: path.join(__dirname, '../unocss.config.ts') }),
     vueJsx(),
   ]
 

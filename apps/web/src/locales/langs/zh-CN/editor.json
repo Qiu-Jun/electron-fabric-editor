@@ -53,6 +53,22 @@
       "save_as_json": "保存为JSON"
     },
     "ruler": "标尺",
+    "waterMark": {
+      "title": "水印",
+      "text": "水印文字",
+      "textPlaceholder": "请输入水印内容",
+      "position": "位置",
+      "posLt": "左上",
+      "posRt": "右上",
+      "posLb": "左下",
+      "posRb": "右下",
+      "posFull": "平铺",
+      "size": "字号",
+      "color": "颜色",
+      "rotate": "倾斜",
+      "apply": "应用",
+      "clear": "清除水印"
+    },
     "history": {
       "undo": "撤销",
       "redo": "重做"
@@ -80,7 +96,8 @@
     "height": "高度",
     "bgImage": "背景图",
     "addBgImage": "设置背景图",
-    "removeBgImage": "移除背景图"
+    "removeBgImage": "移除背景图",
+    "removeBgConfirm": "确定移除画布背景吗？"
   },
   "attrSetting": {
     "color": "颜色",
@@ -163,10 +180,11 @@
     "delete": "删除",
     "copy": "复制",
     "editPoly": "编辑多边形",
+    "editPolyTip": "请选择多边形元素",
     "hidden": "隐藏"
   },
   "imageSetting": {
-    "repleaceImg": "替换图片",
+    "replaceImg": "替换图片",
     "crop": {
       "title": "裁剪图片",
       "create": "添加裁切",
@@ -204,6 +222,7 @@
     "stroke": {
       "title": "图像描边",
       "enable": "启动",
+      "tip": "仅支持透明底的 PNG 图片",
       "show": "显示描边",
       "size": "描边大小",
       "color": "描边颜色"
@@ -260,6 +279,8 @@
     "show": "显示",
     "color": "颜色",
     "position": "位置",
+    "positionBottom": "底部",
+    "positionTop": "顶部",
     "size": "字号",
     "background": "背景"
   },

@@ -65,9 +65,7 @@ class CenterAlignPlugin implements IPluginTempl {
       ]
     }
   }
-  destroy() {
-    console.log('pluginDestroy')
-  }
+  destroy() {}
 }
 
 export default CenterAlignPlugin

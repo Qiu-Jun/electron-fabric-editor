@@ -1,6 +1,6 @@
 import { fabric } from 'fabric'
 import { throttle } from 'lodash-es'
-import type Editor from '../Editor'
+import Editor from '../Editor'
 
 type IEditor = Editor
 class WorkspacePlugin implements IPluginTempl {
@@ -16,9 +16,8 @@ class WorkspacePlugin implements IPluginTempl {
     'setWorkspaseBg',
     'setCenterFromObject',
     'getScale',
-    'getWorkspaceSize',
+    'getWorkspaceSize'
   ]
-
   workspaceEl!: HTMLElement
   workspace: null | fabric.Rect
   resizeObserver!: ResizeObserver
@@ -26,17 +25,17 @@ class WorkspacePlugin implements IPluginTempl {
   zoomRatio: number
   constructor(
     public canvas: fabric.Canvas,
-    public editor: IEditor,
+    public editor: IEditor
   ) {
     this.workspace = null
     this.init({
       width: 900,
-      height: 2000,
+      height: 2000
     })
     this.zoomRatio = 0.85
   }
 
-  init(option: { width: number, height: number }) {
+  init(option: { width: number; height: number }) {
     const workspaceEl = document.querySelector('#workspace') as HTMLElement
     if (!workspaceEl) {
       throw new Error('element #workspace is missing, plz check!')
@@ -54,13 +53,16 @@ class WorkspacePlugin implements IPluginTempl {
     return new Promise((resolve) => {
       const workspace = this.canvas
         .getObjects()
-        .find(item => item.id === 'workspace')
+        .find((item) => item.id === 'workspace')
       if (workspace) {
         workspace.set('selectable', false)
         workspace.set('hasControls', false)
         workspace.set('evented', false)
         if (workspace.width && workspace.height) {
-          this.setSize(workspace.width, workspace.height)
+          // 加载内容时不重置背景,底色以页面json为准
+          this.setSize(workspace.width, workspace.height, {
+            resetBackground: false
+          })
           this.editor.emit('sizeChange', workspace.width, workspace.height)
         }
       }
@@ -75,16 +77,17 @@ class WorkspacePlugin implements IPluginTempl {
     })
   }
 
-  // 初始化背景
-  async _initBackground() {
+  // 初始化背景;resetBackground为false时保留画布背景(加载页面内容时底色以json为准)
+  _initBackground(resetBackground = true) {
+    if (resetBackground) {
+      this.canvas.backgroundImage = ''
+      this.canvas.setBackgroundColor(
+        '#ffffff',
+        this.canvas.renderAll.bind(this.canvas)
+      )
+    }
     this.canvas.setWidth(this.workspaceEl.offsetWidth)
     this.canvas.setHeight(this.workspaceEl.offsetHeight)
-    this.canvas.backgroundImage = ''
-
-    this.canvas.setBackgroundColor(
-      '#ffffff',
-      this.canvas.renderAll.bind(this.canvas),
-    )
   }
 
   // 初始化画布
@@ -95,7 +98,7 @@ class WorkspacePlugin implements IPluginTempl {
       width,
       height,
       id: 'workspace',
-      strokeWidth: 0,
+      strokeWidth: 0
     })
     workspace.set('selectable', false)
     workspace.set('hasControls', false)
@@ -114,27 +117,26 @@ class WorkspacePlugin implements IPluginTempl {
   getWorkspase() {
     return this.canvas
       .getObjects()
-      .find(item => item.id === 'workspace') as fabric.Rect
+      .find((item) => item.id === 'workspace') as fabric.Rect
   }
 
   /**
    * 设置画布中心到指定对象中心点上
-   * @param {object} obj 指定的对象
+   * @param {Object} obj 指定的对象
    */
   setCenterFromObject(obj: fabric.Rect) {
     const { canvas } = this
     const objCenter = obj.getCenterPoint()
     const viewportTransform = canvas.viewportTransform
     if (
-      canvas.width === undefined
-      || canvas.height === undefined
-      || !viewportTransform
-    ) {
+      canvas.width === undefined ||
+      canvas.height === undefined ||
+      !viewportTransform
+    )
       return
-    }
     viewportTransform[4] = canvas.width / 2 - objCenter.x * viewportTransform[0]
-    viewportTransform[5]
-      = canvas.height / 2 - objCenter.y * viewportTransform[3]
+    viewportTransform[5] =
+      canvas.height / 2 - objCenter.y * viewportTransform[3]
     canvas.setViewportTransform(viewportTransform)
     canvas.renderAll()
   }
@@ -148,20 +150,24 @@ class WorkspacePlugin implements IPluginTempl {
     const resizeObserver = new ResizeObserver(
       throttle(() => {
         this.auto()
-      }, 50),
+      }, 50)
     )
     this.resizeObserver = resizeObserver
     this.resizeObserver.observe(this.workspaceEl)
   }
 
-  async setSize(width: number, height: number) {
-    await this._initBackground()
+  setSize(
+    width: number,
+    height: number,
+    options?: { resetBackground?: boolean }
+  ) {
+    this._initBackground(options?.resetBackground ?? true)
     this.option.width = width
     this.option.height = height
     // 重新设置workspace
     this.workspace = this.canvas
       .getObjects()
-      .find(item => item.id === 'workspace') as fabric.Rect
+      .find((item) => item.id === 'workspace') as fabric.Rect
     this.workspace.set('width', width)
     this.workspace.set('height', height)
     this.editor.emit('sizeChange', this.workspace.width, this.workspace.height)
@@ -177,8 +183,7 @@ class WorkspacePlugin implements IPluginTempl {
     const center = this.canvas.getCenter()
     this.canvas.setViewportTransform(fabric.iMatrix.concat())
     this.canvas.zoomToPoint(new fabric.Point(center.left, center.top), scale)
-    if (!this.workspace)
-      return
+    if (!this.workspace) return
     this.setCenterFromObject(this.workspace)
 
     // 超出画布不展示
@@ -186,14 +191,13 @@ class WorkspacePlugin implements IPluginTempl {
       this.canvas.clipPath = cloned
       this.canvas.requestRenderAll()
     })
-    if (cb)
-      cb(this.workspace.left, this.workspace.top)
+    if (cb) cb(this.workspace.left, this.workspace.top)
   }
 
   getScale() {
     return fabric.util.findScaleToFit(this.getWorkspase(), {
       width: this.workspaceEl.offsetWidth,
-      height: this.workspaceEl.offsetHeight,
+      height: this.workspaceEl.offsetHeight
     })
   }
 
@@ -204,7 +208,7 @@ class WorkspacePlugin implements IPluginTempl {
     const center = this.canvas.getCenter()
     this.canvas.zoomToPoint(
       new fabric.Point(center.left, center.top),
-      zoomRatio,
+      zoomRatio
     )
   }
 
@@ -215,7 +219,7 @@ class WorkspacePlugin implements IPluginTempl {
     const center = this.canvas.getCenter()
     this.canvas.zoomToPoint(
       new fabric.Point(center.left, center.top),
-      zoomRatio < 0 ? 0.01 : zoomRatio,
+      zoomRatio < 0 ? 0.01 : zoomRatio
     )
   }
 
@@ -241,10 +245,8 @@ class WorkspacePlugin implements IPluginTempl {
       const delta = opt.e.deltaY
       let zoom = this.getZoom()
       zoom *= 0.999 ** delta
-      if (zoom > 20)
-        zoom = 20
-      if (zoom < 0.01)
-        zoom = 0.01
+      if (zoom > 20) zoom = 20
+      if (zoom < 0.01) zoom = 0.01
       const center = this.getCenter()
       this.zoomToPoint(new fabric.Point(center.left, center.top), zoom)
       opt.e.preventDefault()
@@ -255,7 +257,6 @@ class WorkspacePlugin implements IPluginTempl {
   destroy() {
     this.resizeObserver.disconnect()
     this.canvas.off()
-    console.log('pluginDestroy')
   }
 }
 

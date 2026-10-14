@@ -8,8 +8,9 @@
  */
 import { useEditorStoreWithOut } from '@/store/modules/editor'
 
-const editorStore = useEditorStoreWithOut()
 export default function useCalculate() {
+  // 在函数内取 store，避免 import 时提前初始化
+  const editorStore = useEditorStoreWithOut()
   // 获取画布的DOMRect对象
   const getCanvasBound = () =>
     editorStore.canvas?.getSelectionElement().getBoundingClientRect()
